@@ -1,0 +1,174 @@
+<Window x:Class="GB_Payroll_System.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Genetian Payroll System" 
+        Height="768" Width="1280"
+        WindowStartupLocation="CenterScreen"
+        Background="#F4F6F9">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- LEFT NAVIGATION SIDEBAR -->
+        <Border Grid.Column="0" Background="#0A4D9C">
+            <DockPanel>
+                <!-- App Logo & Brand -->
+                <StackPanel DockPanel.Dock="Top" Margin="20,24,20,24">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="36" Height="36" CornerRadius="6" Background="White" Margin="0,0,12,0">
+                            <TextBlock Text="GB" Foreground="#0A4D9C" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Genetian" Foreground="White" FontWeight="Bold" FontSize="16"/>
+                            <TextBlock Text="PAYROLL SYSTEM" Foreground="#A0AEC0" FontSize="10" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Logout Button at Bottom -->
+                <Border DockPanel.Dock="Bottom" Margin="16" BorderBrush="#1E5BB0" BorderThickness="0,1,0,0" Padding="0,16,0,0">
+                    <Button x:Name="BtnLogout" 
+                            Content="🚪 Logout" 
+                            Background="#103B75" Foreground="White" 
+                            BorderThickness="0" Height="40" 
+                            FontWeight="SemiBold" Cursor="Hand"
+                            Click="BtnLogout_Click"/>
+                </Border>
+
+                <!-- Navigation Links -->
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="12,0">
+                        <RadioButton x:Name="NavDashboard" Content="📊 Dashboard" GroupName="NavGroup" IsChecked="True" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
+                        <RadioButton x:Name="NavEmployees" Content="👥 Employee 201 Files" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
+                        <RadioButton x:Name="NavPromotions" Content="📈 Salary Promotions" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
+                        <RadioButton x:Name="NavPakyawan" Content="📦 Pakyawan Manager" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
+                        <RadioButton x:Name="NavAttendance" Content="⏰ Attendance &amp; Biometrics" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
+                        <RadioButton x:Name="NavHolidays" Content="🗓️ Local Holidays" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
+                        <RadioButton x:Name="NavPayroll" Content="💵 Payroll &amp; Payslips" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
+                        <RadioButton x:Name="NavSettings" Content="⚙️ System Settings" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+
+        <!-- RIGHT CONTENT AREA -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="64"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- HEADER BAR -->
+            <Border Grid.Row="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="24,0">
+                <Grid VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="TxtHeaderTitle" Text="Management Dashboard" FontSize="18" FontWeight="Bold" Foreground="#1A202C"/>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                            <TextBlock x:Name="TxtUserFullName" Text="Genetian Administrator" FontWeight="Bold" FontSize="13" HorizontalAlignment="Right"/>
+                            <TextBlock x:Name="TxtUserRole" Text="ADMINISTRATOR" FontSize="10" Foreground="#002CFA" FontWeight="Bold" HorizontalAlignment="Right"/>
+                        </StackPanel>
+                        <Border Width="36" Height="36" CornerRadius="18" Background="#EBF8FF">
+                            <TextBlock Text="👤" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- MAIN CONTENT AREA: Dashboard Panel (default) + Frame for module views -->
+            <Grid Grid.Row="1">
+                <!-- DASHBOARD (visible by default) -->
+                <ScrollViewer x:Name="DashboardPanel" Padding="24">
+                    <StackPanel>
+                        <!-- SUMMARY CARDS -->
+                        <UniformGrid Columns="4" Margin="0,0,0,24">
+                            <Border Background="White" CornerRadius="8" Padding="16" Margin="0,0,12,0" BorderBrush="#E2E8F0" BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="TOTAL EMPLOYEES" FontSize="11" FontWeight="Bold" Foreground="#718096"/>
+                                    <TextBlock Text="48 Active" FontSize="22" FontWeight="Bold" Foreground="#1A202C" Margin="0,8,0,0"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Background="White" CornerRadius="8" Padding="16" Margin="0,0,12,0" BorderBrush="#E2E8F0" BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="CURRENT CUTOFF" FontSize="11" FontWeight="Bold" Foreground="#718096"/>
+                                    <TextBlock Text="July 16-31, 2026" FontSize="18" FontWeight="Bold" Foreground="#0A4D9C" Margin="0,8,0,0"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Background="White" CornerRadius="8" Padding="16" Margin="0,0,12,0" BorderBrush="#E2E8F0" BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="PAKYAWAN ENTRIES" FontSize="11" FontWeight="Bold" Foreground="#718096"/>
+                                    <TextBlock Text="₱124,500.00" FontSize="20" FontWeight="Bold" Foreground="#2B6CB0" Margin="0,8,0,0"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E2E8F0" BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="ESTIMATED NET PAYROLL" FontSize="11" FontWeight="Bold" Foreground="#718096"/>
+                                    <TextBlock Text="₱485,210.50" FontSize="20" FontWeight="Bold" Foreground="#2F855A" Margin="0,8,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </UniformGrid>
+
+                        <!-- QUICK ACTION BANNER -->
+                        <Border Background="White" CornerRadius="8" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="Welcome to Genetian Payroll System" FontSize="18" FontWeight="Bold" Foreground="#1A202C"/>
+                                <TextBlock Text="Centralized Philippine Multi-Department Payroll, HR 201 Files, Biometric Timekeeping, Pakyawan Piece-rate Manager, and Local Holiday Engine."
+                                           FontSize="13" Foreground="#718096" Margin="0,8,0,16"/>
+                                <WrapPanel>
+                                    <Button Content="➕ Add New Employee" Style="{StaticResource PrimaryBtnStyle}" Width="180" Height="38" FontSize="12" Margin="0,0,12,0"/>
+                                    <Button Content="📦 Log Pakyaw Output" Background="#2B6CB0" Foreground="White" Width="180" Height="38" FontSize="12" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="0,0,12,0"/>
+                                    <Button Content="💵 Process Payroll Cutoff" Background="#2F855A" Foreground="White" Width="180" Height="38" FontSize="12" FontWeight="Bold" BorderThickness="0" Cursor="Hand"/>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- MODULE VIEWS FRAME (hidden initially) -->
+                <ContentControl x:Name="ContentFrame" Visibility="Visible"/>
+            </Grid>
+        </Grid>
+    </Grid>
+
+    <Window.Resources>
+        <Style x:Key="NavRadioStyle" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="#E2E8F0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="border" Background="Transparent" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1E5BB0"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#002CFA"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+</Window>

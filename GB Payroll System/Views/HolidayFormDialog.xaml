@@ -1,0 +1,80 @@
+<Window x:Class="GB_Payroll_System.Views.HolidayFormDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Holiday Entry" Height="480" Width="540"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="#F4F6F9">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="64"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="72"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0" Background="#0A4D9C" Padding="24,0">
+            <TextBlock x:Name="TxtDialogTitle" Text="Add Holiday" FontSize="18"
+                       FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+        </Border>
+
+        <!-- BODY -->
+        <StackPanel Grid.Row="1" Margin="24,20">
+
+            <!-- Holiday Name -->
+            <TextBlock Text="HOLIDAY NAME *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+            <TextBox x:Name="TxtName" Style="{StaticResource ModernInputStyle}" Margin="0,0,0,14"/>
+
+            <!-- Date -->
+            <TextBlock Text="DATE *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+            <DatePicker x:Name="DpDate" Height="44" FontSize="13" Margin="0,0,0,14"/>
+
+            <!-- Holiday Type -->
+            <TextBlock Text="HOLIDAY TYPE *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+            <ComboBox x:Name="CboType" Height="44" FontSize="13" Margin="0,0,0,14" SelectionChanged="CboType_SelectionChanged">
+                <ComboBoxItem Content="Regular Holiday (Double Pay / 200%)" Tag="1"/>
+                <ComboBoxItem Content="Special Non-Working (130% / No work no pay)" Tag="2"/>
+                <ComboBoxItem Content="Special Working (Regular Rate)" Tag="3"/>
+                <ComboBoxItem Content="Local Special Holiday (Custom Rate)" Tag="4"/>
+            </ComboBox>
+
+            <!-- Rate Multipliers (shown for Local/Custom type) -->
+            <Grid x:Name="CustomRatePanel" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="WORKED MULTIPLIER (e.g. 1.30 = 130%)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                    <TextBox x:Name="TxtWorkedMultiplier" Style="{StaticResource ModernInputStyle}" Margin="0,0,0,14"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="UNWORKED MULTIPLIER (e.g. 0.00 = 0%)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                    <TextBox x:Name="TxtUnworkedMultiplier" Style="{StaticResource ModernInputStyle}" Margin="0,0,0,14"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Declared By -->
+            <TextBlock Text="DECLARED BY (Proclamation / LGU Mayor / Ordinance)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+            <TextBox x:Name="TxtDeclaredBy" Style="{StaticResource ModernInputStyle}" Margin="0,0,0,8"/>
+
+            <!-- Error Banner -->
+            <Border x:Name="BannerError" Background="#FFF5F5" BorderBrush="#FEB2B2" BorderThickness="1"
+                    CornerRadius="6" Padding="12,8" Margin="0,8,0,0" Visibility="Collapsed">
+                <TextBlock x:Name="TxtError" Foreground="#C53030" FontSize="12" TextWrapping="Wrap"/>
+            </Border>
+        </StackPanel>
+
+        <!-- FOOTER -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="24,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Content="Cancel" Background="#EDF2F7" Foreground="#4A5568"
+                        BorderThickness="0" Height="40" Padding="20,0" FontWeight="SemiBold"
+                        Cursor="Hand" Margin="0,0,12,0" Click="BtnCancel_Click"/>
+                <Button x:Name="BtnSave" Content="🗓️  Save Holiday" Style="{StaticResource PrimaryBtnStyle}"
+                        Height="40" Padding="20,0" Click="BtnSave_Click"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

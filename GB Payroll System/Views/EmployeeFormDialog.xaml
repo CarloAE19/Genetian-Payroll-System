@@ -1,0 +1,185 @@
+<Window x:Class="GB_Payroll_System.Views.EmployeeFormDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Employee 201 File" Height="700" Width="720"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="#F4F6F9">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="64"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="72"/>
+        </Grid.RowDefinitions>
+
+        <!-- DIALOG HEADER -->
+        <Border Grid.Row="0" Background="#0A4D9C" Padding="24,0">
+            <Grid VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="TxtDialogTitle" Text="Add New Employee" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Grid.Column="1" x:Name="TxtEmployeeCodeHeader" Text="" FontSize="13" Foreground="#93C5FD"/>
+            </Grid>
+        </Border>
+
+        <!-- FORM BODY -->
+        <ScrollViewer Grid.Row="1" Padding="24,16" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <!-- SECTION: Personal Information -->
+                <TextBlock Text="👤  PERSONAL INFORMATION" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,12"/>
+                <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="16"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="16"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Row 1: Last Name / First Name -->
+                        <StackPanel Grid.Column="0" Grid.Row="0">
+                            <TextBlock Text="LAST NAME *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtLastName" Style="{StaticResource ModernInputStyle}" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Grid.Row="0">
+                            <TextBlock Text="FIRST NAME *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtFirstName" Style="{StaticResource ModernInputStyle}" />
+                        </StackPanel>
+
+                        <!-- Row 2: Middle Name / Employee Code -->
+                        <StackPanel Grid.Column="0" Grid.Row="2">
+                            <TextBlock Text="MIDDLE NAME" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtMiddleName" Style="{StaticResource ModernInputStyle}" TextChanged="TxtMiddleName_TextChanged" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Grid.Row="2">
+                            <TextBlock Text="EMPLOYEE CODE *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtEmployeeCode" Style="{StaticResource ModernInputStyle}" />
+                        </StackPanel>
+
+                        <!-- Row 3: Date Hired / Biometric ID -->
+                        <StackPanel Grid.Column="0" Grid.Row="4">
+                            <TextBlock Text="DATE HIRED" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <DatePicker x:Name="DpDateHired" Height="44" FontSize="13" SelectedDate="{x:Static sys:DateTime.Today}" xmlns:sys="clr-namespace:System;assembly=mscorlib"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Grid.Row="4">
+                            <TextBlock Text="BIOMETRIC DEVICE ID" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtBiometricId" Style="{StaticResource ModernInputStyle}" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- SECTION: Job Information -->
+                <TextBlock Text="🏢  JOB INFORMATION" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,12"/>
+                <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="16"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Column="0" Grid.Row="0">
+                            <TextBlock Text="DEPARTMENT" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtDepartment" Style="{StaticResource ModernInputStyle}" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Grid.Row="0">
+                            <TextBlock Text="POSITION / JOB TITLE" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtPosition" Style="{StaticResource ModernInputStyle}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="0" Grid.Row="2">
+                            <TextBlock Text="PAY TYPE" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <ComboBox x:Name="CboPayType" Height="44" FontSize="13" SelectionChanged="CboPayType_SelectionChanged">
+                                <ComboBoxItem Content="Monthly" Tag="1"/>
+                                <ComboBoxItem Content="Daily" Tag="2"/>
+                                <ComboBoxItem Content="Pakyawan (Piece-Rate)" Tag="3"/>
+                                <ComboBoxItem Content="Hybrid Pakyawan" Tag="4"/>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Grid.Row="2">
+                            <TextBlock x:Name="TxtBasicRateLabel" Text="MONTHLY BASIC SALARY (₱)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtBasicRate" Style="{StaticResource ModernInputStyle}" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- SECTION: Government IDs -->
+                <TextBlock Text="🏛️  GOVERNMENT MANDATORY IDs" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,12"/>
+                <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                    <UniformGrid Columns="2" >
+                        <StackPanel Margin="0,0,8,12">
+                            <TextBlock Text="SSS NUMBER" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtSss" Style="{StaticResource ModernInputStyle}" />
+                        </StackPanel>
+                        <StackPanel Margin="8,0,0,12">
+                            <TextBlock Text="PHILHEALTH NUMBER" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtPhilHealth" Style="{StaticResource ModernInputStyle}" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,8,0">
+                            <TextBlock Text="PAG-IBIG / HDMF NUMBER" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtPagIbig" Style="{StaticResource ModernInputStyle}" />
+                        </StackPanel>
+                        <StackPanel Margin="8,0,0,0">
+                            <TextBlock Text="TIN NUMBER (BIR)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtTin" Style="{StaticResource ModernInputStyle}" />
+                        </StackPanel>
+                    </UniformGrid>
+                </Border>
+
+                <!-- SECTION: Banking -->
+                <TextBlock Text="🏦  BANK ACCOUNT" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,12"/>
+                <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,8">
+                    <StackPanel>
+                        <TextBlock Text="BANK ACCOUNT NUMBER" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                        <TextBox x:Name="TxtBankAccount" Style="{StaticResource ModernInputStyle}" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Error Banner -->
+                <Border x:Name="BannerError" Background="#FFF5F5" BorderBrush="#FEB2B2" BorderThickness="1" CornerRadius="6"
+                        Padding="12,8" Margin="0,8,0,0" Visibility="Collapsed">
+                    <TextBlock x:Name="TxtError" Foreground="#C53030" FontSize="12" TextWrapping="Wrap"/>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- DIALOG FOOTER: Save / Cancel -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="24,0">
+            <Grid VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Deactivate toggle (only in edit mode) -->
+                <Button x:Name="BtnToggleActive" Grid.Column="0" Content="⛔ Deactivate Employee"
+                        Background="#FFF5F5" Foreground="#C53030" BorderBrush="#FEB2B2" BorderThickness="1"
+                        Height="40" Padding="16,0" FontWeight="SemiBold" Cursor="Hand"
+                        Visibility="Collapsed" HorizontalAlignment="Left"
+                        Click="BtnToggleActive_Click"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="Cancel" Background="#EDF2F7" Foreground="#4A5568"
+                            BorderThickness="0" Height="40" Padding="20,0" FontWeight="SemiBold"
+                            Cursor="Hand" Margin="0,0,12,0" Click="BtnCancel_Click"/>
+                    <Button x:Name="BtnSave" Content="💾  Save Employee" Style="{StaticResource PrimaryBtnStyle}"
+                            Height="40" Padding="20,0" Click="BtnSave_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,217 @@
+<Window x:Class="GB_Payroll_System.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Genetian Payroll - Login" 
+        Height="720" Width="1080"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource LoginWindowBgBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Centered Login Card -->
+        <Border Grid.Row="0"
+                Width="420" 
+                VerticalAlignment="Center" HorizontalAlignment="Center"
+                Background="{StaticResource CardBgBrush}"
+                CornerRadius="12"
+                SnapsToDevicePixels="True">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="25" ShadowDepth="8" Direction="270" Color="#000000" Opacity="0.3"/>
+            </Border.Effect>
+
+            <StackPanel Margin="0">
+                <!-- Header Section -->
+                <StackPanel Margin="32,32,32,24" HorizontalAlignment="Center">
+                    <!-- Logo Icon Container -->
+                    <Border Width="56" Height="56" 
+                            CornerRadius="8" 
+                            Background="#FAFAFA"
+                            BorderBrush="#E2E8F0" BorderThickness="1"
+                            HorizontalAlignment="Center" 
+                            Margin="0,0,0,16">
+                        <!-- Logo Image: add your file to Assets/logo.png in the project -->
+                        <Image Width="44" Height="44"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Source="pack://application:,,,/Assets/logo.png"
+                               Stretch="Uniform"
+                               RenderOptions.BitmapScalingMode="HighQuality"
+                               ToolTip="Genetian Payroll"/>
+                    </Border>
+
+                    <TextBlock Text="Genetian Payroll" 
+                               FontSize="22" FontWeight="Bold" 
+                               Foreground="{StaticResource TextDarkBrush}" 
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="Sign in to your account" 
+                               FontSize="13" 
+                               Foreground="{StaticResource TextMutedBrush}" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <!-- Error / Status Message Banner -->
+                <Border x:Name="BannerError" 
+                        Background="#FFF5F5" 
+                        BorderBrush="#FEB2B2" 
+                        BorderThickness="1" 
+                        CornerRadius="6" 
+                        Margin="32,0,32,16" 
+                        Padding="12,8"
+                        Visibility="Collapsed">
+                    <TextBlock x:Name="TxtErrorMessage" 
+                               Text="Invalid username or password." 
+                               Foreground="#C53030" 
+                               FontSize="12" 
+                               TextWrapping="Wrap"/>
+                </Border>
+
+                <!-- Input Form Section -->
+                <StackPanel Margin="32,0,32,24">
+                    <!-- USERNAME FIELD -->
+                    <TextBlock Text="USERNAME" 
+                               FontSize="11" FontWeight="Bold" 
+                               Foreground="#4A5568" 
+                               Margin="0,0,0,6"/>
+                    <Grid Margin="0,0,0,16">
+                        <Border Background="{StaticResource InputBgBrush}" 
+                                BorderBrush="{StaticResource InputBorderBrush}" 
+                                BorderThickness="1" 
+                                CornerRadius="6" Height="44">
+                            <Grid Margin="12,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <!-- User Icon -->
+                                <TextBlock Grid.Column="0" Text="👤" FontSize="14" VerticalAlignment="Center" Foreground="#A0AEC0" Margin="0,0,8,0"/>
+                                
+                                <!-- Text Input -->
+                                <TextBox x:Name="TxtUsername" Grid.Column="1"
+                                         Background="Transparent" BorderThickness="0" 
+                                         VerticalContentAlignment="Center" 
+                                         FontSize="13" Foreground="{StaticResource TextDarkBrush}"
+                                         Text="admin"
+                                         GotFocus="TxtUsername_GotFocus" LostFocus="TxtUsername_LostFocus"/>
+                                
+                                <!-- Placeholder -->
+                                <TextBlock x:Name="TxtUsernamePlaceholder" Grid.Column="1"
+                                           Text="e.g. admin_jdoe" 
+                                           FontSize="13" Foreground="#A0AEC0" 
+                                           VerticalAlignment="Center" IsHitTestVisible="False"
+                                           Visibility="Collapsed"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <!-- PASSWORD FIELD -->
+                    <TextBlock Text="PASSWORD" 
+                               FontSize="11" FontWeight="Bold" 
+                               Foreground="#4A5568" 
+                               Margin="0,0,0,6"/>
+                    <Grid Margin="0,0,0,20">
+                        <Border Background="{StaticResource InputBgBrush}" 
+                                BorderBrush="{StaticResource InputBorderBrush}" 
+                                BorderThickness="1" 
+                                CornerRadius="6" Height="44">
+                            <Grid Margin="12,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Lock Icon -->
+                                <TextBlock Grid.Column="0" Text="🔒" FontSize="14" VerticalAlignment="Center" Foreground="#A0AEC0" Margin="0,0,8,0"/>
+
+                                <!-- PasswordBox (Default Masked) -->
+                                <PasswordBox x:Name="TxtPassword" Grid.Column="1"
+                                             Background="Transparent" BorderThickness="0" 
+                                             VerticalContentAlignment="Center" 
+                                             FontSize="13" Foreground="{StaticResource TextDarkBrush}"
+                                             Password="admin123"
+                                             PasswordChanged="TxtPassword_PasswordChanged"/>
+
+                                <!-- Visible Text Box (When Eye Toggle Activated) -->
+                                <TextBox x:Name="TxtPasswordUnmasked" Grid.Column="1"
+                                         Background="Transparent" BorderThickness="0" 
+                                         VerticalContentAlignment="Center" 
+                                         FontSize="13" Foreground="{StaticResource TextDarkBrush}"
+                                         Visibility="Collapsed"
+                                         TextChanged="TxtPasswordUnmasked_TextChanged"/>
+
+                                <!-- Eye Toggle Button -->
+                                <Button Grid.Column="2" x:Name="BtnTogglePassword"
+                                        Content="👁️" 
+                                        Background="Transparent" BorderThickness="0" 
+                                        Cursor="Hand" FontSize="14" Foreground="#A0AEC0"
+                                        Click="BtnTogglePassword_Click" ToolTip="Show/Hide Password"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <!-- SIGN IN BUTTON -->
+                    <Button x:Name="BtnSignIn" 
+                            Content="Sign In" 
+                            Style="{StaticResource PrimaryBtnStyle}" 
+                            Click="BtnSignIn_Click" IsDefault="True"/>
+
+                    <!-- DIVIDER & HELP LINK -->
+                    <Border BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Margin="0,20,0,16"/>
+                    
+                    <TextBlock HorizontalAlignment="Center" FontSize="12" Foreground="{StaticResource TextMutedBrush}">
+                        For access issues contact your <Hyperlink Click="HyperlinkAdmin_Click" Foreground="#4A5568" FontWeight="SemiBold"><Run Text="administrator"/></Hyperlink>.
+                    </TextBlock>
+                </StackPanel>
+
+                <!-- CARD FOOTER - SERVER / ENVIRONMENT STATUS BAR -->
+                <Border Background="#F8FAFC" 
+                        BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" 
+                        CornerRadius="0,0,12,12" 
+                        Padding="20,12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Left: Environment Info -->
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="🗄️" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtEnvironmentInfo" 
+                                       Text="ENVIRONMENT: LOCAL DATABASE (LOCALHOST)" 
+                                       FontSize="10" FontWeight="Bold" 
+                                       Foreground="#718096" 
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Right: Live Connection Status Indicator -->
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Ellipse x:Name="StatusDot" Width="7" Height="7" Fill="{StaticResource ConnectedGreenBrush}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtStatusLabel" 
+                                       Text="CONNECTED" 
+                                       FontSize="10" FontWeight="Bold" 
+                                       Foreground="{StaticResource ConnectedGreenBrush}" 
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </Border>
+
+        <!-- Page Footer Copyright -->
+        <TextBlock Grid.Row="1" 
+                   Text="© 2026 Genetian Builders. All Rights Reserved. | Powered by: AC_Devs;" 
+                   HorizontalAlignment="Center" 
+                   Margin="0,20,0,24" 
+                   FontSize="12" 
+                   Foreground="#A0AEC0"/>
+    </Grid>
+</Window>
