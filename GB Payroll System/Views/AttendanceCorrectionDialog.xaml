@@ -1,0 +1,151 @@
+<Window x:Class="GB_Payroll_System.Views.AttendanceCorrectionDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Attendance Correction" Height="560" Width="580"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Background="#F4F6F9">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="64"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="72"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0" Background="#0A4D9C" Padding="24,0">
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock x:Name="TxtDialogTitle" Text="Attendance Correction" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                <TextBlock x:Name="TxtSubtitle" Text="" FontSize="12" Foreground="#93C5FD"/>
+            </StackPanel>
+        </Border>
+
+        <!-- BODY -->
+        <ScrollViewer Grid.Row="1" Padding="24,20" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <!-- Employee & Date (for manual entry) -->
+                <Border x:Name="ManualEntryPanel" Visibility="Collapsed">
+                    <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="EMPLOYEE CODE" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtEmployeeCode" Style="{StaticResource ModernInputStyle}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="DATE" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                <DatePicker x:Name="DpManualDate" Height="44" FontSize="13"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Border>
+
+                <!-- Existing Record Info Card -->
+                <Border x:Name="RecordInfoCard" Background="#EBF8FF" BorderBrush="#BEE3F8" BorderThickness="1"
+                        CornerRadius="8" Padding="16" Margin="0,0,0,20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="EMPLOYEE" FontSize="10" FontWeight="Bold" Foreground="#2B6CB0"/>
+                            <TextBlock x:Name="TxtInfoEmployee" Text="—" FontSize="14" FontWeight="Bold" Foreground="#1A202C" Margin="0,4,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="DATE" FontSize="10" FontWeight="Bold" Foreground="#2B6CB0"/>
+                            <TextBlock x:Name="TxtInfoDate" Text="—" FontSize="14" FontWeight="Bold" Foreground="#1A202C" Margin="0,4,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="ORIGINAL TIMES" FontSize="10" FontWeight="Bold" Foreground="#2B6CB0"/>
+                            <TextBlock x:Name="TxtInfoOriginal" Text="—" FontSize="13" Foreground="#1A202C" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Time Inputs -->
+                <TextBlock Text="⏰  CORRECTED TIME IN / TIME OUT" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,12"/>
+                <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="TIME IN (24H format: HH:mm)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtTimeIn" Style="{StaticResource ModernInputStyle}" ToolTip="e.g. 08:05 or 07:45"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="TIME OUT (24H format: HH:mm)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtTimeOut" Style="{StaticResource ModernInputStyle}" ToolTip="e.g. 17:30 or 20:00"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Status Override -->
+                <TextBlock Text="📋  ATTENDANCE STATUS" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,12"/>
+                <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="STATUS" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <ComboBox x:Name="CboStatus" Height="44" FontSize="13">
+                                <ComboBoxItem Content="Present"/>
+                                <ComboBoxItem Content="Absent"/>
+                                <ComboBoxItem Content="On Leave"/>
+                                <ComboBoxItem Content="Half Day"/>
+                                <ComboBoxItem Content="Holiday"/>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="SHIFT SCHEDULE" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <ComboBox x:Name="CboShift" Height="44" FontSize="13">
+                                <ComboBoxItem Content="8:00 AM – 5:00 PM" Tag="08:00-17:00" IsSelected="True"/>
+                                <ComboBoxItem Content="7:00 AM – 4:00 PM" Tag="07:00-16:00"/>
+                                <ComboBoxItem Content="9:00 AM – 6:00 PM" Tag="09:00-18:00"/>
+                                <ComboBoxItem Content="10:00 PM – 6:00 AM (Night)" Tag="22:00-06:00"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Correction Reason -->
+                <TextBlock Text="📝  REASON FOR CORRECTION (REQUIRED)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,12"/>
+                <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,8">
+                    <TextBox x:Name="TxtReason" Height="80" AcceptsReturn="True" TextWrapping="Wrap"
+                             VerticalContentAlignment="Top" Padding="0,4"
+                             Background="Transparent" BorderThickness="0" FontSize="13"/>
+                </Border>
+
+                <!-- Error Banner -->
+                <Border x:Name="BannerError" Background="#FFF5F5" BorderBrush="#FEB2B2" BorderThickness="1"
+                        CornerRadius="6" Padding="12,8" Margin="0,8,0,0" Visibility="Collapsed">
+                    <TextBlock x:Name="TxtError" Foreground="#C53030" FontSize="12" TextWrapping="Wrap"/>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- FOOTER -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="24,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Content="Cancel" Background="#EDF2F7" Foreground="#4A5568" BorderThickness="0"
+                        Height="40" Padding="20,0" FontWeight="SemiBold" Cursor="Hand"
+                        Margin="0,0,12,0" Click="BtnCancel_Click"/>
+                <Button Content="✔  Save Correction" Style="{StaticResource PrimaryBtnStyle}"
+                        Height="40" Padding="20,0" Click="BtnSave_Click"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

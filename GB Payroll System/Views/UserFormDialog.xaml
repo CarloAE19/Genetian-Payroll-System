@@ -1,0 +1,118 @@
+<Window x:Class="GB_Payroll_System.Views.UserFormDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="User Account" Height="460" Width="520"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Background="#F4F6F9">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="64"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="72"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0" Background="#0A4D9C" Padding="24,0">
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock x:Name="TxtDialogTitle" Text="Add User Account" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                <TextBlock x:Name="TxtSubtitle" Text="Create a new system user with a role assignment" FontSize="12" Foreground="#93C5FD"/>
+            </StackPanel>
+        </Border>
+
+        <!-- BODY -->
+        <ScrollViewer Grid.Row="1" Padding="24,20" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <!-- Full Name + Email -->
+                <Grid Margin="0,0,0,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="FULL NAME *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                        <TextBox x:Name="TxtFullName" Style="{StaticResource ModernInputStyle}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="EMAIL ADDRESS" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                        <TextBox x:Name="TxtEmail" Style="{StaticResource ModernInputStyle}"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Username + Role -->
+                <Grid Margin="0,0,0,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="USERNAME *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                        <TextBox x:Name="TxtUsername" Style="{StaticResource ModernInputStyle}" ToolTip="Unique login username"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="SYSTEM ROLE *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                        <ComboBox x:Name="CboRole" Height="44" FontSize="13">
+                            <ComboBoxItem Content="Admin"/>
+                            <ComboBoxItem Content="HR" IsSelected="True"/>
+                            <ComboBoxItem Content="Accounting"/>
+                            <ComboBoxItem Content="Management"/>
+                        </ComboBox>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Password fields (add mode only) -->
+                <Border x:Name="PasswordPanel">
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="PASSWORD *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <PasswordBox x:Name="TxtPassword" Height="44" FontSize="13"
+                                         BorderBrush="#E2E8F0" BorderThickness="1" Padding="12,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="CONFIRM PASSWORD *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <PasswordBox x:Name="TxtConfirmPassword" Height="44" FontSize="13"
+                                         BorderBrush="#E2E8F0" BorderThickness="1" Padding="12,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Role description box -->
+                <Border Background="#EBF8FF" BorderBrush="#BEE3F8" BorderThickness="1" CornerRadius="6" Padding="14,10" Margin="0,0,0,14">
+                    <StackPanel>
+                        <TextBlock Text="ROLE PERMISSIONS" FontSize="11" FontWeight="Bold" Foreground="#2B6CB0" Margin="0,0,0,6"/>
+                        <TextBlock FontSize="12" Foreground="#2C5282" TextWrapping="Wrap">
+                            <Run FontWeight="Bold">Admin</Run><Run> — Full access to all modules and settings.</Run><LineBreak/>
+                            <Run FontWeight="Bold">HR</Run><Run> — Employees, Attendance, Payroll (read).</Run><LineBreak/>
+                            <Run FontWeight="Bold">Accounting</Run><Run> — Payroll processing, payslips, government reports.</Run><LineBreak/>
+                            <Run FontWeight="Bold">Management</Run><Run> — Read-only dashboards and reports.</Run>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <!-- Error Banner -->
+                <Border x:Name="BannerError" Background="#FFF5F5" BorderBrush="#FEB2B2" BorderThickness="1"
+                        CornerRadius="6" Padding="12,8" Visibility="Collapsed">
+                    <TextBlock x:Name="TxtError" Foreground="#C53030" FontSize="12" TextWrapping="Wrap"/>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- FOOTER -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="24,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Content="Cancel" Background="#EDF2F7" Foreground="#4A5568" BorderThickness="0"
+                        Height="40" Padding="20,0" FontWeight="SemiBold" Cursor="Hand"
+                        Margin="0,0,12,0" Click="BtnCancel_Click"/>
+                <Button x:Name="BtnSave" Content="💾  Create Account" Style="{StaticResource PrimaryBtnStyle}"
+                        Height="40" Padding="20,0" Click="BtnSave_Click"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

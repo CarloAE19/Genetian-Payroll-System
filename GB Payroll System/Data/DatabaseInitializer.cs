@@ -166,16 +166,18 @@ namespace GB_Payroll_System.Data
 
                 conn.Execute(sql);
 
-                // Seed Default Admin User if no users exist
+                // Seed Default Accounts if no users exist
                 int userCount = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM Users;");
                 if (userCount == 0)
                 {
-                    // Default admin: admin / admin123
-                    string seedAdmin = @"
+                    string seedUsers = @"
                     INSERT INTO Users (Username, PasswordHash, FullName, Email, Role)
-                    VALUES ('admin', 'admin123', 'Genetian Administrator', 'admin@genetian.ph', 1);
+                    VALUES 
+                        ('admin', 'admin123', 'Genetian Administrator', 'admin@genetian.ph', 1),
+                        ('hr', 'hr123', 'Genetian HR Manager', 'hr@genetian.ph', 2),
+                        ('acct', 'acct123', 'Genetian Accountant', 'acct@genetian.ph', 3);
                     ";
-                    conn.Execute(seedAdmin);
+                    conn.Execute(seedUsers);
                 }
             }
             catch (Exception ex)

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -7,13 +7,18 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\logo.png" />
+    <Resource Include="Assets\favicon.ico">
+      <Link>Assets\app_icon.ico</Link>
+    </Resource>
+    <Resource Include="Assets\logo.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Dapper" Version="2.1.79" />
     <PackageReference Include="Npgsql" Version="10.0.3" />
   </ItemGroup>
@@ -23,10 +28,6 @@
     <Folder Include="Data\" />
     <Folder Include="Services\" />
     <Folder Include="Views\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Assets\logo.png" />
   </ItemGroup>
 
 </Project>

@@ -72,6 +72,12 @@ namespace GB_Payroll_System.Views
 
         private void BtnAddEmployee_Click(object sender, RoutedEventArgs e)
         {
+            OpenAddEmployeeDialog();
+        }
+
+        /// <summary>Called by MainWindow's dashboard quick-action button.</summary>
+        public void OpenAddEmployeeDialog()
+        {
             var dialog = new EmployeeFormDialog(null);
             if (dialog.ShowDialog() == true)
                 LoadEmployees();

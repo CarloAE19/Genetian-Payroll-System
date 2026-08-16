@@ -110,7 +110,7 @@ namespace GB_Payroll_System.Views
         private void HyperlinkAdmin_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show(
-                "Please contact your IT / HR Administrator or email admin@genetian.ph for credentials and password resets.",
+                "Please contact your IT / HR Administrator for credentials and password resets.",
                 "Genetian Payroll Help",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);

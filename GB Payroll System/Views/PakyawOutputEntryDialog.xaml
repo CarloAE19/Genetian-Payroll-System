@@ -1,0 +1,117 @@
+<Window x:Class="GB_Payroll_System.Views.PakyawOutputEntryDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Log Daily Pakyaw Output" Height="520" Width="600"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Background="#F4F6F9">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="64"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="72"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0" Background="#0A4D9C" Padding="24,0">
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="📝  Log Daily Pakyaw Output" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Record units completed by an employee for a task" FontSize="12" Foreground="#93C5FD"/>
+            </StackPanel>
+        </Border>
+
+        <!-- BODY -->
+        <ScrollViewer Grid.Row="1" Padding="24,20" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <!-- Task selection + Earnings preview card -->
+                <TextBlock Text="TASK *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                <ComboBox x:Name="CboTask" Height="44" FontSize="13" Margin="0,0,0,16"
+                          SelectionChanged="CboTask_SelectionChanged"
+                          DisplayMemberPath="TaskName"/>
+
+                <!-- Rate info card -->
+                <Border x:Name="RateInfoCard" Background="#EBF8FF" BorderBrush="#BEE3F8" BorderThickness="1"
+                        CornerRadius="8" Padding="16,12" Margin="0,0,0,16" Visibility="Collapsed">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="TASK CODE" FontSize="10" FontWeight="Bold" Foreground="#2B6CB0"/>
+                            <TextBlock x:Name="TxtInfoCode" Text="—" FontSize="14" FontWeight="Bold" Foreground="#1A202C" Margin="0,4,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="UNIT" FontSize="10" FontWeight="Bold" Foreground="#2B6CB0"/>
+                            <TextBlock x:Name="TxtInfoUnit" Text="—" FontSize="14" FontWeight="Bold" Foreground="#1A202C" Margin="0,4,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="RATE PER UNIT" FontSize="10" FontWeight="Bold" Foreground="#2B6CB0"/>
+                            <TextBlock x:Name="TxtInfoRate" Text="₱0.00" FontSize="16" FontWeight="Bold" Foreground="#0A4D9C" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Employee search -->
+                <TextBlock Text="EMPLOYEE CODE *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                <TextBox x:Name="TxtEmpCode" Style="{StaticResource ModernInputStyle}" Margin="0,0,0,4"
+                         ToolTip="Type employee code e.g. EMP-2026-001"
+                         TextChanged="TxtEmpCode_TextChanged"/>
+                <TextBlock x:Name="TxtEmpName" Text="" FontSize="12" Foreground="#2B6CB0" FontWeight="SemiBold"
+                           Margin="2,0,0,14"/>
+
+                <!-- Date + Quantity -->
+                <Grid Margin="0,0,0,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="WORK DATE *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                        <DatePicker x:Name="DpWorkDate" Height="44" FontSize="13"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock x:Name="TxtQtyLabel" Text="QUANTITY COMPLETED *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                        <TextBox x:Name="TxtQuantity" Style="{StaticResource ModernInputStyle}"
+                                 TextChanged="TxtQuantity_TextChanged"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Earnings preview -->
+                <Border x:Name="EarningsCard" Background="#F0FFF4" BorderBrush="#9AE6B4" BorderThickness="1"
+                        CornerRadius="8" Padding="16,12" Margin="0,0,0,16" Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Computed Earnings: " FontSize="13" FontWeight="Bold" Foreground="#276749" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtEarningsPreview" Text="₱0.00" FontSize="20" FontWeight="Bold" Foreground="#2F855A"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Remarks -->
+                <TextBlock Text="REMARKS (optional)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                <Border Background="White" CornerRadius="8" Padding="14,10" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,8">
+                    <TextBox x:Name="TxtRemarks" Height="60" AcceptsReturn="True" TextWrapping="Wrap"
+                             Background="Transparent" BorderThickness="0" FontSize="13"/>
+                </Border>
+
+                <!-- Error Banner -->
+                <Border x:Name="BannerError" Background="#FFF5F5" BorderBrush="#FEB2B2" BorderThickness="1"
+                        CornerRadius="6" Padding="12,8" Visibility="Collapsed">
+                    <TextBlock x:Name="TxtError" Foreground="#C53030" FontSize="12" TextWrapping="Wrap"/>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- FOOTER -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="24,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Content="Cancel" Background="#EDF2F7" Foreground="#4A5568" BorderThickness="0"
+                        Height="40" Padding="20,0" FontWeight="SemiBold" Cursor="Hand"
+                        Margin="0,0,12,0" Click="BtnCancel_Click"/>
+                <Button Content="💾  Save Output Entry" Style="{StaticResource PrimaryBtnStyle}"
+                        Height="40" Padding="20,0" Click="BtnSave_Click"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

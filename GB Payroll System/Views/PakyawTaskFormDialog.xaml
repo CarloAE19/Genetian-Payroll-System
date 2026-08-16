@@ -1,0 +1,89 @@
+<Window x:Class="GB_Payroll_System.Views.PakyawTaskFormDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Pakyaw Task" Height="400" Width="520"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Background="#F4F6F9">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="64"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="72"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0" Background="#0A4D9C" Padding="24,0">
+            <TextBlock x:Name="TxtDialogTitle" Text="Add Pakyaw Task"
+                       FontSize="18" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+        </Border>
+
+        <!-- BODY -->
+        <StackPanel Grid.Row="1" Margin="24,20">
+
+            <Grid Margin="0,0,0,14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="TASK CODE *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                    <TextBox x:Name="TxtTaskCode" Style="{StaticResource ModernInputStyle}" ToolTip="e.g. TASK-PACK-01"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="UNIT OF MEASURE *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                    <ComboBox x:Name="CboUnit" Height="44" FontSize="13" IsEditable="True">
+                        <ComboBoxItem Content="Box"/>
+                        <ComboBoxItem Content="Piece"/>
+                        <ComboBoxItem Content="Batch"/>
+                        <ComboBoxItem Content="Meter"/>
+                        <ComboBoxItem Content="SqM"/>
+                        <ComboBoxItem Content="CbM"/>
+                        <ComboBoxItem Content="Bag"/>
+                        <ComboBoxItem Content="Set"/>
+                        <ComboBoxItem Content="Trip"/>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+
+            <TextBlock Text="TASK / WORK DESCRIPTION *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+            <TextBox x:Name="TxtTaskName" Style="{StaticResource ModernInputStyle}" Margin="0,0,0,14"
+                     ToolTip="e.g. Box Packing, Tile Setting, Welding per meter"/>
+
+            <TextBlock Text="RATE PER UNIT (₱) *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+            <TextBox x:Name="TxtRate" Style="{StaticResource ModernInputStyle}" Margin="0,0,0,14"
+                     ToolTip="e.g. 25.00"/>
+
+            <!-- Error Banner -->
+            <Border x:Name="BannerError" Background="#FFF5F5" BorderBrush="#FEB2B2" BorderThickness="1"
+                    CornerRadius="6" Padding="12,8" Visibility="Collapsed">
+                <TextBlock x:Name="TxtError" Foreground="#C53030" FontSize="12" TextWrapping="Wrap"/>
+            </Border>
+        </StackPanel>
+
+        <!-- FOOTER -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="24,0">
+            <Grid VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Deactivate (edit mode only) -->
+                <Button x:Name="BtnToggleActive" Content="⛔ Deactivate Task"
+                        Background="#FFF5F5" Foreground="#C53030" BorderBrush="#FEB2B2" BorderThickness="1"
+                        Height="40" Padding="16,0" FontWeight="SemiBold" Cursor="Hand"
+                        Visibility="Collapsed" HorizontalAlignment="Left"
+                        Click="BtnToggleActive_Click"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="Cancel" Background="#EDF2F7" Foreground="#4A5568" BorderThickness="0"
+                            Height="40" Padding="20,0" FontWeight="SemiBold" Cursor="Hand"
+                            Margin="0,0,12,0" Click="BtnCancel_Click"/>
+                    <Button x:Name="BtnSave" Content="💾  Save Task" Style="{StaticResource PrimaryBtnStyle}"
+                            Height="40" Padding="20,0" Click="BtnSave_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

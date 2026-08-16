@@ -89,7 +89,7 @@
             </DataGrid.RowStyle>
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="DATE" Binding="{Binding Date, StringFormat={}{0:MMMM dd, yyyy (ddd)}}" Width="220"/>
+                <DataGridTextColumn Header="DATE" Binding="{Binding Date, StringFormat='MMMM dd, yyyy (ddd)'}" Width="220"/>
                 <DataGridTextColumn Header="HOLIDAY NAME" Binding="{Binding Name}" Width="220"/>
                 <DataGridTemplateColumn Header="TYPE" Width="180">
                     <DataGridTemplateColumn.CellTemplate>

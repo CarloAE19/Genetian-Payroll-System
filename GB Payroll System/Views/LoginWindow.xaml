@@ -7,7 +7,8 @@
         Title="Genetian Payroll - Login" 
         Height="720" Width="1080"
         WindowStartupLocation="CenterScreen"
-        Background="{StaticResource LoginWindowBgBrush}">
+        Background="{StaticResource LoginWindowBgBrush}"
+        Icon="/Assets/app_icon.ico">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -208,7 +209,7 @@
 
         <!-- Page Footer Copyright -->
         <TextBlock Grid.Row="1" 
-                   Text="© 2026 Genetian Builders. All Rights Reserved. | Powered by: AC_Devs;" 
+                   Text="© 2026 Genetian Builders and Enterprises Inc. All Rights Reserved. | Powered by: AC_Devs;" 
                    HorizontalAlignment="Center" 
                    Margin="0,20,0,24" 
                    FontSize="12" 

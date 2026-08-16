@@ -6,6 +6,12 @@ namespace GB_Payroll_System.Data
 {
     public class DbConnectionFactory
     {
+        static DbConnectionFactory()
+        {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            Dapper.SqlMapper.AddTypeHandler(new SqlDateTimeHandler());
+        }
+
         public static string Server { get; set; } = "localhost";
         public static string Port { get; set; } = "5432";
         public static string Database { get; set; } = "genetian_payroll";
@@ -34,6 +40,20 @@ namespace GB_Payroll_System.Data
                 errorMessage = ex.Message;
                 return false;
             }
+        }
+    }
+
+    public class SqlDateTimeHandler : Dapper.SqlMapper.TypeHandler<DateTime>
+    {
+        public override void SetValue(IDbDataParameter parameter, DateTime value)
+        {
+            parameter.Value = value;
+        }
+
+        public override DateTime Parse(object value)
+        {
+            if (value is DateOnly d) return d.ToDateTime(TimeOnly.MinValue);
+            return Convert.ToDateTime(value);
         }
     }
 }
