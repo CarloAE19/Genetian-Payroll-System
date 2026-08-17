@@ -10,12 +10,11 @@ namespace GB_Payroll_System.Models
 
         // Earnings
         public decimal BasicPay { get; set; }
-        public decimal PakyawPay { get; set; }
         public decimal OvertimePay { get; set; }
         public decimal NightDiffPay { get; set; }
         public decimal HolidayPay { get; set; }
         public decimal Allowances { get; set; }
-        public decimal GrossPay => BasicPay + PakyawPay + OvertimePay + NightDiffPay + HolidayPay + Allowances;
+        public decimal GrossPay => BasicPay + OvertimePay + NightDiffPay + HolidayPay + Allowances;
 
         // Deductions (DOLE Mandatory)
         public decimal TardinessDeduction { get; set; }

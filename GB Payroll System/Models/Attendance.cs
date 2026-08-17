@@ -8,7 +8,8 @@ namespace GB_Payroll_System.Models
         Absent = 2,
         OnLeave = 3,
         Holiday = 4,
-        HalfDay = 5
+        HalfDay = 5,
+        AWOL = 6
     }
 
     public class Attendance

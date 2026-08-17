@@ -107,6 +107,7 @@
                                 <ComboBoxItem Content="On Leave"/>
                                 <ComboBoxItem Content="Half Day"/>
                                 <ComboBoxItem Content="Holiday"/>
+                                <ComboBoxItem Content="AWOL (Unauthorized Absence)"/>
                             </ComboBox>
                         </StackPanel>
                         <StackPanel Grid.Column="2">

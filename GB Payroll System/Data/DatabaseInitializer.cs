@@ -40,9 +40,20 @@ namespace GB_Payroll_System.Data
                     FirstName VARCHAR(50) NOT NULL,
                     MiddleName VARCHAR(50),
                     LastName VARCHAR(50) NOT NULL,
+                    BirthDate DATE,
+                    Gender VARCHAR(20) DEFAULT 'Male',
+                    CivilStatus VARCHAR(30) DEFAULT 'Single',
+                    ContactNumber VARCHAR(50),
+                    EmailAddress VARCHAR(100),
+                    Address TEXT,
+                    EmergencyContactName VARCHAR(100),
+                    EmergencyContactPhone VARCHAR(50),
                     Department VARCHAR(50),
                     Position VARCHAR(50),
                     BranchId INT REFERENCES Branches(Id),
+                    ContractType INT NOT NULL DEFAULT 2,
+                    ContractStatus INT NOT NULL DEFAULT 1,
+                    ContractEndDate DATE,
                     PayType INT NOT NULL DEFAULT 1,
                     BasicRate NUMERIC(12,2) NOT NULL DEFAULT 0.00,
                     WorkingDaysFactor NUMERIC(5,2) DEFAULT 313.00,
@@ -50,9 +61,44 @@ namespace GB_Payroll_System.Data
                     PhilHealthNumber VARCHAR(20),
                     PagIbigNumber VARCHAR(20),
                     TinNumber VARCHAR(20),
+                    SssDeductionMode INT DEFAULT 1,
+                    CustomSssAmount NUMERIC(12,2) DEFAULT 0.00,
+                    PhilHealthDeductionMode INT DEFAULT 1,
+                    CustomPhilHealthAmount NUMERIC(12,2) DEFAULT 0.00,
+                    PagIbigDeductionMode INT DEFAULT 1,
+                    PagIbigEmployeeAmount NUMERIC(12,2) DEFAULT 200.00,
+                    IsMinimumWageEarner BOOLEAN DEFAULT FALSE,
+                    IsTaxExempt BOOLEAN DEFAULT FALSE,
+                    ContributionSchedule INT DEFAULT 1,
                     DateHired DATE DEFAULT CURRENT_DATE,
                     IsActive BOOLEAN DEFAULT TRUE,
                     BankAccountNumber VARCHAR(50)
+                );
+
+                CREATE TABLE IF NOT EXISTS EmployeeContracts (
+                    Id SERIAL PRIMARY KEY,
+                    EmployeeId INT REFERENCES Employees(Id),
+                    ContractType INT NOT NULL DEFAULT 2,
+                    PositionTitle VARCHAR(50),
+                    BasicRate NUMERIC(12,2) NOT NULL DEFAULT 0.00,
+                    PayType INT NOT NULL DEFAULT 1,
+                    StartDate DATE NOT NULL,
+                    EndDate DATE,
+                    Status INT NOT NULL DEFAULT 1,
+                    DocumentPath TEXT,
+                    Remarks TEXT,
+                    CreatedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE TABLE IF NOT EXISTS EmployeeDocuments (
+                    Id SERIAL PRIMARY KEY,
+                    EmployeeId INT REFERENCES Employees(Id),
+                    Category INT NOT NULL DEFAULT 8,
+                    Title VARCHAR(150) NOT NULL,
+                    FileName VARCHAR(255) NOT NULL,
+                    FilePath TEXT NOT NULL,
+                    FileSizeBytes BIGINT DEFAULT 0,
+                    UploadedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
                 );
 
                 CREATE TABLE IF NOT EXISTS SalaryPromotionHistories (
@@ -68,23 +114,18 @@ namespace GB_Payroll_System.Data
                     CreatedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
                 );
 
-                CREATE TABLE IF NOT EXISTS PakyawRates (
-                    Id SERIAL PRIMARY KEY,
-                    TaskCode VARCHAR(50) UNIQUE NOT NULL,
-                    TaskName VARCHAR(100) NOT NULL,
-                    UnitOfMeasure VARCHAR(20) NOT NULL,
-                    RatePerUnit NUMERIC(10,2) NOT NULL,
-                    IsActive BOOLEAN DEFAULT TRUE
-                );
-
-                CREATE TABLE IF NOT EXISTS PakyawEntries (
+                CREATE TABLE IF NOT EXISTS EmploymentHistories (
                     Id SERIAL PRIMARY KEY,
                     EmployeeId INT REFERENCES Employees(Id),
-                    PakyawRateId INT REFERENCES PakyawRates(Id),
-                    WorkDate DATE NOT NULL,
-                    QuantityCompleted NUMERIC(10,2) NOT NULL,
-                    UnitRate NUMERIC(10,2) NOT NULL,
-                    Remarks TEXT,
+                    CompanyName VARCHAR(150) NOT NULL DEFAULT 'Genetian',
+                    Department VARCHAR(100),
+                    Position VARCHAR(100),
+                    StartDate DATE NOT NULL,
+                    EndDate DATE,
+                    EmploymentType VARCHAR(50) DEFAULT 'Regular',
+                    SeparationType VARCHAR(50) DEFAULT 'Active',
+                    SeparationReason TEXT,
+                    IsRehireEligible BOOLEAN DEFAULT TRUE,
                     RecordedByUsername VARCHAR(50),
                     CreatedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
                 );
@@ -128,6 +169,34 @@ namespace GB_Payroll_System.Data
                     AdjustedByUsername VARCHAR(50)
                 );
 
+                CREATE TABLE IF NOT EXISTS EmployeeLeaveBalances (
+                    Id SERIAL PRIMARY KEY,
+                    EmployeeId INT REFERENCES Employees(Id),
+                    Year INT NOT NULL,
+                    VacationLeaveTotal NUMERIC(5,2) DEFAULT 15.00,
+                    VacationLeaveUsed NUMERIC(5,2) DEFAULT 0.00,
+                    SickLeaveTotal NUMERIC(5,2) DEFAULT 15.00,
+                    SickLeaveUsed NUMERIC(5,2) DEFAULT 0.00,
+                    EmergencyLeaveTotal NUMERIC(5,2) DEFAULT 5.00,
+                    EmergencyLeaveUsed NUMERIC(5,2) DEFAULT 0.00,
+                    UpdatedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                    CONSTRAINT uq_emp_leave_year UNIQUE(EmployeeId, Year)
+                );
+
+                CREATE TABLE IF NOT EXISTS LeaveApplications (
+                    Id SERIAL PRIMARY KEY,
+                    EmployeeId INT REFERENCES Employees(Id),
+                    Type INT NOT NULL,
+                    StartDate DATE NOT NULL,
+                    EndDate DATE NOT NULL,
+                    DaysCount NUMERIC(4,1) NOT NULL,
+                    Reason TEXT,
+                    Status INT NOT NULL DEFAULT 1,
+                    ApprovedByUsername VARCHAR(50),
+                    ApprovedAt TIMESTAMP WITH TIME ZONE,
+                    CreatedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+                );
+
                 CREATE TABLE IF NOT EXISTS PayrollPeriods (
                     Id SERIAL PRIMARY KEY,
                     PeriodCode VARCHAR(50) UNIQUE NOT NULL,
@@ -144,7 +213,6 @@ namespace GB_Payroll_System.Data
                     PayrollPeriodId INT REFERENCES PayrollPeriods(Id),
                     EmployeeId INT REFERENCES Employees(Id),
                     BasicPay NUMERIC(12,2) DEFAULT 0,
-                    PakyawPay NUMERIC(12,2) DEFAULT 0,
                     OvertimePay NUMERIC(12,2) DEFAULT 0,
                     NightDiffPay NUMERIC(12,2) DEFAULT 0,
                     HolidayPay NUMERIC(12,2) DEFAULT 0,
@@ -162,9 +230,71 @@ namespace GB_Payroll_System.Data
                     OtherDeductions NUMERIC(12,2) DEFAULT 0,
                     ComputedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
                 );
+
+                CREATE TABLE IF NOT EXISTS StatutorySettings (
+                    Id INT PRIMARY KEY DEFAULT 1,
+                    SssTotalRatePercent NUMERIC(5,2) DEFAULT 14.00,
+                    SssEmployeeSharePercent NUMERIC(5,2) DEFAULT 4.50,
+                    SssEmployerSharePercent NUMERIC(5,2) DEFAULT 9.50,
+                    SssMinSalaryCredit NUMERIC(12,2) DEFAULT 5000.00,
+                    SssMaxSalaryCredit NUMERIC(12,2) DEFAULT 35000.00,
+                    PhilHealthTotalRatePercent NUMERIC(5,2) DEFAULT 5.00,
+                    PhilHealthEmployeeSharePercent NUMERIC(5,2) DEFAULT 2.50,
+                    PhilHealthEmployerSharePercent NUMERIC(5,2) DEFAULT 2.50,
+                    PhilHealthMinSalaryCredit NUMERIC(12,2) DEFAULT 10000.00,
+                    PhilHealthMaxSalaryCredit NUMERIC(12,2) DEFAULT 100000.00,
+                    PagIbigEmployeeStandardMonthly NUMERIC(12,2) DEFAULT 200.00,
+                    PagIbigEmployerStandardMonthly NUMERIC(12,2) DEFAULT 200.00,
+                    BirSemiMonthlyExemptCeiling NUMERIC(12,2) DEFAULT 10417.00,
+                    BirBonusExemptCap NUMERIC(12,2) DEFAULT 90000.00,
+                    UpdatedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                    UpdatedByUsername VARCHAR(50) DEFAULT 'system'
+                );
                 ";
 
                 conn.Execute(sql);
+
+                // Auto-migrate column additions to Employees if table already existed
+                string migrationSql = @"
+                DO $$ 
+                BEGIN 
+                    BEGIN ALTER TABLE Employees ADD COLUMN BirthDate DATE; EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN Gender VARCHAR(20) DEFAULT 'Male'; EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN CivilStatus VARCHAR(30) DEFAULT 'Single'; EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN ContactNumber VARCHAR(50); EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN EmailAddress VARCHAR(100); EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN Address TEXT; EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN EmergencyContactName VARCHAR(100); EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN EmergencyContactPhone VARCHAR(50); EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN ContractType INT DEFAULT 2; EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN ContractStatus INT DEFAULT 1; EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN ContractEndDate DATE; EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN SssDeductionMode INT DEFAULT 1; EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN CustomSssAmount NUMERIC(12,2) DEFAULT 0.00; EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN PhilHealthDeductionMode INT DEFAULT 1; EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN CustomPhilHealthAmount NUMERIC(12,2) DEFAULT 0.00; EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN PagIbigDeductionMode INT DEFAULT 1; EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN PagIbigEmployeeAmount NUMERIC(12,2) DEFAULT 200.00; EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN IsMinimumWageEarner BOOLEAN DEFAULT FALSE; EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN IsTaxExempt BOOLEAN DEFAULT FALSE; EXCEPTION WHEN duplicate_column THEN END;
+                    BEGIN ALTER TABLE Employees ADD COLUMN ContributionSchedule INT DEFAULT 1; EXCEPTION WHEN duplicate_column THEN END;
+                END $$;
+                ";
+                conn.Execute(migrationSql);
+
+                // Seed Default Statutory Settings if not present
+                int statCount = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM StatutorySettings;");
+                if (statCount == 0)
+                {
+                    conn.Execute(@"
+                    INSERT INTO StatutorySettings (Id, SssTotalRatePercent, SssEmployeeSharePercent, SssEmployerSharePercent,
+                                                  SssMinSalaryCredit, SssMaxSalaryCredit, PhilHealthTotalRatePercent,
+                                                  PhilHealthEmployeeSharePercent, PhilHealthEmployerSharePercent,
+                                                  PhilHealthMinSalaryCredit, PhilHealthMaxSalaryCredit,
+                                                  PagIbigEmployeeStandardMonthly, PagIbigEmployerStandardMonthly,
+                                                  BirSemiMonthlyExemptCeiling, BirBonusExemptCap, UpdatedByUsername)
+                    VALUES (1, 14.00, 4.50, 9.50, 5000.00, 35000.00, 5.00, 2.50, 2.50, 10000.00, 100000.00, 200.00, 200.00, 10417.00, 90000.00, 'system');");
+                }
 
                 // Seed Default Accounts if no users exist
                 int userCount = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM Users;");

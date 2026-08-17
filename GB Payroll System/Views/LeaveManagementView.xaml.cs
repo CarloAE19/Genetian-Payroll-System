@@ -50,7 +50,6 @@ namespace GB_Payroll_System.Views
 
             if (StatusFilterPanel != null) StatusFilterPanel.Visibility = _showingApplications ? Visibility.Visible   : Visibility.Collapsed;
             if (YearFilterPanel != null)   YearFilterPanel.Visibility   = _showingApplications ? Visibility.Collapsed : Visibility.Visible;
-            if (BtnCarryOver != null)      BtnCarryOver.Visibility      = _showingApplications ? Visibility.Collapsed : Visibility.Visible;
 
             LoadData();
         }
@@ -151,40 +150,19 @@ namespace GB_Payroll_System.Views
             }
         }
 
-        private void BtnCarryOver_Click(object sender, RoutedEventArgs e)
-        {
-            int currentYear = DateTime.Now.Year;
-            int prevYear    = currentYear - 1;
-
-            var confirm = MessageBox.Show(
-                $"Run Year-End Carry-Over from {prevYear} to {currentYear}?\n\nThis will carry over up to 5 days of unused Vacation Leave (VL) per employee into the new year's balance.",
-                "Confirm Carry-Over", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (confirm != MessageBoxResult.Yes) return;
-
-            try
-            {
-                int count = _leaveRepo.PerformYearEndCarryOver(prevYear, currentYear, maxCarryOver: 5.0m);
-                LoadBalances();
-                MessageBox.Show($"✅ Carry-over completed for {count} employee balance(s).",
-                    "Carry-Over Complete", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex) { MessageBox.Show($"Carry-over failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
-        }
-
         // ── Demo Offline Data ────────────────────────────────────────────────
         private static List<LeaveApplicationViewModel> GenerateSampleApplications() =>
         [
-            new LeaveApplicationViewModel { Id = 1, EmployeeCode = "EMP-2026-001", FullName = "Dela Cruz, Juan", Department = "Construction", Type = LeaveType.VacationLeave,  StartDate = DateTime.Today.AddDays(2), EndDate = DateTime.Today.AddDays(4), DaysCount = 3.0m, Reason = "Family trip", Status = LeaveStatus.Pending, CreatedAt = DateTime.Today.AddDays(-1) },
-            new LeaveApplicationViewModel { Id = 2, EmployeeCode = "EMP-2026-002", FullName = "Santos, Maria",    Department = "HR",           Type = LeaveType.SickLeave,      StartDate = DateTime.Today.AddDays(-2), EndDate = DateTime.Today.AddDays(-2), DaysCount = 1.0m, Reason = "Flu / Fever", Status = LeaveStatus.Approved, ApprovedByUsername = "admin", ApprovedAt = DateTime.Today.AddDays(-2), CreatedAt = DateTime.Today.AddDays(-3) },
-            new LeaveApplicationViewModel { Id = 3, EmployeeCode = "EMP-2026-003", FullName = "Reyes, Pedro",     Department = "Accounting",   Type = LeaveType.EmergencyLeave, StartDate = DateTime.Today.AddDays(-5), EndDate = DateTime.Today.AddDays(-5), DaysCount = 1.0m, Reason = "Personal matter", Status = LeaveStatus.Rejected, ApprovedByUsername = "admin", ApprovedAt = DateTime.Today.AddDays(-5), CreatedAt = DateTime.Today.AddDays(-6) },
+            new LeaveApplicationViewModel { Id = 1, EmployeeCode = "EMP-2026-001", FullName = "Dela Cruz, Juan", Department = "Operations", Type = LeaveType.VacationLeave,  StartDate = DateTime.Today.AddDays(2), EndDate = DateTime.Today.AddDays(4), DaysCount = 3.0m, Reason = "Family trip", Status = LeaveStatus.Pending, CreatedAt = DateTime.Today.AddDays(-1) },
+            new LeaveApplicationViewModel { Id = 2, EmployeeCode = "EMP-2026-002", FullName = "Santos, Maria",    Department = "HR",         Type = LeaveType.SickLeave,      StartDate = DateTime.Today.AddDays(-2), EndDate = DateTime.Today.AddDays(-2), DaysCount = 1.0m, Reason = "Flu / Fever", Status = LeaveStatus.Approved, ApprovedByUsername = "admin", ApprovedAt = DateTime.Today.AddDays(-2), CreatedAt = DateTime.Today.AddDays(-3) },
+            new LeaveApplicationViewModel { Id = 3, EmployeeCode = "EMP-2026-003", FullName = "Reyes, Pedro",     Department = "Accounting", Type = LeaveType.EmergencyLeave, StartDate = DateTime.Today.AddDays(-5), EndDate = DateTime.Today.AddDays(-5), DaysCount = 1.0m, Reason = "Personal matter", Status = LeaveStatus.Rejected, ApprovedByUsername = "admin", ApprovedAt = DateTime.Today.AddDays(-5), CreatedAt = DateTime.Today.AddDays(-6) },
         ];
 
         private static List<LeaveBalanceViewModel> GenerateSampleBalances(int year) =>
         [
-            new LeaveBalanceViewModel { Id = 1, EmployeeId = 1, EmployeeCode = "EMP-2026-001", FullName = "Dela Cruz, Juan", Department = "Construction", Year = year, VacationLeaveTotal = 15.0m, VacationLeaveUsed = 3.0m, CarryOverDays = 5.0m, SickLeaveTotal = 15.0m, SickLeaveUsed = 1.0m, EmergencyLeaveTotal = 5.0m, EmergencyLeaveUsed = 0.0m },
-            new LeaveBalanceViewModel { Id = 2, EmployeeId = 2, EmployeeCode = "EMP-2026-002", FullName = "Santos, Maria",    Department = "HR",           Year = year, VacationLeaveTotal = 15.0m, VacationLeaveUsed = 5.0m, CarryOverDays = 2.0m, SickLeaveTotal = 15.0m, SickLeaveUsed = 2.0m, EmergencyLeaveTotal = 5.0m, EmergencyLeaveUsed = 1.0m },
-            new LeaveBalanceViewModel { Id = 3, EmployeeId = 3, EmployeeCode = "EMP-2026-003", FullName = "Reyes, Pedro",     Department = "Accounting",   Year = year, VacationLeaveTotal = 15.0m, VacationLeaveUsed = 0.0m, CarryOverDays = 0.0m, SickLeaveTotal = 15.0m, SickLeaveUsed = 0.0m, EmergencyLeaveTotal = 5.0m, EmergencyLeaveUsed = 0.0m },
+            new LeaveBalanceViewModel { Id = 1, EmployeeId = 1, EmployeeCode = "EMP-2026-001", FullName = "Dela Cruz, Juan", Department = "Operations", Year = year, VacationLeaveTotal = 15.0m, VacationLeaveUsed = 3.0m, SickLeaveTotal = 15.0m, SickLeaveUsed = 1.0m, EmergencyLeaveTotal = 5.0m, EmergencyLeaveUsed = 0.0m },
+            new LeaveBalanceViewModel { Id = 2, EmployeeId = 2, EmployeeCode = "EMP-2026-002", FullName = "Santos, Maria",    Department = "HR",         Year = year, VacationLeaveTotal = 15.0m, VacationLeaveUsed = 5.0m, SickLeaveTotal = 15.0m, SickLeaveUsed = 2.0m, EmergencyLeaveTotal = 5.0m, EmergencyLeaveUsed = 1.0m },
+            new LeaveBalanceViewModel { Id = 3, EmployeeId = 3, EmployeeCode = "EMP-2026-003", FullName = "Reyes, Pedro",     Department = "Accounting", Year = year, VacationLeaveTotal = 15.0m, VacationLeaveUsed = 0.0m, SickLeaveTotal = 15.0m, SickLeaveUsed = 0.0m, EmergencyLeaveTotal = 5.0m, EmergencyLeaveUsed = 0.0m },
         ];
     }
 }

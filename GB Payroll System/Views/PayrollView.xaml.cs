@@ -15,7 +15,6 @@ namespace GB_Payroll_System.Views
         private readonly PayrollRecordRepository _recordRepo = new();
         private readonly EmployeeRepository      _empRepo    = new();
         private readonly AttendanceRepository    _attRepo    = new();
-        private readonly PakyawEntryRepository   _pakyawRepo = new();
 
         private List<PayrollPeriod>  _periods = [];
         private List<PayrollRunRow>  _rows    = [];
@@ -94,33 +93,23 @@ namespace GB_Payroll_System.Views
 
                 foreach (var emp in employees)
                 {
-                    var attendances   = _attRepo.GetByDateRange(_selected.StartDate, _selected.EndDate, emp.Id)
-                                                .Select(vm => new Attendance
-                                                {
-                                                    Id                 = vm.Id,
-                                                    EmployeeId         = vm.EmployeeId,
-                                                    Date               = vm.Date,
-                                                    TimeIn             = vm.TimeIn,
-                                                    TimeOut            = vm.TimeOut,
-                                                    LateMinutes        = vm.LateMinutes,
-                                                    UndertimeMinutes   = vm.UndertimeMinutes,
-                                                    RegularHoursWorked = vm.RegularHoursWorked,
-                                                    OvertimeHours      = vm.OvertimeHours,
-                                                    NightDiffHours     = vm.NightDiffHours,
-                                                    Status             = vm.Status
-                                                }).ToList();
+                    var attendances = _attRepo.GetByDateRange(_selected.StartDate, _selected.EndDate, emp.Id)
+                                              .Select(vm => new Attendance
+                                              {
+                                                  Id                 = vm.Id,
+                                                  EmployeeId         = vm.EmployeeId,
+                                                  Date               = vm.Date,
+                                                  TimeIn             = vm.TimeIn,
+                                                  TimeOut            = vm.TimeOut,
+                                                  LateMinutes        = vm.LateMinutes,
+                                                  UndertimeMinutes   = vm.UndertimeMinutes,
+                                                  RegularHoursWorked = vm.RegularHoursWorked,
+                                                  OvertimeHours      = vm.OvertimeHours,
+                                                  NightDiffHours     = vm.NightDiffHours,
+                                                  Status             = vm.Status
+                                              }).ToList();
 
-                    var pakyawEntries = _pakyawRepo.GetByDateRange(_selected.StartDate, _selected.EndDate, emp.Id)
-                                                   .Select(vm => new PakyawEntry
-                                                   {
-                                                       EmployeeId        = vm.EmployeeId,
-                                                       PakyawRateId      = vm.PakyawRateId,
-                                                       WorkDate          = vm.WorkDate,
-                                                       QuantityCompleted = vm.QuantityCompleted,
-                                                       UnitRate          = vm.UnitRate
-                                                   }).ToList();
-
-                    var record = PayrollService.ComputePayrollRecord(emp, _selected, attendances, pakyawEntries);
+                    var record = PayrollService.ComputePayrollRecord(emp, _selected, attendances);
                     computed.Add(record);
                 }
 
@@ -186,9 +175,9 @@ namespace GB_Payroll_System.Views
         // ── Sample offline data ───────────────────────────────────────────────
         private static List<PayrollRunRow> GenerateSampleRows() =>
         [
-            new PayrollRunRow { EmployeeId = 1, EmployeeCode = "EMP-2026-001", FullName = "Juan Dela Cruz",   Department = "Construction", Position = "Foreman",    PayType = PayType.Daily,   BasicPay = 12200m,  PakyawPay = 1200m, OvertimePay = 500m,  SssEmployee = 675m,  PhilHealthEmployee = 325m,  PagIbigEmployee = 100m, WithholdingTax = 0m,      TardinessDeduction = 152m },
-            new PayrollRunRow { EmployeeId = 2, EmployeeCode = "EMP-2026-002", FullName = "Maria Santos",     Department = "HR",           Position = "HR Officer", PayType = PayType.Monthly, BasicPay = 12500m,  PakyawPay = 0m,    OvertimePay = 0m,    SssEmployee = 787.50m, PhilHealthEmployee = 500m, PagIbigEmployee = 100m, WithholdingTax = 937.50m, TardinessDeduction = 0m   },
-            new PayrollRunRow { EmployeeId = 3, EmployeeCode = "EMP-2026-003", FullName = "Pedro Reyes",      Department = "Accounting",   Position = "Accountant", PayType = PayType.Monthly, BasicPay = 14000m,  PakyawPay = 0m,    OvertimePay = 750m,  SssEmployee = 900m,    PhilHealthEmployee = 550m, PagIbigEmployee = 100m, WithholdingTax = 1250m,   TardinessDeduction = 0m   },
+            new PayrollRunRow { EmployeeId = 1, EmployeeCode = "EMP-2026-001", FullName = "Juan Dela Cruz",   Department = "Operations", Position = "Foreman",    PayType = PayType.Daily,   BasicPay = 12200m,  OvertimePay = 500m,  SssEmployee = 675m,  PhilHealthEmployee = 325m,  PagIbigEmployee = 100m, WithholdingTax = 0m,      TardinessDeduction = 152m },
+            new PayrollRunRow { EmployeeId = 2, EmployeeCode = "EMP-2026-002", FullName = "Maria Santos",     Department = "HR",         Position = "HR Officer", PayType = PayType.Monthly, BasicPay = 12500m,  OvertimePay = 0m,    SssEmployee = 787.50m, PhilHealthEmployee = 500m, PagIbigEmployee = 100m, WithholdingTax = 937.50m, TardinessDeduction = 0m   },
+            new PayrollRunRow { EmployeeId = 3, EmployeeCode = "EMP-2026-003", FullName = "Pedro Reyes",      Department = "Accounting", Position = "Accountant", PayType = PayType.Monthly, BasicPay = 14000m,  OvertimePay = 750m,  SssEmployee = 900m,    PhilHealthEmployee = 550m, PagIbigEmployee = 100m, WithholdingTax = 1250m,   TardinessDeduction = 0m   },
         ];
     }
 }

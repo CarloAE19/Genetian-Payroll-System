@@ -17,7 +17,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Search Box -->
-                <Border Grid.Column="0" Background="#F5F6F8" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Height="38" Width="320" HorizontalAlignment="Left">
+                <Border Grid.Column="0" Background="#F5F6F8" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Height="38" Width="340" HorizontalAlignment="Left">
                     <Grid Margin="10,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -37,7 +37,7 @@
                     <Button x:Name="BtnShowInactive" Content="Show Inactive" Background="#EDF2F7" Foreground="#4A5568"
                             BorderThickness="0" Height="38" Padding="16,0" FontWeight="SemiBold" Cursor="Hand"
                             Click="BtnShowInactive_Click" Margin="0,0,8,0"/>
-                    <Button x:Name="BtnAddEmployee" Content="➕  Add Employee" Style="{StaticResource PrimaryBtnStyle}"
+                    <Button x:Name="BtnAddEmployee" Content="➕  Add Employee (201)" Style="{StaticResource PrimaryBtnStyle}"
                             Height="38" Padding="16,0" Click="BtnAddEmployee_Click"/>
                 </StackPanel>
             </Grid>
@@ -97,14 +97,15 @@
             </DataGrid.RowStyle>
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="EMPLOYEE CODE" Binding="{Binding EmployeeCode}" Width="140"/>
-                <DataGridTextColumn Header="LAST NAME" Binding="{Binding LastName}" Width="150"/>
+                <DataGridTextColumn Header="EMPLOYEE CODE" Binding="{Binding EmployeeCode}" Width="130"/>
+                <DataGridTextColumn Header="LAST NAME" Binding="{Binding LastName}" Width="140"/>
                 <DataGridTextColumn Header="FIRST NAME" Binding="{Binding FirstName}" Width="140"/>
-                <DataGridTextColumn Header="DEPARTMENT" Binding="{Binding Department}" Width="150"/>
-                <DataGridTextColumn Header="POSITION" Binding="{Binding Position}" Width="160"/>
-                <DataGridTextColumn Header="PAY TYPE" Binding="{Binding PayType}" Width="110"/>
-                <DataGridTextColumn Header="BASIC RATE (₱)" Binding="{Binding BasicRate, StringFormat={}{0:N2}}" Width="130"/>
-                <DataGridTextColumn Header="DATE HIRED" Binding="{Binding DateHired, StringFormat={}{0:MMM dd, yyyy}}" Width="130"/>
+                <DataGridTextColumn Header="DEPARTMENT" Binding="{Binding Department}" Width="130"/>
+                <DataGridTextColumn Header="POSITION" Binding="{Binding Position}" Width="150"/>
+                <DataGridTextColumn Header="CONTRACT" Binding="{Binding ContractType}" Width="120"/>
+                <DataGridTextColumn Header="PAY TYPE" Binding="{Binding PayType}" Width="90"/>
+                <DataGridTextColumn Header="BASIC RATE (₱)" Binding="{Binding BasicRate, StringFormat={}{0:N2}}" Width="120"/>
+                <DataGridTextColumn Header="DATE HIRED" Binding="{Binding DateHired, StringFormat={}{0:MMM dd, yyyy}}" Width="120"/>
                 <DataGridTemplateColumn Header="STATUS" Width="90">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -141,18 +142,22 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="ACTIONS" Width="140">
+                <DataGridTemplateColumn Header="ACTIONS" Width="285">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="8,0">
-                                <Button Content="✏️ Edit" Tag="{Binding Id}" Click="BtnEdit_Click"
+                            <StackPanel Orientation="Horizontal" Margin="4,0">
+                                <Button Content="✏️ 201 File" Tag="{Binding Id}" Click="BtnEdit_Click"
                                         Background="#EBF8FF" Foreground="#2B6CB0" BorderThickness="0"
-                                        Height="28" Padding="10,0" FontSize="11" FontWeight="Bold"
-                                        Cursor="Hand" Margin="0,0,6,0"/>
-                                <Button Content="📈" Tag="{Binding Id}" Click="BtnPromote_Click"
+                                        Height="28" Padding="8,0" FontSize="11" FontWeight="Bold"
+                                        Cursor="Hand" ToolTip="Edit Employee 201 File &amp; Contract" Margin="0,0,5,0"/>
+                                <Button Content="📜 History" Tag="{Binding Id}" Click="BtnHistory_Click"
+                                        Background="#EDF2F7" Foreground="#2D3748" BorderThickness="0"
+                                        Height="28" Padding="8,0" FontSize="11" FontWeight="Bold"
+                                        Cursor="Hand" ToolTip="View Employment &amp; Re-employment History" Margin="0,0,5,0"/>
+                                <Button Content="📈 Promotion" Tag="{Binding Id}" Click="BtnPromote_Click"
                                         Background="#FEFCBF" Foreground="#744210" BorderThickness="0"
-                                        Height="28" Width="32" FontSize="13"
-                                        Cursor="Hand" ToolTip="Salary Promotion"/>
+                                        Height="28" Padding="8,0" FontSize="11" FontWeight="Bold"
+                                        Cursor="Hand" ToolTip="Apply Salary Promotion &amp; Position Upgrade"/>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

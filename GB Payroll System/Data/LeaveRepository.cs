@@ -49,7 +49,6 @@ namespace GB_Payroll_System.Data
                     @Year AS Year,
                     COALESCE(lb.VacationLeaveTotal, 15.00) AS VacationLeaveTotal,
                     COALESCE(lb.VacationLeaveUsed, 0.00) AS VacationLeaveUsed,
-                    COALESCE(lb.CarryOverDays, 0.00) AS CarryOverDays,
                     COALESCE(lb.SickLeaveTotal, 15.00) AS SickLeaveTotal,
                     COALESCE(lb.SickLeaveUsed, 0.00) AS SickLeaveUsed,
                     COALESCE(lb.EmergencyLeaveTotal, 5.00) AS EmergencyLeaveTotal,
@@ -158,44 +157,10 @@ namespace GB_Payroll_System.Data
             if (count == 0)
             {
                 conn.Execute(@"
-                    INSERT INTO EmployeeLeaveBalances (EmployeeId, Year, VacationLeaveTotal, VacationLeaveUsed, SickLeaveTotal, SickLeaveUsed, EmergencyLeaveTotal, EmergencyLeaveUsed, CarryOverDays, UpdatedAt)
-                    VALUES (@EmpId, @Year, 15.00, 0.00, 15.00, 0.00, 5.00, 0.00, 0.00, CURRENT_TIMESTAMP);",
+                    INSERT INTO EmployeeLeaveBalances (EmployeeId, Year, VacationLeaveTotal, VacationLeaveUsed, SickLeaveTotal, SickLeaveUsed, EmergencyLeaveTotal, EmergencyLeaveUsed, UpdatedAt)
+                    VALUES (@EmpId, @Year, 15.00, 0.00, 15.00, 0.00, 5.00, 0.00, CURRENT_TIMESTAMP);",
                     new { EmpId = employeeId, Year = year });
             }
-        }
-
-        /// <summary>
-        /// Year-End Carry-Over Algorithm:
-        /// Takes unused Vacation Leave (VL) from `fromYear` (capped at maxCarryOver) and carries it over to `toYear` CarryOverDays.
-        /// </summary>
-        public int PerformYearEndCarryOver(int fromYear, int toYear, decimal maxCarryOver)
-        {
-            using var conn = DbConnectionFactory.CreateConnection();
-            conn.Open();
-
-            var balances = conn.Query<EmployeeLeaveBalance>(
-                "SELECT * FROM EmployeeLeaveBalances WHERE Year = @FromYear;",
-                new { FromYear = fromYear });
-
-            int count = 0;
-            foreach (var b in balances)
-            {
-                decimal unusedVl = b.VacationLeaveBalance;
-                if (unusedVl <= 0) continue;
-
-                decimal carryDays = Math.Min(unusedVl, maxCarryOver);
-                EnsureBalanceRecordExists(conn, b.EmployeeId, toYear);
-
-                conn.Execute(@"
-                    UPDATE EmployeeLeaveBalances SET
-                        CarryOverDays = @Carry,
-                        UpdatedAt = CURRENT_TIMESTAMP
-                    WHERE EmployeeId = @EmpId AND Year = @ToYear;",
-                    new { Carry = carryDays, EmpId = b.EmployeeId, ToYear = toYear });
-
-                count++;
-            }
-            return count;
         }
     }
 }

@@ -50,6 +50,7 @@ namespace GB_Payroll_System.Views
                     AttendanceStatus.OnLeave  => 2,
                     AttendanceStatus.HalfDay  => 3,
                     AttendanceStatus.Holiday  => 4,
+                    AttendanceStatus.AWOL     => 5,
                     _ => 0
                 };
             }
@@ -113,6 +114,7 @@ namespace GB_Payroll_System.Views
                 2 => AttendanceStatus.OnLeave,
                 3 => AttendanceStatus.HalfDay,
                 4 => AttendanceStatus.Holiday,
+                5 => AttendanceStatus.AWOL,
                 _ => AttendanceStatus.Present
             };
 

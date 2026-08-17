@@ -52,7 +52,6 @@
                         <RadioButton x:Name="NavDashboard" Content="📊 Dashboard" GroupName="NavGroup" IsChecked="True" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
                         <RadioButton x:Name="NavEmployees" Content="👥 Employee 201 Files" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
                         <RadioButton x:Name="NavPromotions" Content="📈 Salary Promotions" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
-                        <RadioButton x:Name="NavPakyawan" Content="📦 Pakyawan Manager" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
                         <RadioButton x:Name="NavAttendance" Content="⏰ Attendance &amp; Biometrics" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
                         <RadioButton x:Name="NavLeave" Content="🌴 Leave Management" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
                         <RadioButton x:Name="NavHolidays" Content="🗓️ Local Holidays" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
@@ -99,29 +98,23 @@
                 <ScrollViewer x:Name="DashboardPanel" Padding="24">
                     <StackPanel>
                         <!-- SUMMARY CARDS -->
-                        <UniformGrid Columns="4" Margin="0,0,0,24">
-                            <Border Background="White" CornerRadius="8" Padding="16" Margin="0,0,12,0" BorderBrush="#E2E8F0" BorderThickness="1">
+                        <UniformGrid Columns="3" Margin="0,0,0,24">
+                            <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,16,0" BorderBrush="#E2E8F0" BorderThickness="1">
                                 <StackPanel>
                                     <TextBlock Text="TOTAL EMPLOYEES" FontSize="11" FontWeight="Bold" Foreground="#718096"/>
-                                    <TextBlock x:Name="TxtTotalEmployees" Text="Loading..." FontSize="22" FontWeight="Bold" Foreground="#1A202C" Margin="0,8,0,0"/>
+                                    <TextBlock x:Name="TxtTotalEmployees" Text="Loading..." FontSize="24" FontWeight="Bold" Foreground="#1A202C" Margin="0,8,0,0"/>
                                 </StackPanel>
                             </Border>
-                            <Border Background="White" CornerRadius="8" Padding="16" Margin="0,0,12,0" BorderBrush="#E2E8F0" BorderThickness="1">
+                            <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,16,0" BorderBrush="#E2E8F0" BorderThickness="1">
                                 <StackPanel>
                                     <TextBlock Text="CURRENT CUTOFF" FontSize="11" FontWeight="Bold" Foreground="#718096"/>
-                                    <TextBlock x:Name="TxtCurrentCutoff" Text="Loading..." FontSize="18" FontWeight="Bold" Foreground="#0A4D9C" Margin="0,8,0,0"/>
+                                    <TextBlock x:Name="TxtCurrentCutoff" Text="Loading..." FontSize="20" FontWeight="Bold" Foreground="#0A4D9C" Margin="0,8,0,0"/>
                                 </StackPanel>
                             </Border>
-                            <Border Background="White" CornerRadius="8" Padding="16" Margin="0,0,12,0" BorderBrush="#E2E8F0" BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="PAKYAWAN ENTRIES" FontSize="11" FontWeight="Bold" Foreground="#718096"/>
-                                    <TextBlock x:Name="TxtPakyawTotal" Text="Loading..." FontSize="20" FontWeight="Bold" Foreground="#2B6CB0" Margin="0,8,0,0"/>
-                                </StackPanel>
-                            </Border>
-                            <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E2E8F0" BorderThickness="1">
+                            <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1">
                                 <StackPanel>
                                     <TextBlock Text="ESTIMATED NET PAYROLL" FontSize="11" FontWeight="Bold" Foreground="#718096"/>
-                                    <TextBlock x:Name="TxtEstNetPayroll" Text="Loading..." FontSize="20" FontWeight="Bold" Foreground="#2F855A" Margin="0,8,0,0"/>
+                                    <TextBlock x:Name="TxtEstNetPayroll" Text="Loading..." FontSize="24" FontWeight="Bold" Foreground="#2F855A" Margin="0,8,0,0"/>
                                 </StackPanel>
                             </Border>
                         </UniformGrid>
@@ -130,11 +123,10 @@
                         <Border Background="White" CornerRadius="8" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1">
                             <StackPanel>
                                 <TextBlock Text="Welcome to Genetian Payroll System" FontSize="18" FontWeight="Bold" Foreground="#1A202C"/>
-                                <TextBlock Text="Centralized Philippine Multi-Department Payroll, HR 201 Files, Biometric Timekeeping, Pakyawan Piece-rate Manager, and Local Holiday Engine."
+                                <TextBlock Text="Centralized Philippine Multi-Department Payroll, HR 201 Files, Employment Contracts, Biometric Timekeeping, and Statutory Deductions Engine."
                                            FontSize="13" Foreground="#718096" Margin="0,8,0,16"/>
                                 <WrapPanel>
-                                    <Button x:Name="BtnQuickAddEmployee" Content="➕ Add New Employee" Style="{StaticResource PrimaryBtnStyle}" Width="180" Height="38" FontSize="12" Margin="0,0,12,0" Click="BtnQuickAddEmployee_Click"/>
-                                    <Button x:Name="BtnQuickLogPakyaw" Content="📦 Log Pakyaw Output" Background="#2B6CB0" Foreground="White" Width="180" Height="38" FontSize="12" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="0,0,12,0" Click="BtnQuickLogPakyaw_Click"/>
+                                    <Button x:Name="BtnQuickAddEmployee" Content="➕ Add New Employee" Style="{StaticResource PrimaryBtnStyle}" Width="180" Height="38" FontSize="12" Margin="0,0,16,0" Click="BtnQuickAddEmployee_Click"/>
                                     <Button x:Name="BtnQuickProcessPayroll" Content="💵 Process Payroll Cutoff" Background="#2F855A" Foreground="White" Width="180" Height="38" FontSize="12" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="BtnQuickProcessPayroll_Click"/>
                                 </WrapPanel>
                             </StackPanel>

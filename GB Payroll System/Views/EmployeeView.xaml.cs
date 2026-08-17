@@ -122,5 +122,19 @@ namespace GB_Payroll_System.Views
                 }
             }
         }
+
+        private void BtnHistory_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is int id)
+            {
+                var emp = _allEmployees.FirstOrDefault(x => x.Id == id);
+                if (emp != null)
+                {
+                    var dialog = new EmploymentHistoryDialog(emp);
+                    if (dialog.ShowDialog() == true)
+                        LoadEmployees();
+                }
+            }
+        }
     }
 }

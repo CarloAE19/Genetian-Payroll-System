@@ -9,8 +9,7 @@ namespace GB_Payroll_System.Services
         public static PayrollRecord ComputePayrollRecord(
             Employee employee, 
             PayrollPeriod period, 
-            List<Attendance> attendances, 
-            List<PakyawEntry> pakyawEntries)
+            List<Attendance> attendances)
         {
             var record = new PayrollRecord
             {
@@ -22,22 +21,7 @@ namespace GB_Payroll_System.Services
             decimal hourlyRate = AttendanceService.GetHourlyRate(employee);
             decimal minuteRate = hourlyRate / 60m;
 
-            // 1. Basic Pay Computation
-            if (employee.PayType == PayType.Monthly)
-            {
-                // Semi-monthly basic pay (50% of monthly basic)
-                record.BasicPay = Math.Round(employee.BasicRate / 2m, 2);
-            }
-
-            // 2. Pakyawan Pay Computation
-            decimal totalPakyaw = 0m;
-            foreach (var entry in pakyawEntries)
-            {
-                totalPakyaw += entry.TotalEarnings;
-            }
-            record.PakyawPay = totalPakyaw;
-
-            // 3. Attendance, Tardiness, OT, Night Diff, Holiday Pay Calculations
+            // 1. Attendance, Tardiness, OT, Night Diff, Holiday Pay Calculations
             double totalLateMins = 0;
             double totalUndertimeMins = 0;
             double totalOtHrs = 0;
@@ -56,7 +40,13 @@ namespace GB_Payroll_System.Services
                 }
             }
 
-            if (employee.PayType == PayType.Daily)
+            // 2. Basic Pay Computation
+            if (employee.PayType == PayType.Monthly)
+            {
+                // Semi-monthly basic pay (50% of monthly basic)
+                record.BasicPay = Math.Round(employee.BasicRate / 2m, 2);
+            }
+            else // PayType.Daily
             {
                 record.BasicPay = Math.Round(dailyRate * presentDaysCount, 2);
             }
@@ -71,29 +61,82 @@ namespace GB_Payroll_System.Services
             record.TardinessDeduction = Math.Round((decimal)totalLateMins * minuteRate, 2);
             record.UndertimeDeduction = Math.Round((decimal)totalUndertimeMins * minuteRate, 2);
 
-            // Estimated Monthly Equivalent Compensation for Mandatory Government Deductions
+            // Estimated Monthly Equivalent Compensation for Statutory Base
             decimal monthlyCompensation = employee.PayType == PayType.Monthly 
                 ? employee.BasicRate 
-                : record.GrossPay * 2m; // Estimate for semi-monthly daily/pakyaw workers
+                : record.GrossPay * 2m;
 
-            // 4. Government Deductions (Split for Semi-Monthly Cutoff: 50% per cutoff)
-            var (sssEmp, sssEmpEr) = PhilippineDeductionService.CalculateSss(monthlyCompensation);
-            record.SssEmployee = Math.Round(sssEmp / 2m, 2);
-            record.SssEmployer = Math.Round(sssEmpEr / 2m, 2);
+            // Determine Cutoff Deduction Factor based on employee schedule
+            bool isFirstCutoff = period.EndDate.Day <= 15;
+            decimal deductionFactor = employee.ContributionSchedule switch
+            {
+                ContributionSchedule.FirstCutoffOnly => isFirstCutoff ? 1.0m : 0.0m,
+                ContributionSchedule.SecondCutoffOnly => isFirstCutoff ? 0.0m : 1.0m,
+                _ => 0.5m // SplitBothCutoffs (50% per cutoff)
+            };
 
-            var (phEmp, phEmpEr) = PhilippineDeductionService.CalculatePhilHealth(monthlyCompensation);
-            record.PhilHealthEmployee = Math.Round(phEmp / 2m, 2);
-            record.PhilHealthEmployer = Math.Round(phEmpEr / 2m, 2);
+            // 3. SSS Deduction
+            if (employee.SssDeductionMode == DeductionMode.Exempt || deductionFactor == 0m)
+            {
+                record.SssEmployee = 0m;
+                record.SssEmployer = 0m;
+            }
+            else if (employee.SssDeductionMode == DeductionMode.FixedAmount)
+            {
+                record.SssEmployee = Math.Round(employee.CustomSssAmount * deductionFactor, 2);
+                record.SssEmployer = Math.Round(employee.CustomSssAmount * 2.11m * deductionFactor, 2); // Approximate standard ER ratio
+            }
+            else // DeductionMode.Auto
+            {
+                var (sssEmp, sssEmpEr) = PhilippineDeductionService.CalculateSss(monthlyCompensation);
+                record.SssEmployee = Math.Round(sssEmp * deductionFactor, 2);
+                record.SssEmployer = Math.Round(sssEmpEr * deductionFactor, 2);
+            }
 
-            var (pagIbigEmp, pagIbigEmpEr) = PhilippineDeductionService.CalculatePagIbig(monthlyCompensation);
-            record.PagIbigEmployee = Math.Round(pagIbigEmp / 2m, 2);
-            record.PagIbigEmployer = Math.Round(pagIbigEmpEr / 2m, 2);
+            // 4. PhilHealth Deduction
+            if (employee.PhilHealthDeductionMode == DeductionMode.Exempt || deductionFactor == 0m)
+            {
+                record.PhilHealthEmployee = 0m;
+                record.PhilHealthEmployer = 0m;
+            }
+            else if (employee.PhilHealthDeductionMode == DeductionMode.FixedAmount)
+            {
+                record.PhilHealthEmployee = Math.Round(employee.CustomPhilHealthAmount * deductionFactor, 2);
+                record.PhilHealthEmployer = Math.Round(employee.CustomPhilHealthAmount * deductionFactor, 2);
+            }
+            else // DeductionMode.Auto
+            {
+                var (phEmp, phEmpEr) = PhilippineDeductionService.CalculatePhilHealth(monthlyCompensation);
+                record.PhilHealthEmployee = Math.Round(phEmp * deductionFactor, 2);
+                record.PhilHealthEmployer = Math.Round(phEmpEr * deductionFactor, 2);
+            }
 
-            // 5. BIR Tax Computation (Taxable income = Gross - SSS - PhilHealth - PagIBIG)
-            decimal taxableIncome = record.GrossPay - record.SssEmployee - record.PhilHealthEmployee - record.PagIbigEmployee;
-            if (taxableIncome < 0) taxableIncome = 0;
+            // 5. Pag-IBIG (HDMF) Deduction
+            if (employee.PagIbigDeductionMode == DeductionMode.Exempt || deductionFactor == 0m)
+            {
+                record.PagIbigEmployee = 0m;
+                record.PagIbigEmployer = 0m;
+            }
+            else
+            {
+                decimal monthlyPagIbig = employee.PagIbigEmployeeAmount > 0 ? employee.PagIbigEmployeeAmount : 200m;
+                record.PagIbigEmployee = Math.Round(monthlyPagIbig * deductionFactor, 2);
+                record.PagIbigEmployer = Math.Round(200m * deductionFactor, 2); // Mandatory employer counterpart
+            }
 
-            record.WithholdingTax = PhilippineDeductionService.CalculateSemiMonthlyWithholdingTax(taxableIncome);
+            // 6. BIR Withholding Tax
+            if (employee.IsMinimumWageEarner || employee.IsTaxExempt)
+            {
+                record.WithholdingTax = 0m; // Minimum Wage Earners and Tax Exempt are zero tax
+            }
+            else
+            {
+                // Taxable income = Gross - SSS - PhilHealth - PagIBIG
+                decimal taxableIncome = record.GrossPay - record.SssEmployee - record.PhilHealthEmployee - record.PagIbigEmployee;
+                if (taxableIncome < 0) taxableIncome = 0;
+
+                record.WithholdingTax = PhilippineDeductionService.CalculateSemiMonthlyWithholdingTax(taxableIncome);
+            }
 
             return record;
         }

@@ -1,0 +1,246 @@
+<Window x:Class="GB_Payroll_System.Views.EmploymentHistoryDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Employment History &amp; Re-employment Records" Height="740" Width="840"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip"
+        Background="#F4F6F9">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="64"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="64"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0" Background="#0A4D9C" Padding="24,0">
+            <Grid VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock x:Name="TxtDialogTitle" Text="Employment History &amp; Re-employment" FontSize="17" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock x:Name="TxtEmployeeSubtitle" Text="EMP-2026-001 | Juan Dela Cruz" FontSize="12" Foreground="#93C5FD"/>
+                </StackPanel>
+                <Border Grid.Column="1" x:Name="BadgeCurrentStatus" Background="#C6F6D5" CornerRadius="4" Padding="10,4">
+                    <TextBlock x:Name="TxtCurrentStatusBadge" Text="ACTIVE" FontSize="11" FontWeight="Bold" Foreground="#276749"/>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- BODY -->
+        <ScrollViewer Grid.Row="1" Padding="24,16" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <!-- Current Profile Summary Card -->
+                <Border Background="White" CornerRadius="8" Padding="16" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="CURRENT POSITION" FontSize="10" FontWeight="Bold" Foreground="#718096"/>
+                            <TextBlock x:Name="TxtSummaryPosition" Text="—" FontSize="14" FontWeight="Bold" Foreground="#1A202C" Margin="0,4,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="DEPARTMENT" FontSize="10" FontWeight="Bold" Foreground="#718096"/>
+                            <TextBlock x:Name="TxtSummaryDept" Text="—" FontSize="14" FontWeight="Bold" Foreground="#1A202C" Margin="0,4,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="DATE HIRED / REHIRED" FontSize="10" FontWeight="Bold" Foreground="#718096"/>
+                            <TextBlock x:Name="TxtSummaryDateHired" Text="—" FontSize="14" FontWeight="Bold" Foreground="#0A4D9C" Margin="0,4,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="3">
+                            <TextBlock Text="PAY TYPE &amp; RATE" FontSize="10" FontWeight="Bold" Foreground="#718096"/>
+                            <TextBlock x:Name="TxtSummaryRate" Text="—" FontSize="14" FontWeight="Bold" Foreground="#2F855A" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- HISTORY RECORDS TABLE -->
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="📜  EMPLOYMENT &amp; SERVICE TENURE HISTORY" FontSize="12" FontWeight="Bold" Foreground="#4A5568" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" x:Name="TxtHistoryCount" Text="0 record(s)" FontSize="12" Foreground="#718096" VerticalAlignment="Center"/>
+                </Grid>
+
+                <DataGrid x:Name="HistoryGrid" MinHeight="140" MaxHeight="220" AutoGenerateColumns="False"
+                          IsReadOnly="True" BorderBrush="#E2E8F0" BorderThickness="1"
+                          Background="White" HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#EDF2F7"
+                          RowBackground="White" AlternatingRowBackground="#F9FAFB"
+                          ColumnHeaderHeight="34" RowHeight="36" Margin="0,0,0,20">
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#F8FAFC"/>
+                            <Setter Property="Foreground" Value="#718096"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="FontSize" Value="10"/>
+                            <Setter Property="Padding" Value="10,0"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="COMPANY / EMPLOYER" Binding="{Binding CompanyName}" Width="140"/>
+                        <DataGridTextColumn Header="POSITION" Binding="{Binding Position}" Width="130"/>
+                        <DataGridTextColumn Header="SERVICE PERIOD" Binding="{Binding PeriodDisplay}" Width="190"/>
+                        <DataGridTextColumn Header="TYPE" Binding="{Binding EmploymentType}" Width="100"/>
+                        <DataGridTextColumn Header="STATUS / EVENT" Binding="{Binding StatusDisplay}" Width="120"/>
+                        <DataGridTextColumn Header="REMARKS / REASON" Binding="{Binding SeparationReason}" Width="*"/>
+                        <DataGridTemplateColumn Header="ACTION" Width="85">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="🗑️ Delete" Tag="{Binding Id}" Click="BtnDeleteHistory_Click"
+                                            Background="#FFF5F5" Foreground="#C53030" BorderThickness="0"
+                                            Height="24" Padding="8,0" FontSize="11" FontWeight="SemiBold"
+                                            Cursor="Hand" ToolTip="Delete this history record"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- SECTION: Add / Record Employment or Rehire -->
+                <TextBlock Text="➕  LOG NEW SERVICE PERIOD / REHIRE / SEPARATION EVENT" FontSize="12" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,10"/>
+                
+                <!-- Quick Preset Buttons -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <TextBlock Text="Quick Templates:" FontSize="11" FontWeight="SemiBold" Foreground="#718096" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <Button Content="👵 Log Prior Service &amp; Retirement" Click="BtnPresetRetired_Click"
+                            Background="#EDF2F7" Foreground="#2D3748" BorderThickness="0" Height="28" Padding="10,0" FontSize="11" FontWeight="SemiBold" Cursor="Hand" Margin="0,0,6,0"/>
+                    <Button Content="🔄 Log Rehire / Re-employment" Click="BtnPresetRehire_Click"
+                            Background="#EBF8FF" Foreground="#2B6CB0" BorderThickness="0" Height="28" Padding="10,0" FontSize="11" FontWeight="SemiBold" Cursor="Hand" Margin="0,0,6,0"/>
+                    <Button Content="⚠️ Log AWOL / Abandonment" Click="BtnPresetAwol_Click"
+                            Background="#FFF5F5" Foreground="#C53030" BorderBrush="#FEB2B2" BorderThickness="1" Height="28" Padding="10,0" FontSize="11" FontWeight="SemiBold" Cursor="Hand" Margin="0,0,6,0"/>
+                    <Button Content="🏢 Log External Experience" Click="BtnPresetExternal_Click"
+                            Background="#F0FFF4" Foreground="#22543D" BorderThickness="0" Height="28" Padding="10,0" FontSize="11" FontWeight="SemiBold" Cursor="Hand"/>
+                </StackPanel>
+
+                <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <!-- Row 1: Company Name / Department -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="COMPANY / EMPLOYER NAME *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtCompanyName" Text="Genetian" Style="{StaticResource ModernInputStyle}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="DEPARTMENT" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtDepartment" Style="{StaticResource ModernInputStyle}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Row 2: Position / Employment Type -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="POSITION / JOB TITLE *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtPosition" Style="{StaticResource ModernInputStyle}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="EMPLOYMENT TYPE" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="CboEmploymentType" Height="40" FontSize="13">
+                                    <ComboBoxItem Content="Regular"/>
+                                    <ComboBoxItem Content="Probationary"/>
+                                    <ComboBoxItem Content="Contractual"/>
+                                    <ComboBoxItem Content="Project-Based"/>
+                                    <ComboBoxItem Content="Pakyawan"/>
+                                    <ComboBoxItem Content="Consultant / Post-Retirement"/>
+                                    <ComboBoxItem Content="Part-Time / Advisory"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Row 3: Start Date / End Date / Currently Active -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="START DATE *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                <DatePicker x:Name="DpStartDate" Height="40" FontSize="13"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <Grid Margin="0,0,0,5">
+                                    <TextBlock Text="END DATE" FontSize="11" FontWeight="Bold" Foreground="#4A5568" HorizontalAlignment="Left"/>
+                                    <CheckBox x:Name="ChkCurrentlyOngoing" Content="Ongoing / Active" FontSize="11" HorizontalAlignment="Right"
+                                              Checked="ChkCurrentlyOngoing_Checked" Unchecked="ChkCurrentlyOngoing_Unchecked"/>
+                                </Grid>
+                                <DatePicker x:Name="DpEndDate" Height="40" FontSize="13"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Row 4: Separation Type / Rehire Eligible -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="STATUS / SEPARATION EVENT" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="CboSeparationType" Height="40" FontSize="13">
+                                    <ComboBoxItem Content="Retired"/>
+                                    <ComboBoxItem Content="Rehired / Re-employed"/>
+                                    <ComboBoxItem Content="AWOL / Abandonment of Work"/>
+                                    <ComboBoxItem Content="Resigned"/>
+                                    <ComboBoxItem Content="End of Contract"/>
+                                    <ComboBoxItem Content="Terminated"/>
+                                    <ComboBoxItem Content="Active / Current"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="0,16,0,0">
+                                <CheckBox x:Name="ChkRehireEligible" Content="Eligible for Rehire / Return" IsChecked="True" FontSize="12" FontWeight="SemiBold" Foreground="#2D3748"/>
+                                <CheckBox x:Name="ChkSyncEmployeeProfile" Content="Synchronize with Employee Profile (Update position &amp; reactivate if re-hired)" IsChecked="False" FontSize="11" Foreground="#4A5568" Margin="0,6,0,0"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Row 5: Remarks / Reason -->
+                        <StackPanel Margin="0,0,0,12">
+                            <TextBlock Text="SEPARATION REASON / REHIRE TERMS / REMARKS" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtReason" Height="60" Style="{StaticResource ModernInputStyle}"
+                                     AcceptsReturn="True" TextWrapping="Wrap"
+                                     VerticalContentAlignment="Top" Padding="10,8"/>
+                        </StackPanel>
+
+                        <!-- Save Record Button -->
+                        <Button x:Name="BtnAddRecord" Content="💾  Save History Record" Style="{StaticResource PrimaryBtnStyle}"
+                                Height="38" HorizontalAlignment="Right" Padding="20,0" Click="BtnAddRecord_Click"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Error Banner -->
+                <Border x:Name="BannerError" Background="#FFF5F5" BorderBrush="#FEB2B2" BorderThickness="1"
+                        CornerRadius="6" Padding="12,8" Margin="0,12,0,0" Visibility="Collapsed">
+                    <TextBlock x:Name="TxtError" Foreground="#C53030" FontSize="12" TextWrapping="Wrap"/>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- FOOTER -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="24,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Content="Close" Background="#EDF2F7" Foreground="#4A5568"
+                        BorderThickness="0" Height="40" Padding="24,0" FontWeight="SemiBold"
+                        Cursor="Hand" Click="BtnClose_Click"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

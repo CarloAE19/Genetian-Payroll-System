@@ -38,6 +38,7 @@ namespace GB_Payroll_System.Data
             AttendanceStatus.OnLeave => "On Leave",
             AttendanceStatus.Holiday => "Holiday",
             AttendanceStatus.HalfDay => "Half Day",
+            AttendanceStatus.AWOL => "AWOL",
             _ => "—"
         };
     }

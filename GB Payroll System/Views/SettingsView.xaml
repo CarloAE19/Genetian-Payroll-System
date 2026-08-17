@@ -13,63 +13,18 @@
             <StackPanel Orientation="Horizontal">
                 <RadioButton x:Name="TabUsers" Content="👤  User Accounts" GroupName="SettingsTab"
                              IsChecked="True" Checked="Tab_Changed"
-                             Height="36" Padding="16,0" FontWeight="Bold" FontSize="12" Cursor="Hand">
-                    <RadioButton.Style>
-                        <Style TargetType="RadioButton">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Foreground" Value="#718096"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="RadioButton">
-                                        <Border x:Name="bd" Background="{TemplateBinding Background}"
-                                                CornerRadius="6" Padding="{TemplateBinding Padding}">
-                                            <ContentPresenter VerticalAlignment="Center"/>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsChecked" Value="True">
-                                                <Setter TargetName="bd" Property="Background" Value="#0A4D9C"/>
-                                                <Setter Property="Foreground" Value="White"/>
-                                            </Trigger>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="bd" Property="Background" Value="#EBF4FF"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </RadioButton.Style>
-                </RadioButton>
+                             Height="36" Padding="16,0" FontWeight="Bold" FontSize="12" Cursor="Hand"
+                             Style="{DynamicResource SettingsTabRadioStyle}"/>
+
+                <RadioButton x:Name="TabStatutory" Content="🏛️  Statutory &amp; Contribution Rates" GroupName="SettingsTab"
+                             Checked="Tab_Changed" Margin="4,0,0,0"
+                             Height="36" Padding="16,0" FontWeight="Bold" FontSize="12" Cursor="Hand"
+                             Style="{DynamicResource SettingsTabRadioStyle}"/>
 
                 <RadioButton x:Name="TabDatabase" Content="🔌  Database Connection" GroupName="SettingsTab"
                              Checked="Tab_Changed" Margin="4,0,0,0"
-                             Height="36" Padding="16,0" FontWeight="Bold" FontSize="12" Cursor="Hand">
-                    <RadioButton.Style>
-                        <Style TargetType="RadioButton">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Foreground" Value="#718096"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="RadioButton">
-                                        <Border x:Name="bd" Background="{TemplateBinding Background}"
-                                                CornerRadius="6" Padding="{TemplateBinding Padding}">
-                                            <ContentPresenter VerticalAlignment="Center"/>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsChecked" Value="True">
-                                                <Setter TargetName="bd" Property="Background" Value="#0A4D9C"/>
-                                                <Setter Property="Foreground" Value="White"/>
-                                            </Trigger>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="bd" Property="Background" Value="#EBF4FF"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </RadioButton.Style>
-                </RadioButton>
+                             Height="36" Padding="16,0" FontWeight="Bold" FontSize="12" Cursor="Hand"
+                             Style="{DynamicResource SettingsTabRadioStyle}"/>
             </StackPanel>
         </Border>
 
@@ -248,6 +203,150 @@
                 </DataGrid>
             </Grid>
 
+            <!-- ═══ STATUTORY & CONTRIBUTION RATES PANEL ═══ -->
+            <Grid x:Name="StatutoryPanel" Visibility="Collapsed">
+                <ScrollViewer Padding="30,24" VerticalScrollBarVisibility="Auto">
+                    <StackPanel MaxWidth="820" HorizontalAlignment="Left">
+                        <TextBlock Text="🏛️  National Statutory Contribution Rates &amp; Caps" FontSize="18" FontWeight="Bold" Foreground="#1A202C" Margin="0,0,0,4"/>
+                        <TextBlock Text="Configure rates, percentages, and salary caps according to official SSS, PhilHealth, Pag-IBIG, and BIR memorandums." FontSize="13" Foreground="#718096" Margin="0,0,0,20"/>
+
+                        <!-- 1. SSS Card -->
+                        <Border Background="White" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1" Padding="20" Margin="0,0,0,16">
+                            <StackPanel>
+                                <TextBlock Text="SSS (SOCIAL SECURITY SYSTEM) SETTINGS" FontSize="12" FontWeight="Bold" Foreground="#0A4D9C" Margin="0,0,0,14"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="16"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="16"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="EMPLOYEE SHARE (%)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="TxtSssEeRate" Style="{StaticResource ModernInputStyle}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="EMPLOYER SHARE (%)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="TxtSssErRate" Style="{StaticResource ModernInputStyle}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="4">
+                                        <TextBlock Text="TOTAL SSS RATE (%)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="TxtSssTotalRate" Style="{StaticResource ModernInputStyle}"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid Margin="0,12,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="16"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="MINIMUM SALARY CREDIT FLOOR (₱)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="TxtSssMinCredit" Style="{StaticResource ModernInputStyle}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="MAXIMUM SALARY CREDIT CEILING (₱)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="TxtSssMaxCredit" Style="{StaticResource ModernInputStyle}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 2. PhilHealth Card -->
+                        <Border Background="White" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1" Padding="20" Margin="0,0,0,16">
+                            <StackPanel>
+                                <TextBlock Text="PHILHEALTH PREMIUM SETTINGS" FontSize="12" FontWeight="Bold" Foreground="#276749" Margin="0,0,0,14"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="16"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="16"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="TOTAL PREMIUM RATE (%)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="TxtPhTotalRate" Style="{StaticResource ModernInputStyle}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="EMPLOYEE SHARE (%)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="TxtPhEeRate" Style="{StaticResource ModernInputStyle}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="4">
+                                        <TextBlock Text="EMPLOYER SHARE (%)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="TxtPhErRate" Style="{StaticResource ModernInputStyle}"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid Margin="0,12,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="16"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="MINIMUM SALARY FLOOR (₱)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="TxtPhMinCredit" Style="{StaticResource ModernInputStyle}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="MAXIMUM SALARY CEILING (₱)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="TxtPhMaxCredit" Style="{StaticResource ModernInputStyle}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 3. Pag-IBIG & BIR Card -->
+                        <Border Background="White" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1" Padding="20" Margin="0,0,0,20">
+                            <StackPanel>
+                                <TextBlock Text="PAG-IBIG (HDMF) &amp; BIR TAX EXEMPTION CAPS" FontSize="12" FontWeight="Bold" Foreground="#744210" Margin="0,0,0,14"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="16"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="PAG-IBIG EMPLOYEE STANDARD (₱/MO)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="TxtPagIbigEe" Style="{StaticResource ModernInputStyle}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="PAG-IBIG EMPLOYER STANDARD (₱/MO)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="TxtPagIbigEr" Style="{StaticResource ModernInputStyle}"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid Margin="0,12,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="16"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="BIR SEMI-MONTHLY TAX-EXEMPT CEILING (₱)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="TxtBirSemiExempt" Style="{StaticResource ModernInputStyle}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="ANNUAL 13TH MO / BONUS EXEMPT CAP (₱)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="TxtBirBonusCap" Style="{StaticResource ModernInputStyle}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Action Buttons -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,24">
+                            <Button x:Name="BtnSaveStatutory" Content="💾  Save &amp; Apply Statutory Rates" Style="{StaticResource PrimaryBtnStyle}"
+                                    Height="42" Padding="20,0" FontSize="13" Margin="0,0,12,0" Click="BtnSaveStatutory_Click"/>
+                            <Button x:Name="BtnResetStatutory" Content="🔄  Reset to National Defaults" Background="#EDF2F7" Foreground="#4A5568"
+                                    BorderThickness="0" Height="42" Padding="20,0" FontWeight="SemiBold" Cursor="Hand" Click="BtnResetStatutory_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+
             <!-- ═══ DATABASE CONNECTION PANEL ═══ -->
             <Grid x:Name="DatabasePanel" Visibility="Collapsed">
                 <ScrollViewer Padding="40,30" VerticalScrollBarVisibility="Auto">
@@ -345,4 +444,30 @@
             </Grid>
         </Grid>
     </Grid>
+
+    <UserControl.Resources>
+        <Style x:Key="SettingsTabRadioStyle" TargetType="RadioButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#718096"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}"
+                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#0A4D9C"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#EBF4FF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
 </UserControl>

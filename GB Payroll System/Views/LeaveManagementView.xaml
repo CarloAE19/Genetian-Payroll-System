@@ -52,7 +52,7 @@
                                 </RadioButton.Style>
                             </RadioButton>
 
-                            <RadioButton x:Name="TabBalances" Content="📊  Leave Balances &amp; Carry-Over" GroupName="LeaveTab"
+                            <RadioButton x:Name="TabBalances" Content="📊  Leave Balances" GroupName="LeaveTab"
                                          Checked="LeaveTab_Changed"
                                          Height="36" Padding="14,0" FontWeight="Bold" FontSize="12"
                                          Cursor="Hand" BorderThickness="0">
@@ -105,11 +105,6 @@
 
                 <!-- Right: Action Buttons -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button x:Name="BtnCarryOver" Content="🔄  Run Year-End Carry-Over"
-                            Background="#EBF8FF" Foreground="#2B6CB0" BorderBrush="#BEE3F8" BorderThickness="1"
-                            Height="38" Padding="14,0" FontWeight="Bold" FontSize="12" Cursor="Hand"
-                            Visibility="Collapsed" Click="BtnCarryOver_Click" Margin="0,0,8,0"/>
-
                     <Button x:Name="BtnFileLeave" Content="➕  File Leave Application"
                             Style="{StaticResource PrimaryBtnStyle}"
                             Height="38" Padding="16,0" Click="BtnFileLeave_Click"/>
@@ -242,7 +237,6 @@
                     <DataGridTextColumn Header="DEPARTMENT" Binding="{Binding Department}" Width="130"/>
                     <DataGridTextColumn Header="VL TOTAL" Binding="{Binding VacationLeaveTotal, StringFormat={}{0:F1}}" Width="90"/>
                     <DataGridTextColumn Header="VL USED" Binding="{Binding VacationLeaveUsed, StringFormat={}{0:F1}}" Width="90"/>
-                    <DataGridTextColumn Header="CARRY-OVER" Binding="{Binding CarryOverDays, StringFormat={}{0:F1}}" Width="110"/>
                     <DataGridTextColumn Header="VL BAL" Binding="{Binding VacationLeaveBalance, StringFormat={}{0:F1}}" Width="90"/>
                     <DataGridTextColumn Header="SL TOTAL" Binding="{Binding SickLeaveTotal, StringFormat={}{0:F1}}" Width="90"/>
                     <DataGridTextColumn Header="SL USED" Binding="{Binding SickLeaveUsed, StringFormat={}{0:F1}}" Width="90"/>

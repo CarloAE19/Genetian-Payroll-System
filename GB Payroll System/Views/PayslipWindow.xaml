@@ -150,33 +150,6 @@
                         </Grid>
                     </Border>
 
-                    <!-- Employer Contributions Note -->
-                    <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6"
-                            Padding="14,10" Margin="0,0,0,20">
-                        <StackPanel>
-                            <TextBlock Text="EMPLOYER CONTRIBUTIONS (for reference only — not deducted from employee)" FontSize="10" FontWeight="Bold" Foreground="#718096" Margin="0,0,0,6"/>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Text="SSS (Employer)" FontSize="11" Foreground="#718096"/>
-                                    <TextBlock x:Name="TxtSssEr" FontSize="12" FontWeight="Bold" Foreground="#4A5568"/>
-                                </StackPanel>
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="PhilHealth (Employer)" FontSize="11" Foreground="#718096"/>
-                                    <TextBlock x:Name="TxtPhEr" FontSize="12" FontWeight="Bold" Foreground="#4A5568"/>
-                                </StackPanel>
-                                <StackPanel Grid.Column="2">
-                                    <TextBlock Text="Pag-IBIG (Employer)" FontSize="11" Foreground="#718096"/>
-                                    <TextBlock x:Name="TxtPiEr" FontSize="12" FontWeight="Bold" Foreground="#4A5568"/>
-                                </StackPanel>
-                            </Grid>
-                        </StackPanel>
-                    </Border>
-
                     <!-- Footer signature line -->
                     <Border BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="0,16">
                         <Grid>

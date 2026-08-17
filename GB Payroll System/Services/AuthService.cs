@@ -9,13 +9,12 @@ namespace GB_Payroll_System.Services
     {
         public static User? CurrentUser { get; private set; }
 
-        // RBAC Permissions Helpers: HR has full access to all HR, Employee, Attendance, Pakyaw, Holiday, & Payroll management
+        // RBAC Permissions Helpers: HR has full access to all HR, Employee, Attendance, Holiday, & Payroll management
         public static bool HasFullAccess => CurrentUser?.Role == UserRole.Admin || CurrentUser?.Role == UserRole.HR;
         public static bool CanManageEmployees => HasFullAccess;
         public static bool CanManagePromotions => HasFullAccess;
         public static bool CanManageHolidays => HasFullAccess || CurrentUser?.Role == UserRole.Management;
         public static bool CanManageAttendance => HasFullAccess || CurrentUser?.Role == UserRole.Accounting;
-        public static bool CanManagePakyaw => HasFullAccess || CurrentUser?.Role == UserRole.Accounting;
         public static bool CanManagePayroll => HasFullAccess || CurrentUser?.Role == UserRole.Accounting;
         public static bool CanManageSettings => HasFullAccess;
 

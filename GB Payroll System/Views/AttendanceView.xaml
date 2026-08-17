@@ -135,6 +135,9 @@
                                             <DataTrigger Binding="{Binding Status}" Value="Holiday">
                                                 <Setter Property="Background" Value="#E9D8FD"/>
                                             </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="AWOL">
+                                                <Setter Property="Background" Value="#FED7D7"/>
+                                            </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Border.Style>
@@ -154,6 +157,9 @@
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Status}" Value="Holiday">
                                                     <Setter Property="Foreground" Value="#44337A"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="AWOL">
+                                                    <Setter Property="Foreground" Value="#9B2C2C"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>

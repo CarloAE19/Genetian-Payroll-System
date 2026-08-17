@@ -66,12 +66,12 @@ namespace GB_Payroll_System.Data
             {
                 conn.Execute(@"
                     INSERT INTO PayrollRecords
-                        (PayrollPeriodId, EmployeeId, BasicPay, PakyawPay, OvertimePay, NightDiffPay,
+                        (PayrollPeriodId, EmployeeId, BasicPay, OvertimePay, NightDiffPay,
                          HolidayPay, Allowances, TardinessDeduction, UndertimeDeduction, AbsenceDeduction,
                          SssEmployee, SssEmployer, PhilHealthEmployee, PhilHealthEmployer,
                          PagIbigEmployee, PagIbigEmployer, WithholdingTax, OtherDeductions, ComputedAt)
                     VALUES
-                        (@PayrollPeriodId, @EmployeeId, @BasicPay, @PakyawPay, @OvertimePay, @NightDiffPay,
+                        (@PayrollPeriodId, @EmployeeId, @BasicPay, @OvertimePay, @NightDiffPay,
                          @HolidayPay, @Allowances, @TardinessDeduction, @UndertimeDeduction, @AbsenceDeduction,
                          @SssEmployee, @SssEmployer, @PhilHealthEmployee, @PhilHealthEmployer,
                          @PagIbigEmployee, @PagIbigEmployer, @WithholdingTax, @OtherDeductions, @ComputedAt);", r);
@@ -99,12 +99,11 @@ namespace GB_Payroll_System.Data
 
         // Earnings
         public decimal BasicPay { get; set; }
-        public decimal PakyawPay { get; set; }
         public decimal OvertimePay { get; set; }
         public decimal NightDiffPay { get; set; }
         public decimal HolidayPay { get; set; }
         public decimal Allowances { get; set; }
-        public decimal GrossPay => BasicPay + PakyawPay + OvertimePay + NightDiffPay + HolidayPay + Allowances;
+        public decimal GrossPay => BasicPay + OvertimePay + NightDiffPay + HolidayPay + Allowances;
 
         // Deductions
         public decimal TardinessDeduction { get; set; }

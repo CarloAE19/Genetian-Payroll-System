@@ -17,15 +17,16 @@ namespace GB_Payroll_System.Views
             InitializeComponent();
             _employee = employee;
 
+            // Attach Currency Auto-formatting
+            CurrencyInputHelper.Attach(TxtNewRate);
+
             TxtDialogTitle.Text = $"Salary Promotion — {employee.FullName}";
             TxtEmployeeSubtitle.Text = $"{employee.EmployeeCode} | {employee.Department}";
             TxtCurrentPosition.Text = string.IsNullOrWhiteSpace(employee.Position) ? "—" : employee.Position;
             TxtCurrentRate.Text = $"₱{employee.BasicRate:N2}";
             TxtNewRateLabel.Text = employee.PayType == PayType.Daily
                 ? "NEW DAILY RATE (₱)"
-                : employee.PayType == PayType.Monthly
-                    ? "NEW MONTHLY BASIC SALARY (₱)"
-                    : "NEW BASE RATE (₱)";
+                : "NEW MONTHLY BASIC SALARY (₱)";
 
             DpEffectiveDate.SelectedDate = DateTime.Today;
             TxtNewPosition.Text = employee.Position;

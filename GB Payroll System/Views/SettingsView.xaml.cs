@@ -12,14 +12,27 @@ namespace GB_Payroll_System.Views
     public partial class SettingsView : UserControl
     {
         private readonly UserRepository _userRepo = new();
+        private readonly StatutorySettingsRepository _statRepo = new();
         private List<User> _users = [];
+        private StatutorySettings _currentStatutory = new();
 
         public SettingsView()
         {
             InitializeComponent();
             Loaded += (_, _) =>
             {
+                // Attach currency auto-formatting
+                CurrencyInputHelper.Attach(TxtSssMinCredit);
+                CurrencyInputHelper.Attach(TxtSssMaxCredit);
+                CurrencyInputHelper.Attach(TxtPhMinCredit);
+                CurrencyInputHelper.Attach(TxtPhMaxCredit);
+                CurrencyInputHelper.Attach(TxtPagIbigEe);
+                CurrencyInputHelper.Attach(TxtPagIbigEr);
+                CurrencyInputHelper.Attach(TxtBirSemiExempt);
+                CurrencyInputHelper.Attach(TxtBirBonusCap);
+
                 LoadUsers();
+                LoadStatutorySettings();
                 LoadConnectionSettings();
             };
         }
@@ -27,10 +40,11 @@ namespace GB_Payroll_System.Views
         // ── TAB SWITCHING ────────────────────────────────────────────────────
         private void Tab_Changed(object sender, RoutedEventArgs e)
         {
-            if (UsersPanel == null) return;
-            bool showUsers = TabUsers.IsChecked == true;
-            UsersPanel.Visibility    = showUsers ? Visibility.Visible   : Visibility.Collapsed;
-            DatabasePanel.Visibility = showUsers ? Visibility.Collapsed : Visibility.Visible;
+            if (UsersPanel == null || StatutoryPanel == null || DatabasePanel == null) return;
+
+            UsersPanel.Visibility     = TabUsers.IsChecked == true     ? Visibility.Visible : Visibility.Collapsed;
+            StatutoryPanel.Visibility = TabStatutory.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
+            DatabasePanel.Visibility  = TabDatabase.IsChecked == true  ? Visibility.Visible : Visibility.Collapsed;
         }
 
         // ══════════════════════════════════════════════════════════════════════
@@ -115,6 +129,110 @@ namespace GB_Payroll_System.Views
 
                 try { _userRepo.SetActive(id, newState); LoadUsers(); }
                 catch (Exception ex) { MessageBox.Show($"Failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════════
+        // STATUTORY & CONTRIBUTION RATES TAB
+        // ══════════════════════════════════════════════════════════════════════
+        private void LoadStatutorySettings()
+        {
+            if (TxtSssEeRate == null) return;
+            try
+            {
+                _currentStatutory = _statRepo.GetSettings();
+                PopulateStatutoryFields(_currentStatutory);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to load statutory settings: {ex.Message}");
+            }
+        }
+
+        private void PopulateStatutoryFields(StatutorySettings s)
+        {
+            // SSS
+            TxtSssEeRate.Text    = s.SssEmployeeSharePercent.ToString("F2");
+            TxtSssErRate.Text    = s.SssEmployerSharePercent.ToString("F2");
+            TxtSssTotalRate.Text = s.SssTotalRatePercent.ToString("F2");
+            TxtSssMinCredit.Text = s.SssMinSalaryCredit.ToString("N2");
+            TxtSssMaxCredit.Text = s.SssMaxSalaryCredit.ToString("N2");
+
+            // PhilHealth
+            TxtPhTotalRate.Text  = s.PhilHealthTotalRatePercent.ToString("F2");
+            TxtPhEeRate.Text     = s.PhilHealthEmployeeSharePercent.ToString("F2");
+            TxtPhErRate.Text     = s.PhilHealthEmployerSharePercent.ToString("F2");
+            TxtPhMinCredit.Text  = s.PhilHealthMinSalaryCredit.ToString("N2");
+            TxtPhMaxCredit.Text  = s.PhilHealthMaxSalaryCredit.ToString("N2");
+
+            // Pag-IBIG
+            TxtPagIbigEe.Text    = s.PagIbigEmployeeStandardMonthly.ToString("N2");
+            TxtPagIbigEr.Text    = s.PagIbigEmployerStandardMonthly.ToString("N2");
+
+            // BIR Tax
+            TxtBirSemiExempt.Text = s.BirSemiMonthlyExemptCeiling.ToString("N2");
+            TxtBirBonusCap.Text   = s.BirBonusExemptCap.ToString("N2");
+        }
+
+        private void BtnSaveStatutory_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var s = new StatutorySettings();
+
+                // Parse SSS
+                if (decimal.TryParse(TxtSssEeRate.Text.Replace(",", ""), out decimal sssEe)) s.SssEmployeeSharePercent = sssEe;
+                if (decimal.TryParse(TxtSssErRate.Text.Replace(",", ""), out decimal sssEr)) s.SssEmployerSharePercent = sssEr;
+                if (decimal.TryParse(TxtSssTotalRate.Text.Replace(",", ""), out decimal sssTot)) s.SssTotalRatePercent = sssTot;
+                if (decimal.TryParse(TxtSssMinCredit.Text.Replace(",", ""), out decimal sssMin)) s.SssMinSalaryCredit = sssMin;
+                if (decimal.TryParse(TxtSssMaxCredit.Text.Replace(",", ""), out decimal sssMax)) s.SssMaxSalaryCredit = sssMax;
+
+                // Parse PhilHealth
+                if (decimal.TryParse(TxtPhTotalRate.Text.Replace(",", ""), out decimal phTot)) s.PhilHealthTotalRatePercent = phTot;
+                if (decimal.TryParse(TxtPhEeRate.Text.Replace(",", ""), out decimal phEe)) s.PhilHealthEmployeeSharePercent = phEe;
+                if (decimal.TryParse(TxtPhErRate.Text.Replace(",", ""), out decimal phEr)) s.PhilHealthEmployerSharePercent = phEr;
+                if (decimal.TryParse(TxtPhMinCredit.Text.Replace(",", ""), out decimal phMin)) s.PhilHealthMinSalaryCredit = phMin;
+                if (decimal.TryParse(TxtPhMaxCredit.Text.Replace(",", ""), out decimal phMax)) s.PhilHealthMaxSalaryCredit = phMax;
+
+                // Parse Pag-IBIG
+                if (decimal.TryParse(TxtPagIbigEe.Text.Replace(",", ""), out decimal piEe)) s.PagIbigEmployeeStandardMonthly = piEe;
+                if (decimal.TryParse(TxtPagIbigEr.Text.Replace(",", ""), out decimal piEr)) s.PagIbigEmployerStandardMonthly = piEr;
+
+                // Parse BIR
+                if (decimal.TryParse(TxtBirSemiExempt.Text.Replace(",", ""), out decimal birSemi)) s.BirSemiMonthlyExemptCeiling = birSemi;
+                if (decimal.TryParse(TxtBirBonusCap.Text.Replace(",", ""), out decimal birBonus)) s.BirBonusExemptCap = birBonus;
+
+                s.UpdatedByUsername = AuthService.CurrentUser?.Username ?? "admin";
+
+                _statRepo.SaveSettings(s);
+                _currentStatutory = s;
+
+                MessageBox.Show("✅ National statutory contribution rates and caps saved and applied successfully!",
+                    "Statutory Rates Updated", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to save statutory settings:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void BtnResetStatutory_Click(object sender, RoutedEventArgs e)
+        {
+            var confirm = MessageBox.Show(
+                "Reset all statutory contribution rates to standard 2025/2026 DOLE schedules (SSS 14%, PhilHealth 5%, Pag-IBIG ₱200, BIR ₱10,417)?",
+                "Confirm Reset", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (confirm != MessageBoxResult.Yes) return;
+
+            try
+            {
+                _currentStatutory = _statRepo.ResetToDefaults(AuthService.CurrentUser?.Username ?? "admin");
+                PopulateStatutoryFields(_currentStatutory);
+                MessageBox.Show("Statutory rates have been reset to national standard schedules.", "Reset Complete", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to reset statutory settings: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

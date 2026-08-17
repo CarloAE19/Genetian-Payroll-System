@@ -29,7 +29,7 @@ namespace GB_Payroll_System.Models
 
         public decimal VacationLeaveTotal { get; set; } = 15.0m;
         public decimal VacationLeaveUsed { get; set; }
-        public decimal VacationLeaveBalance => (VacationLeaveTotal + CarryOverDays) - VacationLeaveUsed;
+        public decimal VacationLeaveBalance => VacationLeaveTotal - VacationLeaveUsed;
 
         public decimal SickLeaveTotal { get; set; } = 15.0m;
         public decimal SickLeaveUsed { get; set; }
@@ -39,7 +39,6 @@ namespace GB_Payroll_System.Models
         public decimal EmergencyLeaveUsed { get; set; }
         public decimal EmergencyLeaveBalance => EmergencyLeaveTotal - EmergencyLeaveUsed;
 
-        public decimal CarryOverDays { get; set; } // Unused VL carried over from previous year
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 
@@ -106,8 +105,7 @@ namespace GB_Payroll_System.Models
 
         public decimal VacationLeaveTotal { get; set; }
         public decimal VacationLeaveUsed { get; set; }
-        public decimal CarryOverDays { get; set; }
-        public decimal VacationLeaveBalance => (VacationLeaveTotal + CarryOverDays) - VacationLeaveUsed;
+        public decimal VacationLeaveBalance => VacationLeaveTotal - VacationLeaveUsed;
 
         public decimal SickLeaveTotal { get; set; }
         public decimal SickLeaveUsed { get; set; }

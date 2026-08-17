@@ -16,7 +16,6 @@ namespace GB_Payroll_System
         private EmployeeView?   _employeeView;
         private HolidayView?    _holidayView;
         private AttendanceView? _attendanceView;
-        private PakyawView?     _pakyawView;
         private PayrollView?            _payrollView;
         private SettingsView?           _settingsView;
         private GovernmentReportsView?  _govReportsView;
@@ -48,7 +47,6 @@ namespace GB_Payroll_System
             NavDashboard.Visibility  = Visibility.Visible;
             NavEmployees.Visibility  = (isFullAccess || role == UserRole.Accounting || role == UserRole.Management) ? Visibility.Visible : Visibility.Collapsed;
             NavPromotions.Visibility = isFullAccess ? Visibility.Visible : Visibility.Collapsed;
-            NavPakyawan.Visibility   = (isFullAccess || role == UserRole.Accounting) ? Visibility.Visible : Visibility.Collapsed;
             NavAttendance.Visibility = (isFullAccess || role == UserRole.Accounting || role == UserRole.Management) ? Visibility.Visible : Visibility.Collapsed;
             NavLeave.Visibility      = (isFullAccess || role == UserRole.Accounting || role == UserRole.Management) ? Visibility.Visible : Visibility.Collapsed;
             NavHolidays.Visibility   = (isFullAccess || role == UserRole.Management) ? Visibility.Visible : Visibility.Collapsed;
@@ -57,13 +55,12 @@ namespace GB_Payroll_System
             NavSettings.Visibility   = isFullAccess ? Visibility.Visible : Visibility.Collapsed;
         }
 
-
         // ─── Dashboard Stats ───────────────────────────────────────────────────────
 
         private async void LoadDashboardStats()
         {
             // Run DB queries off the UI thread so the window doesn't freeze
-            var (activeEmployees, cutoffLabel, pakyawTotal, estNetPayroll) = await Task.Run<(int, string, decimal, decimal)>(() =>
+            var (activeEmployees, cutoffLabel, estNetPayroll) = await Task.Run<(int, string, decimal)>(() =>
             {
                 try
                 {
@@ -98,27 +95,13 @@ namespace GB_Payroll_System
                         if (closed) label += " (Closed)";
                     }
 
-                    // 3. Pakyaw total earnings for the period's date range
-                    decimal pakyaw = 0m;
-                    if (period != null)
-                    {
-                        DateTime start = Convert.ToDateTime(period.StartDate);
-                        DateTime end   = Convert.ToDateTime(period.EndDate);
-
-                        pakyaw = conn.ExecuteScalar<decimal>(@"
-                            SELECT COALESCE(SUM(QuantityCompleted * UnitRate), 0)
-                            FROM PakyawEntries
-                            WHERE WorkDate BETWEEN @Start AND @End;",
-                            new { Start = start, End = end });
-                    }
-
-                    // 4. Estimated net payroll from PayrollRecords for the latest period
+                    // 3. Estimated net payroll from PayrollRecords for the latest period
                     decimal netPayroll = 0m;
                     if (pId.HasValue)
                     {
                         netPayroll = conn.ExecuteScalar<decimal>(@"
                             SELECT COALESCE(SUM(
-                                (BasicPay + PakyawPay + OvertimePay + NightDiffPay + HolidayPay + Allowances)
+                                (BasicPay + OvertimePay + NightDiffPay + HolidayPay + Allowances)
                                 - (TardinessDeduction + UndertimeDeduction + AbsenceDeduction
                                    + SssEmployee + PhilHealthEmployee + PagIbigEmployee
                                    + WithholdingTax + OtherDeductions)
@@ -128,22 +111,20 @@ namespace GB_Payroll_System
                             new { PeriodId = pId.Value });
                     }
 
-                    return (activeEmps, label, pakyaw, netPayroll);
+                    return (activeEmps, label, netPayroll);
                 }
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine($"Dashboard stats error: {ex.Message}");
-                    return (0, "DB Unavailable", 0m, 0m);
+                    return (0, "DB Unavailable", 0m);
                 }
             });
 
             // Update UI on the dispatcher thread
             TxtTotalEmployees.Text = $"{activeEmployees} Active";
             TxtCurrentCutoff.Text  = cutoffLabel;
-            TxtPakyawTotal.Text    = $"₱{pakyawTotal:N2}";
             TxtEstNetPayroll.Text  = $"₱{estNetPayroll:N2}";
         }
-
 
         // ─── Navigation ────────────────────────────────────────────────────────────
 
@@ -154,7 +135,7 @@ namespace GB_Payroll_System
             string name = btn.Name;
             string title = btn.Content?.ToString()?
                 .Replace("📊 ", "").Replace("👥 ", "").Replace("📈 ", "")
-                .Replace("📦 ", "").Replace("⏰ ", "").Replace("🌴 ", "")
+                .Replace("⏰ ", "").Replace("🌴 ", "")
                 .Replace("🗓️ ", "").Replace("💵 ", "").Replace("🏛️ ", "")
                 .Replace("⚙️ ", "") ?? "";
 
@@ -182,11 +163,6 @@ namespace GB_Payroll_System
                     SetContent(_leaveView);
                     break;
 
-                case "NavPakyawan":
-                    _pakyawView ??= new PakyawView();
-                    SetContent(_pakyawView);
-                    break;
-
                 case "NavPayroll":
                     _payrollView ??= new PayrollView();
                     SetContent(_payrollView);
@@ -203,7 +179,6 @@ namespace GB_Payroll_System
                     break;
 
                 case "NavPromotions":
-                    // Opens Employee view; the 📈 promote button is per-row
                     _employeeView ??= new EmployeeView();
                     SetContent(_employeeView);
                     break;
@@ -239,14 +214,6 @@ namespace GB_Payroll_System
 
             // Ask the employee view to open the Add dialog immediately
             _employeeView.OpenAddEmployeeDialog();
-        }
-
-        private void BtnQuickLogPakyaw_Click(object sender, RoutedEventArgs e)
-        {
-            NavPakyawan.IsChecked = true;
-            TxtHeaderTitle.Text = "Pakyawan Manager";
-            _pakyawView ??= new PakyawView();
-            SetContent(_pakyawView);
         }
 
         private void BtnQuickProcessPayroll_Click(object sender, RoutedEventArgs e)

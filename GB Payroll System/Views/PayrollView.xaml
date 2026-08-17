@@ -53,7 +53,7 @@
                                                                         </DiscreteObjectKeyFrame.Value>
                                                                     </DiscreteObjectKeyFrame>
                                                                 </ObjectAnimationUsingKeyFrames>
-                                                            </Storyboard>
+                                                             </Storyboard>
                                                         </VisualState>
                                                         <VisualState x:Name="Unselected"/>
                                                         <VisualState x:Name="SelectedUnfocused">
@@ -225,7 +225,6 @@
                     <DataGridTextColumn Header="NAME" Binding="{Binding FullName}" Width="160"/>
                     <DataGridTextColumn Header="DEPARTMENT" Binding="{Binding Department}" Width="130"/>
                     <DataGridTextColumn Header="BASIC PAY" Binding="{Binding BasicPay, StringFormat=₱{0:N2}}" Width="110"/>
-                    <DataGridTextColumn Header="PAKYAW" Binding="{Binding PakyawPay, StringFormat=₱{0:N2}}" Width="100"/>
                     <DataGridTextColumn Header="OT PAY" Binding="{Binding OvertimePay, StringFormat=₱{0:N2}}" Width="90"/>
                     <DataGridTextColumn Header="GROSS PAY" Binding="{Binding GrossPay, StringFormat=₱{0:N2}}" Width="110"/>
                     <DataGridTextColumn Header="SSS" Binding="{Binding SssEmployee, StringFormat=₱{0:N2}}" Width="85"/>

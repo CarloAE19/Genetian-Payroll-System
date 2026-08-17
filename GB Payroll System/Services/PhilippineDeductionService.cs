@@ -1,66 +1,86 @@
 using System;
+using GB_Payroll_System.Data;
+using GB_Payroll_System.Models;
 
 namespace GB_Payroll_System.Services
 {
     public class PhilippineDeductionService
     {
+        private static readonly StatutorySettingsRepository _settingsRepo = new();
+
         /// <summary>
-        /// SSS Monthly Contribution (2025/2026 DOLE Schedule)
-        /// Total Rate: 14% (Employee 4.5%, Employer 9.5%) capped at MSC ₱35,000
+        /// SSS Monthly Contribution computed dynamically based on configured Statutory Settings
         /// </summary>
-        public static (decimal Employee, decimal Employer) CalculateSss(decimal monthlyCompensation)
+        public static (decimal Employee, decimal Employer) CalculateSss(decimal monthlyCompensation, StatutorySettings? customSettings = null)
         {
             if (monthlyCompensation <= 0) return (0, 0);
 
-            // Minimum Monthly Salary Credit = ₱5,000, Maximum = ₱35,000
-            decimal msc = Math.Clamp(monthlyCompensation, 5000m, 35000m);
+            var settings = customSettings ?? _settingsRepo.GetSettings();
 
-            decimal employeeShare = Math.Round(msc * 0.045m, 2);
-            decimal employerShare = Math.Round(msc * 0.095m, 2);
+            decimal minMsc = settings.SssMinSalaryCredit > 0 ? settings.SssMinSalaryCredit : 5000m;
+            decimal maxMsc = settings.SssMaxSalaryCredit > 0 ? settings.SssMaxSalaryCredit : 35000m;
+            decimal eePercent = settings.SssEmployeeSharePercent > 0 ? settings.SssEmployeeSharePercent / 100m : 0.045m;
+            decimal erPercent = settings.SssEmployerSharePercent > 0 ? settings.SssEmployerSharePercent / 100m : 0.095m;
+
+            decimal msc = Math.Clamp(monthlyCompensation, minMsc, maxMsc);
+
+            decimal employeeShare = Math.Round(msc * eePercent, 2);
+            decimal employerShare = Math.Round(msc * erPercent, 2);
 
             return (employeeShare, employerShare);
         }
 
         /// <summary>
-        /// PhilHealth Monthly Contribution (2025/2026 Premium 5% shared 50/50)
-        /// Minimum Floor: ₱10,000 MSC, Maximum Ceiling: ₱100,000 MSC
+        /// PhilHealth Monthly Contribution computed dynamically based on configured Statutory Settings
         /// </summary>
-        public static (decimal Employee, decimal Employer) CalculatePhilHealth(decimal monthlyCompensation)
+        public static (decimal Employee, decimal Employer) CalculatePhilHealth(decimal monthlyCompensation, StatutorySettings? customSettings = null)
         {
             if (monthlyCompensation <= 0) return (0, 0);
 
-            decimal msc = Math.Clamp(monthlyCompensation, 10000m, 100000m);
-            decimal totalContribution = Math.Round(msc * 0.05m, 2);
+            var settings = customSettings ?? _settingsRepo.GetSettings();
 
-            decimal shared = Math.Round(totalContribution / 2m, 2);
-            return (shared, shared);
+            decimal minMsc = settings.PhilHealthMinSalaryCredit > 0 ? settings.PhilHealthMinSalaryCredit : 10000m;
+            decimal maxMsc = settings.PhilHealthMaxSalaryCredit > 0 ? settings.PhilHealthMaxSalaryCredit : 100000m;
+            decimal eePercent = settings.PhilHealthEmployeeSharePercent > 0 ? settings.PhilHealthEmployeeSharePercent / 100m : 0.025m;
+            decimal erPercent = settings.PhilHealthEmployerSharePercent > 0 ? settings.PhilHealthEmployerSharePercent / 100m : 0.025m;
+
+            decimal msc = Math.Clamp(monthlyCompensation, minMsc, maxMsc);
+
+            decimal employeeShare = Math.Round(msc * eePercent, 2);
+            decimal employerShare = Math.Round(msc * erPercent, 2);
+
+            return (employeeShare, employerShare);
         }
 
         /// <summary>
-        /// Pag-IBIG (HDMF) Contribution
-        /// Standard Mandatory Employee Cap: ₱200/month (Matched ₱200 by Employer)
+        /// Pag-IBIG (HDMF) Contribution computed dynamically based on configured Statutory Settings
         /// </summary>
-        public static (decimal Employee, decimal Employer) CalculatePagIbig(decimal monthlyCompensation)
+        public static (decimal Employee, decimal Employer) CalculatePagIbig(decimal monthlyCompensation, StatutorySettings? customSettings = null)
         {
             if (monthlyCompensation <= 0) return (0, 0);
 
-            decimal employee = 200m;
-            decimal employer = 200m;
+            var settings = customSettings ?? _settingsRepo.GetSettings();
+
+            decimal employee = settings.PagIbigEmployeeStandardMonthly > 0 ? settings.PagIbigEmployeeStandardMonthly : 200m;
+            decimal employer = settings.PagIbigEmployerStandardMonthly > 0 ? settings.PagIbigEmployerStandardMonthly : 200m;
 
             return (employee, employer);
         }
 
         /// <summary>
-        /// BIR Withholding Tax (TRAIN Law Semi-Monthly Graduated Tax Table)
+        /// BIR Withholding Tax computed dynamically based on configured Statutory Settings and TRAIN Law brackets
         /// </summary>
-        public static decimal CalculateSemiMonthlyWithholdingTax(decimal taxableIncome)
+        public static decimal CalculateSemiMonthlyWithholdingTax(decimal taxableIncome, StatutorySettings? customSettings = null)
         {
-            if (taxableIncome <= 10417m) return 0m; // ₱10,417 or below = Tax Exempt (₱250,000 annual exemption)
+            var settings = customSettings ?? _settingsRepo.GetSettings();
+            decimal exemptFloor = settings.BirSemiMonthlyExemptCeiling > 0 ? settings.BirSemiMonthlyExemptCeiling : 10417m;
+
+            if (taxableIncome <= exemptFloor) return 0m; // Tax Exempt threshold
 
             if (taxableIncome <= 16666m)
             {
-                // 15% in excess of 10,417
-                return Math.Round((taxableIncome - 10417m) * 0.15m, 2);
+                // 15% in excess of exempt floor
+                return Math.Round((taxableIncome - exemptFloor) * 0.15m, 2);
             }
             if (taxableIncome <= 33333m)
             {
