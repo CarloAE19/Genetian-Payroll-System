@@ -2,13 +2,13 @@
 name: gb-payroll-system
 description: >-
   Definitive architectural guide, Modern Enterprise UI/UX Design System (Windows 10 & Windows 11 Fluent / SaaS standard), 
-  Advanced HCI standards, code integrity patterns, and Philippine Data Privacy rules 
+  Advanced HCI & User-Friendliness standards, code integrity patterns, and Philippine Data Privacy rules 
   for the Genetian GB Payroll System (.NET 10 WPF + PostgreSQL + Dapper).
 ---
 
-# Genetian GB Payroll System — Modern Enterprise UI/UX, Advanced HCI & Architecture Blueprint
+# Genetian GB Payroll System — Modern Enterprise UI/UX, Advanced HCI, User-Friendliness & Architecture Blueprint
 
-This document is the definitive engineering and design standard for the **Genetian GB Payroll System**. It guarantees that any UI, code, or feature created in this repository meets **modern world-class desktop UI/UX standards (Windows 10 & Windows 11 Fluent / Modern Enterprise SaaS)**, adheres to **Advanced Human-Computer Interaction (HCI)** principles, ensures **non-breaking code stability**, and enforces **zero data leakage (Philippine RA 10173)**.
+This document is the definitive engineering, UX, and operational standard for the **Genetian GB Payroll System**. It guarantees that any UI, code, or feature created in this repository is **exceptionally user-friendly**, meets **modern world-class desktop UI/UX standards (Windows 10 & Windows 11 Fluent / Modern Enterprise SaaS)**, adheres to **Advanced Human-Computer Interaction (HCI)** principles, ensures **non-breaking code stability**, and enforces **zero data leakage (Philippine RA 10173)**.
 
 ---
 
@@ -36,25 +36,44 @@ GB_Payroll_System/
 
 ---
 
-## 2. Modern World-Class UI/UX Design System (Windows 10 & Windows 11)
+## 2. World-Class User-Friendliness & Operational Ergonomics
 
-To guarantee the application looks and feels like a **sleek, top-tier modern enterprise application** across both **Windows 10 and Windows 11**:
+To make the system effortless, intuitive, and welcoming for HR officers, accountants, and non-technical staff:
 
-### 2.1 Cross-Windows Compatibility & Visual Refinement
-* **Unified Fluent Aesthetic**: Regardless of whether the user runs Windows 10 or Windows 11, the app renders a unified, premium look with soft rounded corners (`8px-12px`), drop shadows, and modern card containers.
-* **Font Fallback Stack**: Use `FontFamily="Segoe UI Variable, Segoe UI, -apple-system, Arial, sans-serif"`. On Windows 10, it seamlessly falls back to crisp `Segoe UI` without visual distortion or missing glyphs.
-* **High-DPI & Multi-Monitor V2 Awareness**: All Windows and Controls must declare `SnapsToDevicePixels="True"` and `UseLayoutRounding="True"` to ensure razor-sharp rendering on 100%, 125%, 150%, 175%, and 200% DPI displays on both Windows 10 and 11.
+### 2.1 Plain-Language UI & Contextual Guidance
+* **Zero Jargon**: Use familiar, natural terminology across all screens (e.g. *"Regular Holiday (200% Pay)"*, *"Semi-Monthly 1st Cutoff (1st–15th)"*, *"Net Pay After Deductions"* instead of cryptic system codes).
+* **Helpful Tooltips**: Every icon button, configuration field, and statutory toggle must include an informative `ToolTip` explaining what it does and why (e.g., `ToolTip="Clamps employee contributions to ₱35,000 maximum monthly salary credit under SSS 2025 table"`).
+* **Actionable Empty States**: When lists, grids, or search results are empty, **never leave a stark blank table**. Display a friendly icon, a brief description, and a direct Call-To-Action button (e.g. *"No employees found matching 'Finance'. [Clear Filter] or [+ Add New Employee]"*).
 
-### 2.2 Color Palette & Modern Design Tokens (`App.xaml`)
+### 2.2 Instant Feedback & Frictionless Search
+* **Search-As-You-Type**: Filter tables instantly as the user types (name, department, employee code) without requiring an extra "Submit Search" click.
+* **Smart Dropdowns & Branch Switchers**: Auto-select active branches and current payroll periods by default so users can complete daily tasks in minimal clicks.
+* **One-Click Actions**: Provide dedicated one-click shortcuts for frequent tasks (e.g., *"Calculate All Drafts"*, *"Export All Payslips to PDF"*, *"Send SSS Summary to Excel"*).
+
+### 2.3 Forgiving Design & User Confidence (Zero Anxiety)
+* **Safe Draft vs. Finalize Modes**: Users can compute, inspect, adjust, and re-run draft payroll calculations with zero penalty. Finalizing/locking a period is an explicit, clear milestone.
+* **Friendly, Actionable Error Messages**: Catch exceptions and translate them into clear human guidance with steps to fix:
+  - *Poor:* `"NpgsqlException: foreign key violation constraint fk_emp_branch"`
+  - *User-Friendly:* `"Unable to save employee: The selected Branch no longer exists. Please choose an active branch from the list."`
+* **Confirmation Dialogs with Impact Summaries**: Before deleting a record or resetting a cutoff, show a modal specifying the exact items affected (e.g. *"Deleting this employee contract will not delete past historical payslips. Do you want to proceed?"*).
+
+---
+
+## 3. Modern World-Class UI/UX Design System (Windows 10 & Windows 11)
+
+### 3.1 Cross-Windows Compatibility & Visual Refinement
+* **Unified Fluent Aesthetic**: Soft rounded geometry (`CornerRadius="8"` to `12"`), subtle elevations, and clean cards across both Windows 10 and Windows 11.
+* **Font Fallback Stack**: `FontFamily="Segoe UI Variable, Segoe UI, -apple-system, Arial, sans-serif"`, ensuring native typography on Windows 10 (`Segoe UI`) and Windows 11 (`Segoe UI Variable`).
+* **High-DPI Scaling**: `SnapsToDevicePixels="True"` and `UseLayoutRounding="True"` on all Windows and UserControls for razor-sharp rendering on 100%–200% displays.
+
+### 3.2 Color Palette & Modern Design Tokens (`App.xaml`)
 * **Signature Brand Gradients**:
   - Primary Window Background: Deep Sapphire (`#0A4D9C`) $\to$ Midnight Navy (`#06254A`)
   - Accent Primary Blue: `#002CFA` (Hover: `#0022C8`, Active/Pressed: `#001CA3`)
 * **Surfaces, Elevation & Cards**:
   - Main Background: `#F8FAFC` (Slate Canvas)
-  - Card Surfaces: `#FFFFFF` with smooth subtle shadows:
-    `<DropShadowEffect BlurRadius="18" Opacity="0.06" Direction="270" ShadowDepth="3" Color="#0F172A"/>`
+  - Card Surfaces: `#FFFFFF` with smooth drop shadows (`BlurRadius="18"`, `Opacity="0.06"`, `Direction="270"`, `ShadowDepth="3"`, `Color="#0F172A"`)
   - Container Borders: `1px` solid `#E2E8F0` or `#EDF2F7`
-  - Corner Radiuses: Modern soft curves (`CornerRadius="8"` for inputs/buttons, `CornerRadius="12"` for cards/dialogs)
 * **Modern Semantic Pill Badges (Soft Pastel Background + Vibrant Ink)**:
   - **Success / Active / Present / Approved**: Background `#DCFCE7`, Foreground `#15803D`, Border `#BBF7D0`
   - **Warning / Pending / Probationary / On-Leave**: Background `#FEF3C7`, Foreground `#B45309`, Border `#FDE68A`
@@ -62,7 +81,7 @@ To guarantee the application looks and feels like a **sleek, top-tier modern ent
   - **Info / Regular / Draft**: Background `#DBEAFE`, Foreground `#1D4ED8`, Border `#BFDBFE`
   - **Neutral / Inactive**: Background `#F1F5F9`, Foreground `#475569`, Border `#E2E8F0`
 
-### 2.3 High-Precision DataGrid Standards
+### 3.3 High-Precision DataGrid Standards
 Every data table must look modern, spacious, and readable:
 1. **Never allow default auto-generated columns**: Always set `AutoGenerateColumns="False"`.
 2. **Column Alignment & Currency Formatting**:
@@ -74,44 +93,38 @@ Every data table must look modern, spacious, and readable:
    - Row styling: Alternating subtle row tint (`#FFFFFF` / `#F8FAFC`), smooth hover state (`#F0F4F8`).
    - Cell padding: Minimum `8px,10px` vertical/horizontal padding to avoid dense, cramped spreadsheet appearance.
 
-### 2.4 Modern Form Controls & Ergonomics
+### 3.4 Modern Form Controls & Ergonomics
 * **Modern Inputs (`ModernInputStyle`)**: Height `42-46px`, soft background (`#F8FAFC`), subtle border (`#E2E8F0`), focus ring (`#002CFA`, `1.5px` border thickness with gentle glow).
 * **Live Formatted Inputs**: Always format currency fields on blur using `CurrencyInputHelper` or structured masked inputs.
-* **Persistent Visual Labels**: Every input must feature an explicit label above the box (never rely solely on disappearing watermark/placeholder text).
+* **Persistent Visual Labels**: Every input must feature an explicit label above the box (never rely solely on disappearing placeholder text).
 
 ---
 
-## 3. Advanced Human-Computer Interaction (HCI) Principles
+## 4. Advanced Human-Computer Interaction (HCI) Principles
 
-### 3.1 Cognitive Load Reduction & Hick's Law
+### 4.1 Cognitive Load Reduction & Hick's Law
 * **Progressive Disclosure**: Break complex or multi-parameter workflows (e.g. Biometric Import, New Payroll Run, Employee Onboarding) into step-by-step wizards or categorized tab views with breadcrumbs.
-* **Visual Hierarchy**: Group related inputs into clearly bounded card panels with subtitles. Use clear visual contrast between primary actions (Solid Blue `#002CFA`), secondary actions (Outlined Gray `#E2E8F0`), and destructive actions (Crimson Outline/Fill `#DC2626`).
+* **Visual Hierarchy**: Group related inputs into clearly bounded card panels with subtitles. Clear contrast between primary actions (Solid Blue `#002CFA`), secondary actions (Outlined Gray `#E2E8F0`), and destructive actions (Crimson Outline/Fill `#DC2626`).
 
-### 3.2 Fitts's Law & Touch/Pointer Ergonomics
-* **Generous Target Sizes**: All interactive buttons, dropdowns, and clickable rows must have a minimum height of `38px-46px` and sufficient horizontal padding (`16px-24px`).
-* **Visual Affordance & Micro-interactions**:
-  - Buttons must show smooth hover transitions (`IsMouseOver`) and active press feedback.
-  - Interactive table rows must indicate clickable state with pointer cursor and subtle highlight.
+### 4.2 Fitts's Law & Touch/Pointer Ergonomics
+* **Generous Target Sizes**: Interactive buttons, dropdowns, and clickable rows must have a minimum height of `38px-46px` and sufficient horizontal padding (`16px-24px`).
+* **Visual Affordance & Micro-interactions**: Hover transitions (`IsMouseOver`) and active press feedback on buttons and interactive rows.
 
-### 3.3 Zero-Lag Non-Blocking UI (Nielsen's Responsiveness Principle)
+### 4.3 Zero-Lag Non-Blocking UI (Nielsen's Responsiveness Principle)
 * **Async Database & Processing**: All database queries, batch payroll computations, biometric log parsing, and report exports **must** execute asynchronously (`await Task.Run(...)` or async Dapper calls) off the UI thread.
-* **Loading Skeletons & Progress Rings**:
-  - Never freeze the WPF dispatcher thread or leave the user guessing.
-  - Display indeterminate progress rings or skeleton placeholders with informative status messages ("Ingesting 2,400 biometric punches...", "Computing PhilHealth 5% contribution brackets...").
-* **Non-Disruptive Feedback**: Use lightweight in-app toast/banner alerts for non-critical confirmations rather than abrupt modal message boxes.
+* **Loading Skeletons & Progress Rings**: Display indeterminate progress rings or skeleton placeholders with informative status messages ("Ingesting 2,400 biometric punches...", "Computing PhilHealth 5% contribution brackets...").
+* **Non-Disruptive Feedback**: Lightweight in-app toast/banner alerts for non-critical confirmations.
 
-### 3.4 Error Prevention & Forgiving Design (Norman's Principles)
+### 4.4 Error Prevention & Keyboard Accessibility (Norman's Principles)
 * **Real-Time Input Validation**: Mark erroneous inputs with a clear crimson border (`#E53935`) and an inline validation tooltip/helper label.
-* **Destructive Action Confirmation**: Require a dedicated, informative confirmation dialog before deleting an employee profile, deleting a contract, or recalculating finalized payroll periods.
 * **Full Keyboard Accessibility**:
   - Explicit `TabIndex` sequence across all form fields.
   - `IsDefault="True"` bound to primary confirm buttons; `IsCancel="True"` bound to cancel/escape buttons.
   - `Enter` key triggers search in filter boxes.
-  - High-DPI support: `SnapsToDevicePixels="True"` and `UseLayoutRounding="True"` on all Windows and UserControls.
 
 ---
 
-## 4. What Is Inside This System (Domain & Architectural Blueprint)
+## 5. What Is Inside This System (Domain & Architectural Blueprint)
 
 ```mermaid
 graph LR
@@ -152,7 +165,7 @@ graph LR
     USR --> EMP
 ```
 
-### 4.1 Module Directory
+### 5.1 Module Directory
 1. **Auth & RBAC (`AuthService.cs`, `UserRepository.cs`)**:
    - Roles: `Admin`, `HR`, `Accounting`, `Management`, and `Staff`.
    - Salted `BCrypt.Net` hash storage and dynamic role-based navigation rendering.
@@ -184,7 +197,7 @@ graph LR
 
 ---
 
-## 5. Security & Zero Data Leakage Rules (RA 10173 Compliance)
+## 6. Security & Zero Data Leakage Rules (RA 10173 Compliance)
 
 1. **PII Masking**: TIN, SSS, PhilHealth, Pag-IBIG, and bank account numbers must be masked in general overview tables (e.g., `000-***-***-000` or `****-****-1234`).
 2. **Salary Confidentiality**: Basic rates and net pays are strictly gated behind role permissions (`Admin`, `HR`, `Accounting`).
@@ -194,14 +207,14 @@ graph LR
 
 ---
 
-## 6. Pre-Implementation Quality Checklist
+## 7. User-Friendliness & Quality Checklist
 
 Before completing any task or code change in this repository, verify:
-- [ ] UI strictly follows modern Fluent design tokens, soft corner radiuses (`8px-12px`), and subtle elevations on both **Windows 10 and Windows 11**.
-- [ ] High-DPI rendering properties (`SnapsToDevicePixels="True"`, `UseLayoutRounding="True"`) and font fallback stacks (`Segoe UI Variable, Segoe UI`) are in place.
-- [ ] DataGrids have `AutoGenerateColumns="False"`, right-aligned monetary amounts (`₱#,##0.00`), and pastel pill badges.
-- [ ] Layout is responsive with `<ScrollViewer>` wrapping — zero clipping or fixed overflow.
-- [ ] Database operations are asynchronous and non-blocking with loading progress feedback.
-- [ ] SQL queries are 100% parameterized with Dapper inside explicit transactions where appropriate.
-- [ ] PII and compensation data are protected under RA 10173 with proper role gating.
-- [ ] Keyboard accessibility (`TabIndex`, `IsDefault`, `IsCancel`) is fully functional.
+- [ ] **Is it user-friendly?** Are labels in clear plain language? Are tooltips present on buttons/inputs?
+- [ ] **Are empty states informative?** Do empty tables show a friendly message and a "+ Add" or "Import" button?
+- [ ] **Are error messages helpful?** Do error messages give clear guidance instead of technical stack traces?
+- [ ] **Is the layout responsive?** Is content wrapped in `<ScrollViewer>` with zero clipping or text cutoff?
+- [ ] **Are visuals modern?** Does the UI use soft corner radiuses (`8px-12px`), pastel pill badges, and Genetian tokens on Windows 10 & 11?
+- [ ] **Are numbers formatted?** Are monetary amounts right-aligned and formatted as `₱#,##0.00`?
+- [ ] **Is data secure?** Are sensitive statutory IDs masked and SQL queries 100% parameterized with Dapper?
+- [ ] **Is UI non-blocking?** Are database queries and heavy computations asynchronous with loading progress indicators?

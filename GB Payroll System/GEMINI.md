@@ -28,7 +28,13 @@ GB_Payroll_System/
 
 ## Core Development & Quality Mandates
 
-### 1. Modern Enterprise UI/UX & Human-Computer Interface (HCI) Excellence (Windows 10 & 11)
+### 1. User-Friendliness & Operational Ergonomics
+* **Plain Language & Tooltips**: Use clear, natural labels (e.g. *"Regular Holiday (200% Pay)"*) and helpful tooltips on all action buttons and settings.
+* **Actionable Empty States**: When lists or tables have no records, display a helpful message and direct Call-To-Action buttons (e.g., *"+ Add Employee"* or *"Import Log"*) instead of blank tables.
+* **Instant Filtering & Search**: Provide search-as-you-type filtering with immediate results.
+* **Forgiving Error Handling**: Translate technical database errors into clear, friendly guidance on how to fix the issue.
+
+### 2. Modern Enterprise UI/UX & Human-Computer Interface (HCI) Excellence (Windows 10 & 11)
 * **Cross-Windows Theme & Elevation**: Strictly use the Genetian color tokens (`#0A4D9C`, `#06254A`, `#002CFA`, `#FFFFFF`, `#F8FAFC`, `#E2E8F0`, `#0F172A`, `#64748B`), soft card elevations (`BlurRadius="18"`, `Opacity="0.06"`), and rounded geometry (`CornerRadius="8"` to `12"`), with graceful font fallbacks (`Segoe UI Variable, Segoe UI`) for Windows 10 and 11.
 * **Modern Semantic Pill Badges**: Render status enums as modern pill badges with soft pastel backgrounds and high-contrast text (`#DCFCE7` / `#15803D` for Active/Approved, `#FEF3C7` / `#B45309` for Pending/Warning, `#FEE2E2` / `#B91C1C` for Danger/Absent).
 * **High-Precision DataGrids**: Prohibit default unformatted grids (`AutoGenerateColumns="False"`). Right-align all numeric/currency values (`₱#,##0.00`), left-align text, and center dates/badges with spacious cell padding (`8px,10px`).
@@ -36,7 +42,7 @@ GB_Payroll_System/
 * **Non-Blocking UI & Micro-interactions**: Asynchronous operations (`async`/`await`) for all database operations, imports, and heavy computations. Provide progress rings with descriptive actions and hover/click feedback.
 * **Accessibility & Keyboard Navigation**: Ensure logical `TabIndex`, `IsDefault`, and `IsCancel` button bindings, and crisp high-DPI rendering (`SnapsToDevicePixels="True"`, `UseLayoutRounding="True"`).
 
-### 2. Code Architecture & Non-Breaking Changes
+### 3. Code Architecture & Non-Breaking Changes
 * **Separation of Concerns**:
   - `Models/`: Domain entities and DTOs only.
   - `Data/`: Dapper SQL data access, repository methods, transactions.
@@ -45,7 +51,7 @@ GB_Payroll_System/
 * **100% Parameterized Queries**: Never concatenate or interpolate user input into SQL queries.
 * **Transaction Safety**: Multi-table payroll calculations and data mutations must be executed inside database transactions.
 
-### 3. Data Privacy & Enterprise Security
+### 4. Data Privacy & Enterprise Security
 * **Philippine Data Privacy Act (RA 10173)**: Mask sensitive PII (TIN, SSS, PhilHealth, Pag-IBIG, bank accounts) in public and overview grids.
 * **Password Security**: Store passwords exclusively using salted `BCrypt.Net` hashes.
 * **Sanitized Diagnostics**: Never expose database connection strings or raw stack traces in user-facing dialogs.
