@@ -2,9 +2,12 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="Employee 201 File &amp; Profile" Height="730" Width="840"
+        Title="Employee 201 File &amp; Profile" Height="740" Width="880"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
-        Background="#F4F6F9">
+        Background="#F8FAFC"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True"
+        FontFamily="Segoe UI Variable, Segoe UI, -apple-system, Arial, sans-serif">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -14,8 +17,14 @@
             <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
 
-        <!-- DIALOG HEADER -->
-        <Border Grid.Row="0" Background="#0A4D9C" Padding="24,0">
+        <!-- ════════════════════ DIALOG HEADER ════════════════════ -->
+        <Border Grid.Row="0" Padding="24,0">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#0A4D9C" Offset="0.0"/>
+                    <GradientStop Color="#06254A" Offset="1.0"/>
+                </LinearGradientBrush>
+            </Border.Background>
             <Grid VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -23,37 +32,46 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock x:Name="TxtDialogTitle" Text="Add New Employee (201 File)" FontSize="17" FontWeight="Bold" Foreground="White"/>
-                    <TextBlock Text="Comprehensive Personnel Record, Employment Contract &amp; Deductions" FontSize="11" Foreground="#CBD5E0"/>
+                    <TextBlock Text="Comprehensive Personnel Record, Employment Contract &amp; Philippine Statutory Setup" FontSize="11.5" Foreground="#CBD5E1"/>
                 </StackPanel>
-                <TextBlock Grid.Column="1" x:Name="TxtEmployeeCodeHeader" Text="" FontSize="13" FontWeight="Bold" Foreground="#93C5FD"/>
+                <Border Grid.Column="1" Background="#1E3A8A" CornerRadius="6" Padding="10,4">
+                    <TextBlock x:Name="TxtEmployeeCodeHeader" Text="NEW RECORD" FontSize="12.5" FontWeight="Bold" Foreground="#93C5FD"/>
+                </Border>
             </Grid>
         </Border>
 
-        <!-- TAB NAVIGATION BAR -->
+        <!-- ════════════════════ TAB NAVIGATION BAR ════════════════════ -->
         <Border Grid.Row="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="20,8">
             <StackPanel Orientation="Horizontal">
-                <RadioButton x:Name="TabPersonal" Content="👤 Personal Details" GroupName="FormTabs" IsChecked="True"
-                             Checked="FormTab_Changed" Height="36" Padding="14,0" FontWeight="Bold" FontSize="12"
-                             Cursor="Hand" Style="{DynamicResource DialogTabRadioStyle}"/>
-                <RadioButton x:Name="TabEmployment" Content="💼 Contract &amp; Job" GroupName="FormTabs"
-                             Checked="FormTab_Changed" Height="36" Padding="14,0" FontWeight="Bold" FontSize="12"
-                             Cursor="Hand" Style="{DynamicResource DialogTabRadioStyle}"/>
-                <RadioButton x:Name="TabContributions" Content="🏛️ Statutory &amp; Tax" GroupName="FormTabs"
-                             Checked="FormTab_Changed" Height="36" Padding="14,0" FontWeight="Bold" FontSize="12"
-                             Cursor="Hand" Style="{DynamicResource DialogTabRadioStyle}"/>
-                <RadioButton x:Name="TabVault" Content="📁 201 Document Vault" GroupName="FormTabs"
-                             Checked="FormTab_Changed" Height="36" Padding="14,0" FontWeight="Bold" FontSize="12"
-                             Cursor="Hand" Style="{DynamicResource DialogTabRadioStyle}"/>
+                <RadioButton x:Name="TabPersonal" Content="👤 1. Personal Details" GroupName="FormTabs" IsChecked="True"
+                             Checked="FormTab_Changed" Height="36" Padding="14,0" FontWeight="SemiBold" FontSize="12"
+                             Cursor="Hand" ToolTip="Employee demographic and personal 201 contact information"
+                             Style="{DynamicResource DialogTabRadioStyle}"/>
+                <RadioButton x:Name="TabEmployment" Content="💼 2. Contract &amp; Job" GroupName="FormTabs"
+                             Checked="FormTab_Changed" Height="36" Padding="14,0" FontWeight="SemiBold" FontSize="12"
+                             Cursor="Hand" ToolTip="Department, position, working days factor, pay rate, and contract terms"
+                             Style="{DynamicResource DialogTabRadioStyle}"/>
+                <RadioButton x:Name="TabContributions" Content="🏛️ 3. Statutory &amp; Tax" GroupName="FormTabs"
+                             Checked="FormTab_Changed" Height="36" Padding="14,0" FontWeight="SemiBold" FontSize="12"
+                             Cursor="Hand" ToolTip="Mandatory SSS, PhilHealth, Pag-IBIG &amp; BIR TRAIN tax setup"
+                             Style="{DynamicResource DialogTabRadioStyle}"/>
+                <RadioButton x:Name="TabVault" Content="📁 4. 201 Document Vault" GroupName="FormTabs"
+                             Checked="FormTab_Changed" Height="36" Padding="14,0" FontWeight="SemiBold" FontSize="12"
+                             Cursor="Hand" ToolTip="Uploaded resumes, contracts, clearances, and IDs"
+                             Style="{DynamicResource DialogTabRadioStyle}"/>
             </StackPanel>
         </Border>
 
-        <!-- TAB CONTENTS -->
+        <!-- ════════════════════ TAB CONTENTS ════════════════════ -->
         <Grid Grid.Row="2">
 
             <!-- ── TAB 1: PERSONAL DETAILS ── -->
             <ScrollViewer x:Name="PanelPersonal" Padding="24,16" VerticalScrollBarVisibility="Auto">
                 <StackPanel>
-                    <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                    <Border Background="White" CornerRadius="10" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="14" Opacity="0.03" Direction="270" ShadowDepth="2" Color="#0F172A"/>
+                        </Border.Effect>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -72,42 +90,42 @@
 
                             <!-- Row 1: Last Name / First Name -->
                             <StackPanel Grid.Column="0" Grid.Row="0">
-                                <TextBlock Text="LAST NAME *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <TextBox x:Name="TxtLastName" Style="{StaticResource ModernInputStyle}" />
+                                <TextBlock Text="LAST NAME *" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtLastName" Style="{StaticResource ModernInputStyle}" TabIndex="1" ToolTip="Employee family name (required)"/>
                             </StackPanel>
                             <StackPanel Grid.Column="2" Grid.Row="0">
-                                <TextBlock Text="FIRST NAME *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <TextBox x:Name="TxtFirstName" Style="{StaticResource ModernInputStyle}" />
+                                <TextBlock Text="FIRST NAME *" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtFirstName" Style="{StaticResource ModernInputStyle}" TabIndex="2" ToolTip="Employee given name (required)"/>
                             </StackPanel>
 
                             <!-- Row 2: Middle Name / Employee Code -->
                             <StackPanel Grid.Column="0" Grid.Row="2">
-                                <TextBlock Text="MIDDLE NAME" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <TextBox x:Name="TxtMiddleName" Style="{StaticResource ModernInputStyle}" />
+                                <TextBlock Text="MIDDLE NAME" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtMiddleName" Style="{StaticResource ModernInputStyle}" TabIndex="3" ToolTip="Employee middle or maternal name"/>
                             </StackPanel>
                             <StackPanel Grid.Column="2" Grid.Row="2">
-                                <TextBlock Text="EMPLOYEE CODE *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <TextBox x:Name="TxtEmployeeCode" Style="{StaticResource ModernInputStyle}" />
+                                <TextBlock Text="EMPLOYEE CODE *" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtEmployeeCode" Style="{StaticResource ModernInputStyle}" TabIndex="4" ToolTip="Unique company employee code e.g. EMP-2026-001"/>
                             </StackPanel>
 
-                            <!-- Row 3: Birth Date / Gender -->
+                            <!-- Row 3: Birth Date / Gender & Civil Status -->
                             <StackPanel Grid.Column="0" Grid.Row="4">
-                                <TextBlock Text="DATE OF BIRTH" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <DatePicker x:Name="DpBirthDate" Height="40" FontSize="13"/>
+                                <TextBlock Text="DATE OF BIRTH" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <DatePicker x:Name="DpBirthDate" Height="40" FontSize="13" TabIndex="5" ToolTip="Employee date of birth"/>
                             </StackPanel>
                             <StackPanel Grid.Column="2" Grid.Row="4">
-                                <TextBlock Text="GENDER / CIVIL STATUS" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
+                                <TextBlock Text="GENDER / CIVIL STATUS" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="10"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <ComboBox x:Name="CboGender" Grid.Column="0" Height="40" FontSize="12">
+                                    <ComboBox x:Name="CboGender" Grid.Column="0" Height="40" FontSize="12" TabIndex="6" ToolTip="Select gender">
                                         <ComboBoxItem Content="Male" IsSelected="True"/>
                                         <ComboBoxItem Content="Female"/>
                                     </ComboBox>
-                                    <ComboBox x:Name="CboCivilStatus" Grid.Column="2" Height="40" FontSize="12">
+                                    <ComboBox x:Name="CboCivilStatus" Grid.Column="2" Height="40" FontSize="12" TabIndex="7" ToolTip="Select civil status">
                                         <ComboBoxItem Content="Single" IsSelected="True"/>
                                         <ComboBoxItem Content="Married"/>
                                         <ComboBoxItem Content="Widowed"/>
@@ -118,26 +136,32 @@
 
                             <!-- Row 4: Contact Number / Email -->
                             <StackPanel Grid.Column="0" Grid.Row="6">
-                                <TextBlock Text="CONTACT NUMBER" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <TextBox x:Name="TxtContactNumber" Style="{StaticResource ModernInputStyle}" />
+                                <TextBlock Text="CONTACT NUMBER" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtContactNumber" Style="{StaticResource ModernInputStyle}" TabIndex="8" ToolTip="Mobile or telephone number"/>
                             </StackPanel>
                             <StackPanel Grid.Column="2" Grid.Row="6">
-                                <TextBlock Text="EMAIL ADDRESS" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <TextBox x:Name="TxtEmailAddress" Style="{StaticResource ModernInputStyle}" />
+                                <TextBlock Text="EMAIL ADDRESS" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtEmailAddress" Style="{StaticResource ModernInputStyle}" TabIndex="9" ToolTip="Personal or corporate email address"/>
                             </StackPanel>
                         </Grid>
                     </Border>
 
                     <!-- Residential Address -->
-                    <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                    <Border Background="White" CornerRadius="10" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="14" Opacity="0.03" Direction="270" ShadowDepth="2" Color="#0F172A"/>
+                        </Border.Effect>
                         <StackPanel>
-                            <TextBlock Text="RESIDENTIAL ADDRESS" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                            <TextBox x:Name="TxtAddress" Style="{StaticResource ModernInputStyle}" Height="54" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            <TextBlock Text="RESIDENTIAL ADDRESS" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TxtAddress" Style="{StaticResource ModernInputStyle}" Height="54" TextWrapping="Wrap" AcceptsReturn="True" TabIndex="10" ToolTip="Full permanent or residential address"/>
                         </StackPanel>
                     </Border>
 
                     <!-- Emergency Contact -->
-                    <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <Border Background="White" CornerRadius="10" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="14" Opacity="0.03" Direction="270" ShadowDepth="2" Color="#0F172A"/>
+                        </Border.Effect>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -145,12 +169,12 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="EMERGENCY CONTACT PERSON" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <TextBox x:Name="TxtEmergencyPerson" Style="{StaticResource ModernInputStyle}" />
+                                <TextBlock Text="EMERGENCY CONTACT PERSON" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtEmergencyPerson" Style="{StaticResource ModernInputStyle}" TabIndex="11" ToolTip="Name of person to contact in case of emergency"/>
                             </StackPanel>
                             <StackPanel Grid.Column="2">
-                                <TextBlock Text="EMERGENCY CONTACT PHONE" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <TextBox x:Name="TxtEmergencyPhone" Style="{StaticResource ModernInputStyle}" />
+                                <TextBlock Text="EMERGENCY CONTACT PHONE" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtEmergencyPhone" Style="{StaticResource ModernInputStyle}" TabIndex="12" ToolTip="Phone number of emergency contact person"/>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -160,7 +184,10 @@
             <!-- ── TAB 2: CONTRACT & EMPLOYMENT ── -->
             <ScrollViewer x:Name="PanelEmployment" Padding="24,16" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
                 <StackPanel>
-                    <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                    <Border Background="White" CornerRadius="10" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="14" Opacity="0.03" Direction="270" ShadowDepth="2" Color="#0F172A"/>
+                        </Border.Effect>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -173,20 +200,29 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="14"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="14"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
                             <StackPanel Grid.Column="0" Grid.Row="0">
-                                <TextBlock Text="DEPARTMENT" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <TextBox x:Name="TxtDepartment" Style="{StaticResource ModernInputStyle}" />
+                                <TextBlock Text="DEPARTMENT" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtDepartment" Style="{StaticResource ModernInputStyle}" TabIndex="13" ToolTip="Assigned department e.g. Operations, HR, Accounting, Construction"/>
                             </StackPanel>
                             <StackPanel Grid.Column="2" Grid.Row="0">
-                                <TextBlock Text="POSITION / JOB TITLE *" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <TextBox x:Name="TxtPosition" Style="{StaticResource ModernInputStyle}" />
+                                <TextBlock Text="POSITION / JOB TITLE *" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtPosition" Style="{StaticResource ModernInputStyle}" TabIndex="14" ToolTip="Designated position or job title (required)"/>
                             </StackPanel>
 
+                            <!-- Branch & Contract Type -->
                             <StackPanel Grid.Column="0" Grid.Row="2">
-                                <TextBlock Text="CONTRACT TYPE" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <ComboBox x:Name="CboContractType" Height="40" FontSize="12">
+                                <TextBlock Text="BRANCH ASSIGNMENT" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="CboBranch" Height="40" FontSize="12" TabIndex="15" ToolTip="Select company branch or site assignment">
+                                    <ComboBoxItem Content="Head Office / Main Branch" Tag="1" IsSelected="True"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Grid.Row="2">
+                                <TextBlock Text="CONTRACT TYPE" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="CboContractType" Height="40" FontSize="12" TabIndex="16" ToolTip="Type of employment contract">
                                     <ComboBoxItem Content="Probationary (6 Months)" Tag="2" IsSelected="True"/>
                                     <ComboBoxItem Content="Regular / Permanent" Tag="1"/>
                                     <ComboBoxItem Content="Fixed-Term / Project-Based" Tag="3"/>
@@ -194,29 +230,44 @@
                                     <ComboBoxItem Content="Casual" Tag="5"/>
                                 </ComboBox>
                             </StackPanel>
-                            <StackPanel Grid.Column="2" Grid.Row="2">
-                                <TextBlock Text="CONTRACT STATUS" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <ComboBox x:Name="CboContractStatus" Height="40" FontSize="12">
+
+                            <!-- Contract Status & Working Days Factor -->
+                            <StackPanel Grid.Column="0" Grid.Row="4">
+                                <TextBlock Text="CONTRACT STATUS" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="CboContractStatus" Height="40" FontSize="12" TabIndex="17" ToolTip="Current status of the employment contract">
                                     <ComboBoxItem Content="Active" Tag="1" IsSelected="True"/>
                                     <ComboBoxItem Content="Renewed" Tag="2"/>
                                     <ComboBoxItem Content="Expired" Tag="3"/>
                                     <ComboBoxItem Content="Terminated" Tag="4"/>
                                 </ComboBox>
                             </StackPanel>
-
-                            <StackPanel Grid.Column="0" Grid.Row="4">
-                                <TextBlock Text="DATE HIRED / CONTRACT START" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <DatePicker x:Name="DpDateHired" Height="40" FontSize="13" SelectedDate="{x:Static sys:DateTime.Today}"/>
-                            </StackPanel>
                             <StackPanel Grid.Column="2" Grid.Row="4">
-                                <TextBlock Text="CONTRACT EXPIRATION / END DATE" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <DatePicker x:Name="DpContractEnd" Height="40" FontSize="13"/>
+                                <TextBlock Text="DOLE WORKING DAYS FACTOR" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="CboWorkingDaysFactor" Height="40" FontSize="12" TabIndex="18"
+                                          ToolTip="DOLE Factor used to compute daily rate from monthly salary: Daily Rate = (Monthly Salary * 12) / Factor">
+                                    <ComboBoxItem Content="313 Days (6-Day Mon-Sat Workweek)" Tag="313" IsSelected="True"/>
+                                    <ComboBoxItem Content="261 Days (5-Day Mon-Fri Workweek)" Tag="261"/>
+                                    <ComboBoxItem Content="365 Days (Daily / Continuous Operations)" Tag="365"/>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <!-- Start Date & End Date -->
+                            <StackPanel Grid.Column="0" Grid.Row="6">
+                                <TextBlock Text="DATE HIRED / CONTRACT START" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <DatePicker x:Name="DpDateHired" Height="40" FontSize="13" SelectedDate="{x:Static sys:DateTime.Today}" TabIndex="19" ToolTip="Date when employment or contract begins"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Grid.Row="6">
+                                <TextBlock Text="CONTRACT EXPIRATION / END DATE" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <DatePicker x:Name="DpContractEnd" Height="40" FontSize="13" TabIndex="20" ToolTip="End date for probationary or fixed-term contracts (leave blank for permanent)"/>
                             </StackPanel>
                         </Grid>
                     </Border>
 
                     <!-- Compensation & Wage Setup -->
-                    <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                    <Border Background="White" CornerRadius="10" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="14" Opacity="0.03" Direction="270" ShadowDepth="2" Color="#0F172A"/>
+                        </Border.Effect>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -230,43 +281,49 @@
                             </Grid.RowDefinitions>
 
                             <StackPanel Grid.Column="0" Grid.Row="0">
-                                <TextBlock Text="PAY TYPE" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <ComboBox x:Name="CboPayType" Height="40" FontSize="12" SelectionChanged="CboPayType_SelectionChanged">
+                                <TextBlock Text="PAY TYPE" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="CboPayType" Height="40" FontSize="12" SelectionChanged="CboPayType_SelectionChanged" TabIndex="21" ToolTip="Monthly salary vs Daily wage rate">
                                     <ComboBoxItem Content="Monthly Salary" Tag="1" IsSelected="True"/>
                                     <ComboBoxItem Content="Daily Rate" Tag="2"/>
                                 </ComboBox>
                             </StackPanel>
                             <StackPanel Grid.Column="2" Grid.Row="0">
-                                <TextBlock x:Name="TxtBasicRateLabel" Text="BASIC PAY RATE (₱)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <TextBox x:Name="TxtBasicRate" Style="{StaticResource ModernInputStyle}" />
+                                <TextBlock x:Name="TxtBasicRateLabel" Text="BASIC PAY RATE (₱)" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtBasicRate" Style="{StaticResource ModernInputStyle}" TabIndex="22" ToolTip="Gross basic rate before deductions"/>
                             </StackPanel>
 
                             <StackPanel Grid.Column="0" Grid.Row="2">
-                                <TextBlock Text="BIOMETRIC DEVICE USER ID" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <TextBox x:Name="TxtBiometricId" Style="{StaticResource ModernInputStyle}" />
+                                <TextBlock Text="BIOMETRIC DEVICE USER ID" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtBiometricId" Style="{StaticResource ModernInputStyle}" TabIndex="23" ToolTip="Enrolled User ID matching the biometric timeclock device"/>
                             </StackPanel>
                             <StackPanel Grid.Column="2" Grid.Row="2">
-                                <TextBlock Text="BANK ACCOUNT NUMBER (PAYROLL)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                <TextBox x:Name="TxtBankAccount" Style="{StaticResource ModernInputStyle}" />
+                                <TextBlock Text="BANK ACCOUNT NUMBER (PAYROLL)" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtBankAccount" Style="{StaticResource ModernInputStyle}" TabIndex="24" ToolTip="Bank account or e-wallet number for payroll disbursement"/>
                             </StackPanel>
                         </Grid>
                     </Border>
 
                     <!-- Employment History & Re-employment Records Card -->
-                    <Border Background="#F7FAFC" CornerRadius="8" Padding="16" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                    <Border Background="#F8FAFC" CornerRadius="10" Padding="18" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="📜 EMPLOYMENT HISTORY &amp; RE-EMPLOYMENT" FontSize="11" FontWeight="Bold" Foreground="#2D3748"/>
-                                <TextBlock Text="Track previous Genetian service, retirement, rehirings, or outside employment history." FontSize="11" Foreground="#718096" Margin="0,2,0,0"/>
+                                <TextBlock Text="📜 EMPLOYMENT HISTORY &amp; SERVICE AUDIT" FontSize="11.5" FontWeight="Bold" Foreground="#334155"/>
+                                <TextBlock Text="Track past company service, separations, rehiring records, and outside employment history." FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
                             </StackPanel>
-                            <Button Grid.Column="1" x:Name="BtnViewHistoryInTab" Content="📜 View / Manage History"
-                                    Background="#EBF8FF" Foreground="#2B6CB0" BorderBrush="#BEE3F8" BorderThickness="1"
-                                    Height="32" Padding="14,0" FontSize="11" FontWeight="Bold" Cursor="Hand"
-                                    Click="BtnManageHistory_Click"/>
+                            <Button Grid.Column="1" x:Name="BtnViewHistoryInTab" Content="📜 Manage Service History"
+                                    Background="#EFF6FF" Foreground="#1D4ED8" BorderBrush="#BFDBFE" BorderThickness="1"
+                                    Height="34" Padding="14,0" FontSize="11.5" FontWeight="Bold" Cursor="Hand"
+                                    Click="BtnManageHistory_Click">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="6"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
                         </Grid>
                     </Border>
                 </StackPanel>
@@ -276,94 +333,100 @@
             <ScrollViewer x:Name="PanelContributions" Padding="24,16" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
                 <StackPanel>
                     <!-- Government ID Numbers -->
-                    <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                    <Border Background="White" CornerRadius="10" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="14" Opacity="0.03" Direction="270" ShadowDepth="2" Color="#0F172A"/>
+                        </Border.Effect>
                         <StackPanel>
-                            <TextBlock Text="MANDATORY GOVERNMENT ID NUMBERS" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,12"/>
+                            <TextBlock Text="MANDATORY PHILIPPINE STATUTORY ID NUMBERS" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,12"/>
                             <UniformGrid Columns="2">
                                 <StackPanel Margin="0,0,8,12">
-                                    <TextBlock Text="SSS NUMBER" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                    <TextBox x:Name="TxtSss" Style="{StaticResource ModernInputStyle}" />
+                                    <TextBlock Text="SSS NUMBER" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                    <TextBox x:Name="TxtSss" Style="{StaticResource ModernInputStyle}" TabIndex="25" ToolTip="Social Security System 10-digit number (e.g. 01-2345678-9)"/>
                                 </StackPanel>
                                 <StackPanel Margin="8,0,0,12">
-                                    <TextBlock Text="PHILHEALTH NUMBER" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                    <TextBox x:Name="TxtPhilHealth" Style="{StaticResource ModernInputStyle}" />
+                                    <TextBlock Text="PHILHEALTH NUMBER" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                    <TextBox x:Name="TxtPhilHealth" Style="{StaticResource ModernInputStyle}" TabIndex="26" ToolTip="PhilHealth 12-digit PIN number"/>
                                 </StackPanel>
                                 <StackPanel Margin="0,0,8,0">
-                                    <TextBlock Text="PAG-IBIG / HDMF NUMBER" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                    <TextBox x:Name="TxtPagIbig" Style="{StaticResource ModernInputStyle}" />
+                                    <TextBlock Text="PAG-IBIG / HDMF NUMBER" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                    <TextBox x:Name="TxtPagIbig" Style="{StaticResource ModernInputStyle}" TabIndex="27" ToolTip="Pag-IBIG / HDMF 12-digit MID number"/>
                                 </StackPanel>
                                 <StackPanel Margin="8,0,0,0">
-                                    <TextBlock Text="TIN NUMBER (BIR)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                                    <TextBox x:Name="TxtTin" Style="{StaticResource ModernInputStyle}" />
+                                    <TextBlock Text="TIN NUMBER (BIR)" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                    <TextBox x:Name="TxtTin" Style="{StaticResource ModernInputStyle}" TabIndex="28" ToolTip="Bureau of Internal Revenue 9 or 12 digit Tax ID number"/>
                                 </StackPanel>
                             </UniformGrid>
                         </StackPanel>
                     </Border>
 
                     <!-- Deduction Settings & Overrides -->
-                    <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                    <Border Background="White" CornerRadius="10" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,16">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="14" Opacity="0.03" Direction="270" ShadowDepth="2" Color="#0F172A"/>
+                        </Border.Effect>
                         <StackPanel>
-                            <TextBlock Text="PER-EMPLOYEE STATUTORY CONTRIBUTION RULES" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,12"/>
+                            <TextBlock Text="PER-EMPLOYEE STATUTORY CONTRIBUTION RULES" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,12"/>
                             
                             <!-- SSS Setup -->
                             <Grid Margin="0,0,0,12">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="150"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="16"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="SSS Contribution:" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="12"/>
-                                <ComboBox x:Name="CboSssMode" Grid.Column="1" Height="38" FontSize="12">
-                                    <ComboBoxItem Content="Auto (Statutory Table)" Tag="1" IsSelected="True"/>
+                                <TextBlock Text="SSS Contribution:" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="12" Foreground="#334155"/>
+                                <ComboBox x:Name="CboSssMode" Grid.Column="1" Height="38" FontSize="12" TabIndex="29" ToolTip="Select statutory table calculation mode for SSS">
+                                    <ComboBoxItem Content="Auto (Statutory MSC Table)" Tag="1" IsSelected="True"/>
                                     <ComboBoxItem Content="Fixed Custom Amount" Tag="2"/>
                                     <ComboBoxItem Content="Exempt (₱0.00)" Tag="3"/>
                                 </ComboBox>
-                                <TextBox x:Name="TxtCustomSss" Grid.Column="3" Style="{StaticResource ModernInputStyle}" Height="38" ToolTip="Custom Monthly SSS Amount (₱)"/>
+                                <TextBox x:Name="TxtCustomSss" Grid.Column="3" Style="{StaticResource ModernInputStyle}" Height="38" TabIndex="30" ToolTip="Custom Monthly SSS Employee Share (₱)"/>
                             </Grid>
 
                             <!-- PhilHealth Setup -->
                             <Grid Margin="0,0,0,12">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="150"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="16"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="PhilHealth Premium:" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="12"/>
-                                <ComboBox x:Name="CboPhMode" Grid.Column="1" Height="38" FontSize="12">
+                                <TextBlock Text="PhilHealth Premium:" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="12" Foreground="#334155"/>
+                                <ComboBox x:Name="CboPhMode" Grid.Column="1" Height="38" FontSize="12" TabIndex="31" ToolTip="Select statutory premium rate calculation mode for PhilHealth">
                                     <ComboBoxItem Content="Auto (5% Shared Table)" Tag="1" IsSelected="True"/>
                                     <ComboBoxItem Content="Fixed Custom Amount" Tag="2"/>
                                     <ComboBoxItem Content="Exempt (₱0.00)" Tag="3"/>
                                 </ComboBox>
-                                <TextBox x:Name="TxtCustomPh" Grid.Column="3" Style="{StaticResource ModernInputStyle}" Height="38" ToolTip="Custom Monthly PhilHealth Amount (₱)"/>
+                                <TextBox x:Name="TxtCustomPh" Grid.Column="3" Style="{StaticResource ModernInputStyle}" Height="38" TabIndex="32" ToolTip="Custom Monthly PhilHealth Employee Share (₱)"/>
                             </Grid>
 
                             <!-- Pag-IBIG Setup -->
                             <Grid Margin="0,0,0,12">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="150"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="16"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Pag-IBIG / HDMF:" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="12"/>
-                                <ComboBox x:Name="CboPagIbigMode" Grid.Column="1" Height="38" FontSize="12">
+                                <TextBlock Text="Pag-IBIG / HDMF:" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="12" Foreground="#334155"/>
+                                <ComboBox x:Name="CboPagIbigMode" Grid.Column="1" Height="38" FontSize="12" TabIndex="33" ToolTip="Select Pag-IBIG contribution mode">
                                     <ComboBoxItem Content="Standard (₱200/mo)" Tag="1" IsSelected="True"/>
                                     <ComboBoxItem Content="Custom Amount (MP2/Voluntary)" Tag="2"/>
                                     <ComboBoxItem Content="Exempt (₱0.00)" Tag="3"/>
                                 </ComboBox>
-                                <TextBox x:Name="TxtPagIbigAmount" Text="200.00" Grid.Column="3" Style="{StaticResource ModernInputStyle}" Height="38" ToolTip="Monthly Pag-IBIG Amount (₱)"/>
+                                <TextBox x:Name="TxtPagIbigAmount" Text="200.00" Grid.Column="3" Style="{StaticResource ModernInputStyle}" Height="38" TabIndex="34" ToolTip="Monthly Pag-IBIG Employee Share (₱)"/>
                             </Grid>
 
                             <!-- Cutoff Timing -->
                             <Grid Margin="0,0,0,12">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="150"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Deduction Schedule:" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="12"/>
-                                <ComboBox x:Name="CboCutoffSchedule" Grid.Column="1" Height="38" FontSize="12">
+                                <TextBlock Text="Deduction Schedule:" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="12" Foreground="#334155"/>
+                                <ComboBox x:Name="CboCutoffSchedule" Grid.Column="1" Height="38" FontSize="12" TabIndex="35" ToolTip="When mandatory contributions are deducted from semi-monthly pay">
                                     <ComboBoxItem Content="Split 50/50 across both cutoffs" Tag="1" IsSelected="True"/>
                                     <ComboBoxItem Content="1st Cutoff Only (15th Payday)" Tag="2"/>
                                     <ComboBoxItem Content="2nd Cutoff Only (End of Month Payday)" Tag="3"/>
@@ -372,8 +435,11 @@
 
                             <!-- Tax Exemptions -->
                             <StackPanel Margin="0,6,0,0">
-                                <CheckBox x:Name="ChkMinimumWage" Content="🌱 Minimum Wage Earner (MWE) — BIR Withholding Tax Exempt (RA 9504)" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,6"/>
-                                <CheckBox x:Name="ChkTaxExempt" Content="🚫 Tax Exempt (Other statutory exemption)" FontSize="12" Margin="0,0,0,0"/>
+                                <CheckBox x:Name="ChkMinimumWage" Content="🌱 Minimum Wage Earner (MWE) — BIR Withholding Tax Exempt (RA 9504)"
+                                          FontWeight="SemiBold" FontSize="12" Foreground="#0F172A" Margin="0,0,0,6" TabIndex="36"
+                                          ToolTip="Exempts employee from BIR withholding income tax under Philippine statutory minimum wage regulations"/>
+                                <CheckBox x:Name="ChkTaxExempt" Content="🚫 Other Statutory Tax Exemption" FontSize="12" Foreground="#475569" Margin="0,0,0,0" TabIndex="37"
+                                          ToolTip="Applies other statutory tax exemption overrides"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -388,7 +454,10 @@
                 </Grid.RowDefinitions>
 
                 <!-- Document Upload Bar -->
-                <Border Grid.Row="0" Background="White" CornerRadius="8" Padding="16" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,12">
+                <Border Grid.Row="0" Background="White" CornerRadius="10" Padding="16" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,12">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="14" Opacity="0.03" Direction="270" ShadowDepth="2" Color="#0F172A"/>
+                    </Border.Effect>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="180"/>
@@ -398,7 +467,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox x:Name="CboDocCategory" Grid.Column="0" Height="38" FontSize="12">
+                        <ComboBox x:Name="CboDocCategory" Grid.Column="0" Height="38" FontSize="12" ToolTip="Select 201 document classification">
                             <ComboBoxItem Content="Employment Contract" Tag="1" IsSelected="True"/>
                             <ComboBoxItem Content="Resume / CV" Tag="2"/>
                             <ComboBoxItem Content="Government ID" Tag="3"/>
@@ -409,43 +478,85 @@
                             <ComboBoxItem Content="Other Document" Tag="8"/>
                         </ComboBox>
 
-                        <TextBox x:Name="TxtDocTitle" Grid.Column="2" Height="38" Style="{StaticResource ModernInputStyle}" Tag="Document Title / Note"/>
+                        <TextBox x:Name="TxtDocTitle" Grid.Column="2" Height="38" Style="{StaticResource ModernInputStyle}" ToolTip="Document title or descriptive note"/>
 
                         <Button x:Name="BtnUploadDocument" Grid.Column="4" Content="📎 Upload Document"
-                                Style="{StaticResource PrimaryBtnStyle}" Height="38" Padding="16,0"
+                                Style="{StaticResource PrimaryBtnStyle}" Height="38" Padding="16,0" FontSize="12.5"
+                                ToolTip="Attach a scanned PDF, DOCX, or Image file to this employee's vault"
                                 Click="BtnUploadDocument_Click"/>
                     </Grid>
                 </Border>
 
-                <!-- Documents Grid -->
-                <DataGrid Grid.Row="1" x:Name="DocumentsGrid" AutoGenerateColumns="False" IsReadOnly="True"
-                          Background="White" BorderBrush="#E2E8F0" BorderThickness="1" RowHeight="42">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="CATEGORY" Binding="{Binding CategoryDisplay}" Width="160"/>
-                        <DataGridTextColumn Header="TITLE / DESCRIPTION" Binding="{Binding Title}" Width="*"/>
-                        <DataGridTextColumn Header="FILE NAME" Binding="{Binding FileName}" Width="180"/>
-                        <DataGridTextColumn Header="SIZE" Binding="{Binding FileSizeFormatted}" Width="80"/>
-                        <DataGridTemplateColumn Header="ACTIONS" Width="140">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Button Content="👁️ Open" Tag="{Binding Id}" Click="BtnOpenDoc_Click"
-                                                Background="#EBF8FF" Foreground="#2B6CB0" BorderThickness="0"
-                                                Height="28" Padding="8,0" FontSize="11" FontWeight="Bold" Cursor="Hand" Margin="0,0,6,0"/>
-                                        <Button Content="🗑️ Delete" Tag="{Binding Id}" Click="BtnDeleteDoc_Click"
-                                                Background="#FFF5F5" Foreground="#C53030" BorderThickness="0"
-                                                Height="28" Padding="8,0" FontSize="11" FontWeight="Bold" Cursor="Hand"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                <!-- Documents Grid Container -->
+                <Border Grid.Row="1" Background="White" CornerRadius="10" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="14" Opacity="0.03" Direction="270" ShadowDepth="2" Color="#0F172A"/>
+                    </Border.Effect>
+                    <Grid>
+                        <DataGrid x:Name="DocumentsGrid" AutoGenerateColumns="False" IsReadOnly="True"
+                                  Background="Transparent" BorderThickness="0" RowHeight="44" ColumnHeaderHeight="38"
+                                  AlternatingRowBackground="#F8FAFC" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9">
+                            <DataGrid.ColumnHeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="#F8FAFC"/>
+                                    <Setter Property="Foreground" Value="#475569"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="FontSize" Value="11"/>
+                                    <Setter Property="Padding" Value="12,0"/>
+                                    <Setter Property="BorderBrush" Value="#E2E8F0"/>
+                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                </Style>
+                            </DataGrid.ColumnHeaderStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="CATEGORY" Binding="{Binding CategoryDisplay}" Width="160"/>
+                                <DataGridTextColumn Header="TITLE / DESCRIPTION" Binding="{Binding Title}" Width="*"/>
+                                <DataGridTextColumn Header="FILE NAME" Binding="{Binding FileName}" Width="180"/>
+                                <DataGridTextColumn Header="SIZE" Binding="{Binding FileSizeFormatted}" Width="85"/>
+                                <DataGridTemplateColumn Header="ACTIONS" Width="150">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Button Content="👁️ Open" Tag="{Binding Id}" Click="BtnOpenDoc_Click"
+                                                        Background="#EFF6FF" Foreground="#1D4ED8" BorderBrush="#BFDBFE" BorderThickness="1"
+                                                        Height="26" Padding="8,0" FontSize="11" FontWeight="Bold" Cursor="Hand" Margin="0,0,6,0">
+                                                    <Button.Resources>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="CornerRadius" Value="5"/>
+                                                        </Style>
+                                                    </Button.Resources>
+                                                </Button>
+                                                <Button Content="🗑️ Delete" Tag="{Binding Id}" Click="BtnDeleteDoc_Click"
+                                                        Background="#FEE2E2" Foreground="#B91C1C" BorderBrush="#FECACA" BorderThickness="1"
+                                                        Height="26" Padding="8,0" FontSize="11" FontWeight="Bold" Cursor="Hand">
+                                                    <Button.Resources>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="CornerRadius" Value="5"/>
+                                                        </Style>
+                                                    </Button.Resources>
+                                                </Button>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <!-- Empty State for Document Vault -->
+                        <Border x:Name="PanelVaultEmpty" Background="White" CornerRadius="8" Padding="20"
+                                HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Text="📂" FontSize="32" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                                <TextBlock Text="No 201 Documents Uploaded" FontSize="14" FontWeight="Bold" Foreground="#334155" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                <TextBlock Text="Select a category above and click 'Upload Document' to attach 201 records." FontSize="12" Foreground="#64748B" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Border>
             </Grid>
 
         </Grid>
 
-        <!-- DIALOG FOOTER: Save / Cancel -->
+        <!-- ════════════════════ DIALOG FOOTER: Save / Cancel ════════════════════ -->
         <Border Grid.Row="3" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="24,0">
             <Grid VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
@@ -458,21 +569,40 @@
                             Background="#FFF5F5" Foreground="#C53030" BorderBrush="#FEB2B2" BorderThickness="1"
                             Height="40" Padding="16,0" FontWeight="SemiBold" Cursor="Hand"
                             Visibility="Collapsed" HorizontalAlignment="Left" Margin="0,0,8,0"
-                            Click="BtnToggleActive_Click"/>
+                            Click="BtnToggleActive_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
 
                     <Button x:Name="BtnManageHistoryFooter" Content="📜 Employment History"
-                            Background="#EDF2F7" Foreground="#2D3748" BorderBrush="#E2E8F0" BorderThickness="1"
+                            Background="#F1F5F9" Foreground="#334155" BorderBrush="#E2E8F0" BorderThickness="1"
                             Height="40" Padding="14,0" FontWeight="SemiBold" Cursor="Hand"
                             Visibility="Collapsed" HorizontalAlignment="Left"
-                            Click="BtnManageHistory_Click"/>
+                            Click="BtnManageHistory_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button Content="Cancel" Background="#EDF2F7" Foreground="#4A5568"
+                    <Button x:Name="BtnCancel" Content="Cancel" Background="#F1F5F9" Foreground="#475569"
                             BorderThickness="0" Height="40" Padding="20,0" FontWeight="SemiBold"
-                            Cursor="Hand" Margin="0,0,12,0" Click="BtnCancel_Click"/>
+                            IsCancel="True" Cursor="Hand" Margin="0,0,12,0" Click="BtnCancel_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+
                     <Button x:Name="BtnSave" Content="💾  Save Employee" Style="{StaticResource PrimaryBtnStyle}"
-                            Height="40" Padding="20,0" Click="BtnSave_Click"/>
+                            Height="40" Padding="22,0" IsDefault="True" Click="BtnSave_Click"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -481,13 +611,13 @@
     <Window.Resources>
         <Style x:Key="DialogTabRadioStyle" TargetType="RadioButton">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#718096"/>
+            <Setter Property="Foreground" Value="#64748B"/>
             <Setter Property="Margin" Value="0,0,8,0"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
                         <Border x:Name="bd" Background="{TemplateBinding Background}"
-                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                CornerRadius="8" Padding="{TemplateBinding Padding}">
                             <ContentPresenter VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -496,7 +626,7 @@
                                 <Setter Property="Foreground" Value="White"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="bd" Property="Background" Value="#EBF4FF"/>
+                                <Setter TargetName="bd" Property="Background" Value="#EFF6FF"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
