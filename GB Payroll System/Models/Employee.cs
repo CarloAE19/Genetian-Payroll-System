@@ -83,5 +83,38 @@ namespace GB_Payroll_System.Models
                                            ContractEndDate.HasValue &&
                                            ContractEndDate.Value >= DateTime.Today &&
                                            ContractEndDate.Value <= DateTime.Today.AddDays(30);
+
+        // Display & Privacy Helpers
+        public string ContractTypeDisplay => ContractType switch
+        {
+            ContractType.Regular => "Regular",
+            ContractType.Probationary => "Probationary",
+            ContractType.FixedTerm => "Fixed-Term",
+            ContractType.Seasonal => "Seasonal",
+            ContractType.Casual => "Casual",
+            _ => "Probationary"
+        };
+
+        public string PayTypeDisplay => PayType == PayType.Daily ? "Daily Rate" : "Monthly Salary";
+
+        public string WorkingDaysFactorDisplay => WorkingDaysFactor switch
+        {
+            261m => "261 Days (5-day)",
+            313m => "313 Days (6-day)",
+            365m => "365 Days (Daily)",
+            _ => $"{WorkingDaysFactor:N0} Days"
+        };
+
+        public string MaskedSssNumber => string.IsNullOrWhiteSpace(SssNumber) ? "-" : MaskSensitive(SssNumber);
+        public string MaskedPhilHealthNumber => string.IsNullOrWhiteSpace(PhilHealthNumber) ? "-" : MaskSensitive(PhilHealthNumber);
+        public string MaskedPagIbigNumber => string.IsNullOrWhiteSpace(PagIbigNumber) ? "-" : MaskSensitive(PagIbigNumber);
+        public string MaskedTinNumber => string.IsNullOrWhiteSpace(TinNumber) ? "-" : MaskSensitive(TinNumber);
+        public string MaskedBankAccount => string.IsNullOrWhiteSpace(BankAccountNumber) ? "-" : MaskSensitive(BankAccountNumber);
+
+        private static string MaskSensitive(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value) || value.Length <= 4) return value;
+            return $"{value[..2]}****{value[^2..]}";
+        }
     }
 }
