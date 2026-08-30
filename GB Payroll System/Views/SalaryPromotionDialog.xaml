@@ -1,105 +1,168 @@
 <Window x:Class="GB_Payroll_System.Views.SalaryPromotionDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Salary Promotion" Height="560" Width="600"
+        Title="Record Salary Promotion &amp; Position Upgrade" Height="640" Width="640"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
-        Background="#F4F6F9">
+        Background="#F8FAFC"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True"
+        FontFamily="Segoe UI Variable, Segoe UI, -apple-system, Arial, sans-serif">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="64"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="72"/>
+            <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
 
-        <!-- HEADER -->
-        <Border Grid.Row="0" Background="#0A4D9C" Padding="24,0">
-            <StackPanel VerticalAlignment="Center">
-                <TextBlock x:Name="TxtDialogTitle" Text="Salary Promotion" FontSize="18" FontWeight="Bold" Foreground="White"/>
-                <TextBlock x:Name="TxtEmployeeSubtitle" Text="" FontSize="12" Foreground="#93C5FD"/>
-            </StackPanel>
+        <!-- ════════════════════ HEADER ════════════════════ -->
+        <Border Grid.Row="0" Padding="24,0">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#0A4D9C" Offset="0.0"/>
+                    <GradientStop Color="#06254A" Offset="1.0"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Grid VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock x:Name="TxtDialogTitle" Text="Record Salary Promotion &amp; Adjustment" FontSize="17" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock x:Name="TxtEmployeeSubtitle" Text="Audit salary increment, rank advancement, and effective date" FontSize="11.5" Foreground="#93C5FD"/>
+                </StackPanel>
+                <Border Grid.Column="1" Background="#1E3A8A" CornerRadius="6" Padding="10,4">
+                    <TextBlock Text="📈 WAGE AUDIT" FontSize="11" FontWeight="Bold" Foreground="#93C5FD"/>
+                </Border>
+            </Grid>
         </Border>
 
-        <!-- BODY -->
-        <ScrollViewer Grid.Row="1" Padding="24,20" VerticalScrollBarVisibility="Auto">
+        <!-- ════════════════════ BODY ════════════════════ -->
+        <ScrollViewer Grid.Row="1" Padding="24,18" VerticalScrollBarVisibility="Auto">
             <StackPanel>
+                <!-- Employee Picker (when opening generally) -->
+                <StackPanel x:Name="PanelEmployeePicker" Margin="0,0,0,16" Visibility="Collapsed">
+                    <TextBlock Text="SELECT EMPLOYEE *" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                    <ComboBox x:Name="CboSelectEmployee" Height="42" FontSize="13" SelectionChanged="CboSelectEmployee_SelectionChanged"
+                              ToolTip="Choose an employee to apply a salary promotion or wage adjustment"/>
+                </StackPanel>
+
                 <!-- Current Salary Info Card -->
-                <Border Background="#EBF8FF" BorderBrush="#BEE3F8" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,20">
+                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="10" Padding="18" Margin="0,0,0,18">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="14" Opacity="0.04" Direction="270" ShadowDepth="2" Color="#0F172A"/>
+                    </Border.Effect>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="CURRENT POSITION" FontSize="11" FontWeight="Bold" Foreground="#2B6CB0"/>
-                            <TextBlock x:Name="TxtCurrentPosition" Text="—" FontSize="16" FontWeight="Bold" Foreground="#1A202C" Margin="0,4,0,0"/>
+                            <TextBlock Text="CURRENT POSITION" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                            <TextBlock x:Name="TxtCurrentPosition" Text="—" FontSize="15" FontWeight="Bold" Foreground="#0F172A" Margin="0,4,0,0"/>
                         </StackPanel>
-                        <StackPanel Grid.Column="1">
-                            <TextBlock Text="CURRENT BASIC RATE (₱)" FontSize="11" FontWeight="Bold" Foreground="#2B6CB0"/>
-                            <TextBlock x:Name="TxtCurrentRate" Text="₱0.00" FontSize="20" FontWeight="Bold" Foreground="#0A4D9C" Margin="0,4,0,0"/>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="CURRENT BASIC RATE" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                            <TextBlock x:Name="TxtCurrentRate" Text="₱0.00" FontSize="18" FontWeight="Bold" Foreground="#0A4D9C" Margin="0,4,0,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- New Position -->
-                <TextBlock Text="NEW POSITION / JOB TITLE" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                <TextBox x:Name="TxtNewPosition" Style="{StaticResource ModernInputStyle}" Margin="0,0,0,16"/>
+                <!-- Form Fields Card -->
+                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="10" Padding="18" Margin="0,0,0,18">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="14" Opacity="0.04" Direction="270" ShadowDepth="2" Color="#0F172A"/>
+                    </Border.Effect>
+                    <StackPanel>
+                        <!-- New Position -->
+                        <TextBlock Text="NEW POSITION / JOB TITLE *" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                        <TextBox x:Name="TxtNewPosition" Style="{StaticResource ModernInputStyle}" Margin="0,0,0,14" ToolTip="Updated job title or position"/>
 
-                <!-- New Rate -->
-                <TextBlock x:Name="TxtNewRateLabel" Text="NEW BASIC RATE (₱)" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                <TextBox x:Name="TxtNewRate" Style="{StaticResource ModernInputStyle}" Margin="0,0,0,16"/>
+                        <!-- New Rate & Effective Date -->
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock x:Name="TxtNewRateLabel" Text="NEW BASIC RATE (₱) *" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TxtNewRate" Style="{StaticResource ModernInputStyle}" ToolTip="New monthly salary or daily wage"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="EFFECTIVE DATE *" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                                <DatePicker x:Name="DpEffectiveDate" Height="44" FontSize="13" ToolTip="Date when new wage takes effect"/>
+                            </StackPanel>
+                        </Grid>
 
-                <!-- Effective Date -->
-                <TextBlock Text="EFFECTIVE DATE" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                <DatePicker x:Name="DpEffectiveDate" Height="44" FontSize="13" Margin="0,0,0,16"/>
-
-                <!-- Reason -->
-                <TextBlock Text="REASON / REMARKS" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,5"/>
-                <TextBox x:Name="TxtReason" Height="80" Style="{StaticResource ModernInputStyle}"
-                         AcceptsReturn="True" TextWrapping="Wrap"
-                         VerticalContentAlignment="Top" Padding="12,10" Margin="0,0,0,16"/>
+                        <!-- Reason -->
+                        <TextBlock Text="REASON / REMARKS" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                        <TextBox x:Name="TxtReason" Height="68" Style="{StaticResource ModernInputStyle}"
+                                 AcceptsReturn="True" TextWrapping="Wrap"
+                                 VerticalContentAlignment="Top" Padding="12,8" ToolTip="Performance evaluation, annual appraisal, statutory wage order, etc."/>
+                    </StackPanel>
+                </Border>
 
                 <!-- History Section -->
-                <TextBlock Text="📋  PROMOTION HISTORY" FontSize="11" FontWeight="Bold" Foreground="#4A5568" Margin="0,0,0,10"/>
-                <DataGrid x:Name="HistoryGrid" Height="130" AutoGenerateColumns="False"
-                          IsReadOnly="True" BorderBrush="#E2E8F0" BorderThickness="1"
-                          Background="White" HeadersVisibility="Column"
-                          GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#EDF2F7"
-                          ColumnHeaderHeight="32" RowHeight="32">
-                    <DataGrid.ColumnHeaderStyle>
-                        <Style TargetType="DataGridColumnHeader">
-                            <Setter Property="Background" Value="#F8FAFC"/>
-                            <Setter Property="Foreground" Value="#718096"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                            <Setter Property="FontSize" Value="10"/>
-                            <Setter Property="Padding" Value="10,0"/>
-                        </Style>
-                    </DataGrid.ColumnHeaderStyle>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="EFFECTIVE DATE" Binding="{Binding EffectiveDate, StringFormat={}{0:MMM dd, yyyy}}" Width="130"/>
-                        <DataGridTextColumn Header="POSITION" Binding="{Binding NewPosition}" Width="150"/>
-                        <DataGridTextColumn Header="NEW RATE (₱)" Binding="{Binding NewRate, StringFormat={}{0:N2}}" Width="120"/>
-                        <DataGridTextColumn Header="APPROVED BY" Binding="{Binding ApprovedByUsername}" Width="*"/>
-                    </DataGrid.Columns>
-                </DataGrid>
+                <TextBlock Text="📋 PAST PROMOTION HISTORY" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,8"/>
+                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8">
+                    <DataGrid x:Name="HistoryGrid" Height="110" AutoGenerateColumns="False"
+                              IsReadOnly="True" BorderThickness="0"
+                              Background="Transparent" HeadersVisibility="Column"
+                              GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9"
+                              ColumnHeaderHeight="32" RowHeight="32">
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#F8FAFC"/>
+                                <Setter Property="Foreground" Value="#64748B"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter Property="FontSize" Value="10.5"/>
+                                <Setter Property="Padding" Value="10,0"/>
+                                <Setter Property="BorderBrush" Value="#E2E8F0"/>
+                                <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="EFFECTIVE DATE" Binding="{Binding EffectiveDate, StringFormat={}{0:MMM dd, yyyy}}" Width="115"/>
+                            <DataGridTextColumn Header="NEW POSITION" Binding="{Binding NewPosition}" Width="*"/>
+                            <DataGridTextColumn Header="NEW RATE" Binding="{Binding NewRate, StringFormat='₱{0:N2}'}" Width="110"/>
+                            <DataGridTextColumn Header="APPROVED BY" Binding="{Binding ApprovedByUsername}" Width="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
 
                 <!-- Error Banner -->
                 <Border x:Name="BannerError" Background="#FFF5F5" BorderBrush="#FEB2B2" BorderThickness="1"
-                        CornerRadius="6" Padding="12,8" Margin="0,12,0,0" Visibility="Collapsed">
+                        CornerRadius="8" Padding="12,8" Margin="0,12,0,0" Visibility="Collapsed">
                     <TextBlock x:Name="TxtError" Foreground="#C53030" FontSize="12" TextWrapping="Wrap"/>
                 </Border>
             </StackPanel>
         </ScrollViewer>
 
-        <!-- FOOTER -->
+        <!-- ════════════════════ FOOTER ════════════════════ -->
         <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="24,0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Button Content="Cancel" Background="#EDF2F7" Foreground="#4A5568"
-                        BorderThickness="0" Height="40" Padding="20,0" FontWeight="SemiBold"
-                        Cursor="Hand" Margin="0,0,12,0" Click="BtnCancel_Click"/>
-                <Button Content="📈  Apply Promotion" Style="{StaticResource PrimaryBtnStyle}"
-                        Height="40" Padding="20,0" Click="BtnApply_Click"/>
-            </StackPanel>
+            <Grid VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="Cancel" Background="#F1F5F9" Foreground="#475569"
+                            BorderThickness="0" Height="40" Padding="20,0" FontWeight="SemiBold"
+                            IsCancel="True" Cursor="Hand" Margin="0,0,12,0" Click="BtnCancel_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <Button Content="📈  Apply Promotion" Style="{StaticResource PrimaryBtnStyle}"
+                            Height="40" Padding="22,0" IsDefault="True" Click="BtnApply_Click"/>
+                </StackPanel>
+            </Grid>
         </Border>
     </Grid>
 </Window>
