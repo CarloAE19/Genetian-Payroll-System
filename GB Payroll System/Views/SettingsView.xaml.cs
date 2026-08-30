@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -12,8 +13,13 @@ namespace GB_Payroll_System.Views
     public partial class SettingsView : UserControl
     {
         private readonly UserRepository _userRepo = new();
+        private readonly CompanyProfileRepository _companyRepo = new();
+        private readonly BranchRepository _branchRepo = new();
         private readonly StatutorySettingsRepository _statRepo = new();
-        private List<User> _users = [];
+
+        private List<User> _allUsers = [];
+        private List<Branch> _allBranches = [];
+        private CompanyProfile _currentCompany = new();
         private StatutorySettings _currentStatutory = new();
 
         public SettingsView()
@@ -32,6 +38,8 @@ namespace GB_Payroll_System.Views
                 CurrencyInputHelper.Attach(TxtBirBonusCap);
 
                 LoadUsers();
+                LoadCompanyProfile();
+                LoadBranches();
                 LoadStatutorySettings();
                 LoadConnectionSettings();
             };
@@ -40,33 +48,68 @@ namespace GB_Payroll_System.Views
         // ── TAB SWITCHING ────────────────────────────────────────────────────
         private void Tab_Changed(object sender, RoutedEventArgs e)
         {
-            if (UsersPanel == null || StatutoryPanel == null || DatabasePanel == null) return;
+            if (UsersPanel == null || CompanyPanel == null || BranchesPanel == null || StatutoryPanel == null || DatabasePanel == null) return;
 
             UsersPanel.Visibility     = TabUsers.IsChecked == true     ? Visibility.Visible : Visibility.Collapsed;
+            CompanyPanel.Visibility   = TabCompany.IsChecked == true   ? Visibility.Visible : Visibility.Collapsed;
+            BranchesPanel.Visibility  = TabBranches.IsChecked == true  ? Visibility.Visible : Visibility.Collapsed;
             StatutoryPanel.Visibility = TabStatutory.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
             DatabasePanel.Visibility  = TabDatabase.IsChecked == true  ? Visibility.Visible : Visibility.Collapsed;
         }
 
         // ══════════════════════════════════════════════════════════════════════
-        // USER ACCOUNTS TAB
+        // 1. USER ACCOUNTS TAB
         // ══════════════════════════════════════════════════════════════════════
         private void LoadUsers()
         {
             if (UsersGrid == null) return;
-            try { _users = _userRepo.GetAll(); }
+            try 
+            { 
+                _allUsers = _userRepo.GetAll(); 
+            }
             catch
             {
-                // Offline sample
-                _users =
+                _allUsers =
                 [
                     new User { Id = 1, Username = "admin",    FullName = "Genetian Administrator", Email = "admin@genetian.ph",   Role = UserRole.Admin,      IsActive = true,  CreatedAt = DateTime.Now.AddDays(-60) },
                     new User { Id = 2, Username = "hr_user",  FullName = "HR Officer",             Email = "hr@genetian.ph",      Role = UserRole.HR,         IsActive = true,  CreatedAt = DateTime.Now.AddDays(-30) },
                     new User { Id = 3, Username = "acct",     FullName = "Accountant",             Email = "acct@genetian.ph",    Role = UserRole.Accounting,  IsActive = true,  CreatedAt = DateTime.Now.AddDays(-15) },
-                    new User { Id = 4, Username = "mgmt",     FullName = "Branch Manager",         Email = "mgmt@genetian.ph",    Role = UserRole.Management,  IsActive = false, CreatedAt = DateTime.Now.AddDays(-45) },
                 ];
             }
-            UsersGrid.ItemsSource = _users;
-            TxtUserCount.Text = $"{_users.Count} user(s)";
+
+            ApplyUserFilter();
+        }
+
+        private void TxtUserSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ApplyUserFilter();
+        }
+
+        private void BtnClearUserSearch_Click(object sender, RoutedEventArgs e)
+        {
+            TxtUserSearch.Clear();
+            ApplyUserFilter();
+        }
+
+        private void ApplyUserFilter()
+        {
+            if (UsersGrid == null) return;
+
+            string query = TxtUserSearch?.Text.Trim().ToLower() ?? "";
+            var filtered = string.IsNullOrEmpty(query)
+                ? _allUsers
+                : _allUsers.Where(u =>
+                    u.Username.ToLower().Contains(query) ||
+                    u.FullName.ToLower().Contains(query) ||
+                    (u.Email != null && u.Email.ToLower().Contains(query)) ||
+                    u.Role.ToString().ToLower().Contains(query)).ToList();
+
+            UsersGrid.ItemsSource = filtered;
+            TxtUserCount.Text = $"{filtered.Count} user(s)";
+
+            bool isEmpty = filtered.Count == 0;
+            UsersGrid.Visibility = isEmpty ? Visibility.Collapsed : Visibility.Visible;
+            BorderNoUsers.Visibility = isEmpty ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void BtnAddUser_Click(object sender, RoutedEventArgs e)
@@ -79,10 +122,9 @@ namespace GB_Payroll_System.Views
         {
             if (sender is Button btn && btn.Tag is int id)
             {
-                var user = _users.Find(u => u.Id == id);
+                var user = _allUsers.Find(u => u.Id == id);
                 if (user == null) return;
 
-                // Protect the currently logged-in admin from role changes
                 if (user.Username == AuthService.CurrentUser?.Username)
                 {
                     MessageBox.Show("You cannot edit your own account from here. Use 'Change Password' instead.",
@@ -99,7 +141,7 @@ namespace GB_Payroll_System.Views
         {
             if (sender is Button btn && btn.Tag is int id)
             {
-                var user = _users.Find(u => u.Id == id);
+                var user = _allUsers.Find(u => u.Id == id);
                 if (user == null) return;
                 var dialog = new ResetPasswordDialog(user);
                 if (dialog.ShowDialog() == true)
@@ -111,7 +153,7 @@ namespace GB_Payroll_System.Views
         {
             if (sender is Button btn && btn.Tag is int id)
             {
-                var user = _users.Find(u => u.Id == id);
+                var user = _allUsers.Find(u => u.Id == id);
                 if (user == null) return;
 
                 if (user.Username == AuthService.CurrentUser?.Username)
@@ -133,7 +175,147 @@ namespace GB_Payroll_System.Views
         }
 
         // ══════════════════════════════════════════════════════════════════════
-        // STATUTORY & CONTRIBUTION RATES TAB
+        // 2. COMPANY PROFILE TAB
+        // ══════════════════════════════════════════════════════════════════════
+        private void LoadCompanyProfile()
+        {
+            if (TxtCompName == null) return;
+            try
+            {
+                _currentCompany = _companyRepo.GetProfile();
+                TxtCompName.Text       = _currentCompany.CompanyName;
+                TxtTradeName.Text       = _currentCompany.TradeName;
+                TxtCompEmail.Text       = _currentCompany.EmailAddress;
+                TxtCompContact.Text     = _currentCompany.ContactNumber;
+                TxtCompAddress.Text     = _currentCompany.CompanyAddress;
+
+                TxtEmpSss.Text          = _currentCompany.EmployerSssNumber;
+                TxtEmpPh.Text           = _currentCompany.EmployerPhilHealthNumber;
+                TxtEmpPagIbig.Text      = _currentCompany.EmployerPagIbigNumber;
+                TxtEmpTin.Text          = _currentCompany.EmployerTin;
+
+                TxtSignatoryName.Text   = _currentCompany.AuthorizedSignatoryName;
+                TxtSignatoryTitle.Text  = _currentCompany.AuthorizedSignatoryTitle;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to load company profile: {ex.Message}");
+            }
+        }
+
+        private void BtnSaveCompany_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(TxtCompName.Text))
+            {
+                MessageBox.Show("Registered Corporate Name is required.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                TxtCompName.Focus();
+                return;
+            }
+
+            try
+            {
+                var profile = new CompanyProfile
+                {
+                    Id = 1,
+                    CompanyName = TxtCompName.Text.Trim(),
+                    TradeName = TxtTradeName.Text.Trim(),
+                    EmailAddress = TxtCompEmail.Text.Trim(),
+                    ContactNumber = TxtCompContact.Text.Trim(),
+                    CompanyAddress = TxtCompAddress.Text.Trim(),
+                    EmployerSssNumber = TxtEmpSss.Text.Trim(),
+                    EmployerPhilHealthNumber = TxtEmpPh.Text.Trim(),
+                    EmployerPagIbigNumber = TxtEmpPagIbig.Text.Trim(),
+                    EmployerTin = TxtEmpTin.Text.Trim(),
+                    AuthorizedSignatoryName = TxtSignatoryName.Text.Trim(),
+                    AuthorizedSignatoryTitle = TxtSignatoryTitle.Text.Trim(),
+                    UpdatedByUsername = AuthService.CurrentUser?.Username ?? "admin",
+                    UpdatedAt = DateTime.UtcNow
+                };
+
+                _companyRepo.SaveProfile(profile);
+                _currentCompany = profile;
+
+                MessageBox.Show("✅ Company Profile & Statutory Remittance Information saved successfully!",
+                    "Profile Updated", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to save company profile:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════════
+        // 3. BRANCHES TAB
+        // ══════════════════════════════════════════════════════════════════════
+        private void LoadBranches()
+        {
+            if (BranchesGrid == null) return;
+            try
+            {
+                _allBranches = _branchRepo.GetAll(includeInactive: true);
+            }
+            catch
+            {
+                _allBranches =
+                [
+                    new Branch { Id = 1, Code = "MAIN", Name = "Main Office - Headquarter", Location = "General Santos City", IsActive = true },
+                    new Branch { Id = 2, Code = "DVO", Name = "Davao City Branch", Location = "Davao City", IsActive = true }
+                ];
+            }
+
+            BranchesGrid.ItemsSource = _allBranches;
+            TxtBranchCount.Text = $"{_allBranches.Count} branch(es)";
+
+            bool isEmpty = _allBranches.Count == 0;
+            BranchesGrid.Visibility = isEmpty ? Visibility.Collapsed : Visibility.Visible;
+            BorderNoBranches.Visibility = isEmpty ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void BtnAddBranch_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new BranchFormDialog(null);
+            if (dialog.ShowDialog() == true) LoadBranches();
+        }
+
+        private void BtnEditBranch_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is int id)
+            {
+                var branch = _allBranches.Find(b => b.Id == id);
+                if (branch == null) return;
+
+                var dialog = new BranchFormDialog(branch);
+                if (dialog.ShowDialog() == true) LoadBranches();
+            }
+        }
+
+        private void BtnToggleBranch_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is int id)
+            {
+                var branch = _allBranches.Find(b => b.Id == id);
+                if (branch == null) return;
+
+                bool newState = !branch.IsActive;
+                var confirm = MessageBox.Show(
+                    $"{(newState ? "Reactivate" : "Deactivate")} branch '{branch.Name}'?",
+                    "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (confirm != MessageBoxResult.Yes) return;
+
+                try
+                {
+                    _branchRepo.SetActive(id, newState);
+                    LoadBranches();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to toggle branch status:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════════
+        // 4. STATUTORY & CONTRIBUTION RATES TAB
         // ══════════════════════════════════════════════════════════════════════
         private void LoadStatutorySettings()
         {
@@ -237,7 +419,7 @@ namespace GB_Payroll_System.Views
         }
 
         // ══════════════════════════════════════════════════════════════════════
-        // DATABASE CONNECTION TAB
+        // 5. DATABASE CONNECTION TAB
         // ══════════════════════════════════════════════════════════════════════
         private void LoadConnectionSettings()
         {
