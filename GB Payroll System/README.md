@@ -1,8 +1,6 @@
-# Genetian GB Payroll System
+# Genetian Payroll System
 
 <div align="center">
-
-![Genetian Payroll System]
 
 **Enterprise Philippine Payroll, HRIS, Biometric Timekeeping & Statutory Compliance Desktop Application**
 
