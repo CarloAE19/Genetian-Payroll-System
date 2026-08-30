@@ -7,6 +7,7 @@
         Title="Genetian Payroll - Login" 
         Height="720" Width="1080"
         WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
         Background="{StaticResource LoginWindowBgBrush}"
         Icon="/Assets/app_icon.ico">
 

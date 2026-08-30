@@ -1,5 +1,7 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Media;
 using GB_Payroll_System.Data;
 using GB_Payroll_System.Services;
@@ -10,9 +12,52 @@ namespace GB_Payroll_System.Views
     {
         private bool _isPasswordShown = false;
 
+        // ─── DWM Title Bar Coloring (Windows 11 / Windows 10 fallback) ─────────────
+
+        [DllImport("dwmapi.dll", PreserveSig = true)]
+        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+
+        private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20; // Win 10 dark caption fallback
+        private const int DWMWA_CAPTION_COLOR           = 35; // Win 11: title bar background
+        private const int DWMWA_TEXT_COLOR               = 36; // Win 11: title bar text
+
+        /// <summary>Converts "#RRGGBB" to Win32 COLORREF (0x00BBGGRR).</summary>
+        private static int ToColorRef(byte r, byte g, byte b) => r | (g << 8) | (b << 16);
+
+        private void ApplyTitleBarColor()
+        {
+            try
+            {
+                var hwnd = new WindowInteropHelper(this).Handle;
+                if (hwnd == IntPtr.Zero) return;
+
+                // Windows 11 (Build 22000+): exact caption color + text color
+                if (Environment.OSVersion.Version.Build >= 22000)
+                {
+                    int captionColor = ToColorRef(0x0A, 0x4D, 0x9C); // Genetian Blue #0A4D9C
+                    DwmSetWindowAttribute(hwnd, DWMWA_CAPTION_COLOR, ref captionColor, sizeof(int));
+
+                    int textColor = ToColorRef(0xFF, 0xFF, 0xFF); // White text
+                    DwmSetWindowAttribute(hwnd, DWMWA_TEXT_COLOR, ref textColor, sizeof(int));
+                }
+                else
+                {
+                    // Windows 10 fallback: enable dark-mode caption (dark grey is the closest available)
+                    int useDark = 1;
+                    DwmSetWindowAttribute(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, ref useDark, sizeof(int));
+                }
+            }
+            catch
+            {
+                // Non-critical — silently ignore if DWM is unavailable
+            }
+        }
+
         public LoginWindow()
         {
             InitializeComponent();
+            // SourceInitialized fires once the native HWND exists — earliest safe point for DWM calls
+            SourceInitialized += (_, _) => ApplyTitleBarColor();
             CheckServerConnection();
         }
 
