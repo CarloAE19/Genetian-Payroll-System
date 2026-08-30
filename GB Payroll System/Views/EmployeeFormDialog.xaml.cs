@@ -33,6 +33,8 @@ namespace GB_Payroll_System.Views
             CurrencyInputHelper.Attach(TxtCustomPh);
             CurrencyInputHelper.Attach(TxtPagIbigAmount);
 
+            PopulateBranchDropdown();
+
             if (_isEditMode)
             {
                 TxtDialogTitle.Text = "Edit Employee 201 Profile & Contract";
@@ -51,7 +53,18 @@ namespace GB_Payroll_System.Views
 
                 DpDateHired.SelectedDate = DateTime.Today;
                 CboPayType.SelectedIndex = 0;
+                CboWorkingDaysFactor.SelectedIndex = 0; // 313 Days default
+                UpdateVaultEmptyState();
             }
+        }
+
+        private void PopulateBranchDropdown()
+        {
+            CboBranch.Items.Clear();
+            CboBranch.Items.Add(new ComboBoxItem { Content = "Head Office / Main Branch", Tag = 1, IsSelected = true });
+            CboBranch.Items.Add(new ComboBoxItem { Content = "Quezon City Operations", Tag = 2 });
+            CboBranch.Items.Add(new ComboBoxItem { Content = "Cebu Regional Branch", Tag = 3 });
+            CboBranch.Items.Add(new ComboBoxItem { Content = "Davao Regional Branch", Tag = 4 });
         }
 
         private void FormTab_Changed(object sender, RoutedEventArgs e)
@@ -83,8 +96,25 @@ namespace GB_Payroll_System.Views
             // Employment & Contract
             TxtDepartment.Text = emp.Department;
             TxtPosition.Text = emp.Position;
+
+            // Branch
+            if (emp.BranchId.HasValue && emp.BranchId.Value > 0 && emp.BranchId.Value <= CboBranch.Items.Count)
+            {
+                CboBranch.SelectedIndex = emp.BranchId.Value - 1;
+            }
+            else
+            {
+                CboBranch.SelectedIndex = 0;
+            }
+
             CboContractType.SelectedIndex = Math.Clamp((int)emp.ContractType - 1, 0, 4);
             CboContractStatus.SelectedIndex = Math.Clamp((int)emp.ContractStatus - 1, 0, 3);
+
+            // Working Days Factor
+            if (emp.WorkingDaysFactor == 261m) CboWorkingDaysFactor.SelectedIndex = 1;
+            else if (emp.WorkingDaysFactor == 365m) CboWorkingDaysFactor.SelectedIndex = 2;
+            else CboWorkingDaysFactor.SelectedIndex = 0; // 313 default
+
             DpDateHired.SelectedDate = emp.DateHired;
             DpContractEnd.SelectedDate = emp.ContractEndDate;
             CboPayType.SelectedIndex = emp.PayType == PayType.Daily ? 1 : 0;
@@ -121,16 +151,26 @@ namespace GB_Payroll_System.Views
                 : "MONTHLY BASIC SALARY (₱)";
         }
 
+        private void UpdateVaultEmptyState()
+        {
+            if (PanelVaultEmpty != null)
+            {
+                PanelVaultEmpty.Visibility = _documents.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
         private void LoadDocuments(int employeeId)
         {
             try
             {
                 _documents = _docRepo.GetByEmployeeId(employeeId);
                 DocumentsGrid.ItemsSource = _documents;
+                UpdateVaultEmptyState();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Failed to load documents: {ex.Message}");
+                UpdateVaultEmptyState();
             }
         }
 
@@ -155,6 +195,11 @@ namespace GB_Payroll_System.Views
                 {
                     var cat = (DocumentCategory)(CboDocCategory.SelectedIndex + 1);
                     string title = TxtDocTitle.Text.Trim();
+                    if (string.IsNullOrWhiteSpace(title))
+                    {
+                        title = Path.GetFileNameWithoutExtension(openDialog.FileName);
+                    }
+
                     _docRepo.SaveDocument(_existing.Id, cat, title, openDialog.FileName);
                     TxtDocTitle.Clear();
                     LoadDocuments(_existing.Id);
@@ -230,6 +275,13 @@ namespace GB_Payroll_System.Views
             decimal.TryParse(TxtPagIbigAmount.Text.Replace(",", ""), out decimal pagIbigAmount);
             if (pagIbigAmount <= 0) pagIbigAmount = 200m;
 
+            // Working Days factor
+            decimal factor = 313m;
+            if (CboWorkingDaysFactor.SelectedIndex == 1) factor = 261m;
+            else if (CboWorkingDaysFactor.SelectedIndex == 2) factor = 365m;
+
+            int branchId = CboBranch.SelectedIndex >= 0 ? CboBranch.SelectedIndex + 1 : 1;
+
             try
             {
                 var emp = _existing ?? new Employee();
@@ -248,12 +300,14 @@ namespace GB_Payroll_System.Views
 
                 emp.Department = TxtDepartment.Text.Trim();
                 emp.Position = TxtPosition.Text.Trim();
+                emp.BranchId = branchId;
                 emp.ContractType = (ContractType)(CboContractType.SelectedIndex + 1);
                 emp.ContractStatus = (ContractStatus)(CboContractStatus.SelectedIndex + 1);
                 emp.DateHired = DpDateHired.SelectedDate ?? DateTime.Today;
                 emp.ContractEndDate = DpContractEnd.SelectedDate;
                 emp.PayType = CboPayType.SelectedIndex == 1 ? PayType.Daily : PayType.Monthly;
                 emp.BasicRate = rate;
+                emp.WorkingDaysFactor = factor;
                 emp.BiometricUserId = TxtBiometricId.Text.Trim();
                 emp.BankAccountNumber = TxtBankAccount.Text.Trim();
 
@@ -306,7 +360,7 @@ namespace GB_Payroll_System.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Save failed:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Unable to save employee 201 profile:\n\n{ex.Message}\n\nPlease verify all required fields and try again.", "Save Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -318,7 +372,7 @@ namespace GB_Payroll_System.Views
 
             var confirm = MessageBox.Show(
                 $"Are you sure you want to {action} {_existing.FullName}?",
-                "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                "Confirm Status Change", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (confirm != MessageBoxResult.Yes) return;
 
