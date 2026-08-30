@@ -64,7 +64,7 @@ namespace GB_Payroll_System.Data
                     COALESCE(e.SssNumber, '—') AS SssNumber,
                     CONCAT(e.LastName, ', ', e.FirstName) AS FullName,
                     SUM(pr.BasicPay) AS BasicPay,
-                    SUM(pr.BasicPay + pr.PakyawPay + pr.OvertimePay + pr.NightDiffPay + pr.HolidayPay + pr.Allowances) AS GrossPay,
+                    SUM(pr.BasicPay + pr.OvertimePay + pr.NightDiffPay + pr.HolidayPay + pr.Allowances) AS GrossPay,
                     SUM(pr.SssEmployee) AS EmployeeShare,
                     SUM(pr.SssEmployer) AS EmployerShare
                 FROM PayrollRecords pr
@@ -135,9 +135,9 @@ namespace GB_Payroll_System.Data
                     e.EmployeeCode,
                     COALESCE(e.TinNumber, '—') AS TinNumber,
                     CONCAT(e.LastName, ', ', e.FirstName) AS FullName,
-                    SUM(pr.BasicPay + pr.PakyawPay + pr.OvertimePay + pr.NightDiffPay + pr.HolidayPay + pr.Allowances) AS GrossPay,
+                    SUM(pr.BasicPay + pr.OvertimePay + pr.NightDiffPay + pr.HolidayPay + pr.Allowances) AS GrossPay,
                     SUM(pr.SssEmployee + pr.PhilHealthEmployee + pr.PagIbigEmployee) AS StatutoryDeductions,
-                    SUM((pr.BasicPay + pr.PakyawPay + pr.OvertimePay + pr.NightDiffPay + pr.HolidayPay + pr.Allowances) 
+                    SUM((pr.BasicPay + pr.OvertimePay + pr.NightDiffPay + pr.HolidayPay + pr.Allowances) 
                         - (pr.SssEmployee + pr.PhilHealthEmployee + pr.PagIbigEmployee)) AS TaxableIncome,
                     SUM(pr.WithholdingTax) AS TaxWithheld
                 FROM PayrollRecords pr
