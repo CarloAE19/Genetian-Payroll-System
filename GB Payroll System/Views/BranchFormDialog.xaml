@@ -1,0 +1,55 @@
+<Window x:Class="GB_Payroll_System.Views.BranchFormDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Branch Location" Height="420" Width="480"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="#F8FAFC" UseLayoutRounding="True" SnapsToDevicePixels="True">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="68"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#0A4D9C" Padding="20,0">
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock x:Name="TxtDialogTitle" Text="🏢 Add New Branch" FontSize="16" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="Configure office/location information for employee assignment" FontSize="11" Foreground="#93C5FD"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Body -->
+        <ScrollViewer Grid.Row="1" Padding="24,20" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- Branch Code -->
+                <TextBlock Text="BRANCH CODE" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                <TextBox x:Name="TxtCode" Style="{StaticResource ModernInputStyle}" ToolTip="Short unique code (e.g. MAIN, DVO, CEB, MNL)" Margin="0,0,0,16"/>
+
+                <!-- Branch Name -->
+                <TextBlock Text="BRANCH NAME" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                <TextBox x:Name="TxtName" Style="{StaticResource ModernInputStyle}" ToolTip="Full descriptive name of the office/branch" Margin="0,0,0,16"/>
+
+                <!-- Location / Address -->
+                <TextBlock Text="LOCATION / CITY" FontSize="11" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,5"/>
+                <TextBox x:Name="TxtLocation" Style="{StaticResource ModernInputStyle}" ToolTip="City, municipality, or full street address" Margin="0,0,0,16"/>
+
+                <!-- Status Active Checkbox -->
+                <CheckBox x:Name="ChkActive" Content="Branch is active and available for employee assignments"
+                          IsChecked="True" FontSize="12" Foreground="#334155" Cursor="Hand" Margin="0,4,0,10"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="20,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Content="Cancel" Background="#EDF2F7" Foreground="#475569"
+                        BorderThickness="0" Height="38" Padding="18,0" FontWeight="SemiBold"
+                        Cursor="Hand" Margin="0,0,10,0" IsCancel="True" Click="BtnCancel_Click"/>
+                <Button x:Name="BtnSave" Content="💾  Save Branch" Style="{StaticResource PrimaryBtnStyle}"
+                        Height="38" Padding="18,0" IsDefault="True" Click="BtnSave_Click"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
