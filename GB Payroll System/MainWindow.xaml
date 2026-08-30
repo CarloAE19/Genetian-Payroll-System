@@ -7,10 +7,13 @@
         Title="Genetian Payroll System — Enterprise Edition" 
         Height="840" Width="1380"
         WindowStartupLocation="CenterScreen"
-        WindowState="Maximized"
+        WindowStyle="None"
+        ResizeMode="NoResize"
         Background="#F8FAFC"
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
+        KeyDown="MainWindow_KeyDown"
+        Loaded="MainWindow_Loaded"
         FontFamily="Segoe UI Variable, Segoe UI, -apple-system, Arial, sans-serif">
 
     <Grid>

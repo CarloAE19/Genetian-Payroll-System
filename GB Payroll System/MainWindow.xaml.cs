@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using Dapper;
 using GB_Payroll_System.Data;
@@ -21,6 +22,7 @@ namespace GB_Payroll_System
         private SettingsView?          _settingsView;
         private GovernmentReportsView? _govReportsView;
         private LeaveManagementView?   _leaveView;
+        private SalaryPromotionsView?  _salaryPromotionsView;
 
         public MainWindow()
         {
@@ -213,8 +215,8 @@ namespace GB_Payroll_System
                     break;
 
                 case "NavPromotions":
-                    _employeeView ??= new EmployeeView();
-                    SetContent(_employeeView);
+                    _salaryPromotionsView ??= new SalaryPromotionsView();
+                    SetContent(_salaryPromotionsView);
                     break;
 
                 default:
@@ -245,6 +247,10 @@ namespace GB_Payroll_System
             if (ContentFrame.Content is EmployeeView empView)
             {
                 _ = empView.LoadEmployeesAsync();
+            }
+            else if (ContentFrame.Content is SalaryPromotionsView promView)
+            {
+                _ = promView.LoadPromotionsAsync();
             }
         }
 
@@ -305,6 +311,33 @@ namespace GB_Payroll_System
                 var loginWindow = new LoginWindow();
                 loginWindow.Show();
                 this.Close();
+            }
+        }
+
+        // ─── Fullscreen / Keyboard ──────────────────────────────────────────────────
+
+        /// <summary>
+        /// Sizes the chrome-less window to the working area so the Windows taskbar
+        /// remains visible at the bottom of the screen.
+        /// </summary>
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            var workArea = SystemParameters.WorkArea;
+            this.Left   = workArea.Left;
+            this.Top    = workArea.Top;
+            this.Width  = workArea.Width;
+            this.Height = workArea.Height;
+        }
+
+        /// <summary>
+        /// Pressing Escape triggers the same logout flow as clicking the Logout button.
+        /// </summary>
+        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                BtnLogout_Click(sender, e);
+                e.Handled = true;
             }
         }
     }
