@@ -222,6 +222,8 @@ dotnet run --project "GB Payroll System.csproj"
 
 ## 📖 Developer & AI Agent Guidelines
 
+"All logos, application branding, and UI screenshots in /Assets are proprietary trademarks and property of the project owner. They may not be extracted, reused, or republished without express written consent."
+
 For developers and AI coding agents working on this codebase:
 * Full architectural patterns, HCI mandates, and design tokens are detailed in [`.agents/skills/gb-payroll-system/SKILL.md`](file:///c:/Users/H0me/source/repos/Genetian%20Payroll/GB%20Payroll%20System/.agents/skills/gb-payroll-system/SKILL.md).
 * Core coding standards are summarized in [`AGENTS.md`](file:///c:/Users/H0me/source/repos/Genetian%20Payroll/GB%20Payroll%20System/AGENTS.md) and [`GEMINI.md`](file:///c:/Users/H0me/source/repos/Genetian%20Payroll/GB%20Payroll%20System/GEMINI.md).
