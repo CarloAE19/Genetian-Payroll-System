@@ -179,6 +179,15 @@ GB_Payroll_System/
 
 ---
 
+
+## 🎨 Asset, Image & Media Rights Disclaimer
+
+* **Proprietary Branding & Media**: All visual assets, application logos, trademarks, and UI design screenshots located in this repository (including the `/Assets` directory) are the exclusive property of the project owner.
+* **No Re-Use / Redistribution**: You are **not permitted** to extract, copy, hotlink, or use any pictures, logos, or brand materials in personal, academic, or commercial projects without express written permission.
+* **Data Privacy (RA 10173)**: All sample names, profile records, and numerical figures demonstrated in screenshots or mockups are strictly fictitious and generated for demonstration purposes only.
+
+---
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -221,8 +230,6 @@ dotnet run --project "GB Payroll System.csproj"
 ---
 
 ## 📖 Developer & AI Agent Guidelines
-
-"All logos, application branding, and UI screenshots in /Assets are proprietary trademarks and property of the project owner. They may not be extracted, reused, or republished without express written consent."
 
 For developers and AI coding agents working on this codebase:
 * Full architectural patterns, HCI mandates, and design tokens are detailed in [`.agents/skills/gb-payroll-system/SKILL.md`](file:///c:/Users/H0me/source/repos/Genetian%20Payroll/GB%20Payroll%20System/.agents/skills/gb-payroll-system/SKILL.md).
