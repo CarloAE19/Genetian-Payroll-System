@@ -4,15 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Genetian Payroll System" 
-        Height="768" Width="1280"
+        Title="Genetian Payroll System — Enterprise Edition" 
+        Height="840" Width="1380"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
-        Background="#F4F6F9">
+        Background="#F8FAFC"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True"
+        FontFamily="Segoe UI Variable, Segoe UI, -apple-system, Arial, sans-serif">
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="252"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -20,9 +23,9 @@
         <Border Grid.Column="0" Background="#0A4D9C">
             <DockPanel>
                 <!-- App Logo & Brand -->
-                <StackPanel DockPanel.Dock="Top" Margin="20,24,20,24">
+                <StackPanel DockPanel.Dock="Top" Margin="20,22,20,20">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Border Width="36" Height="36" CornerRadius="6" Background="White" Margin="0,0,12,0">
+                        <Border Width="38" Height="38" CornerRadius="8" Background="White" Margin="0,0,12,0" Padding="4">
                             <Image Width="28" Height="28"
                                    HorizontalAlignment="Center" VerticalAlignment="Center"
                                    Source="pack://application:,,,/Assets/logo.png"
@@ -31,33 +34,52 @@
                         </Border>
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock Text="Genetian" Foreground="White" FontWeight="Bold" FontSize="16"/>
-                            <TextBlock Text="PAYROLL SYSTEM" Foreground="#A0AEC0" FontSize="10" FontWeight="SemiBold"/>
+                            <TextBlock Text="PAYROLL SYSTEM" Foreground="#93C5FD" FontSize="10" FontWeight="SemiBold" Margin="0,1,0,0"/>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
 
                 <!-- Logout Button at Bottom -->
-                <Border DockPanel.Dock="Bottom" Margin="16" BorderBrush="#1E5BB0" BorderThickness="0,1,0,0" Padding="0,16,0,0">
+                <Border DockPanel.Dock="Bottom" Margin="14,10,14,16" BorderBrush="#1E5BB0" BorderThickness="0,1,0,0" Padding="0,14,0,0">
                     <Button x:Name="BtnLogout" 
-                            Content="🚪 Logout" 
-                            Background="#103B75" Foreground="White" 
+                            Content="🚪  Sign Out" 
+                            Background="#06254A" Foreground="White" 
                             BorderThickness="0" Height="40" 
-                            FontWeight="SemiBold" Cursor="Hand"
-                            Click="BtnLogout_Click"/>
+                            FontSize="12" FontWeight="SemiBold" Cursor="Hand"
+                            ToolTip="Sign out of the system safely"
+                            Click="BtnLogout_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border"><Setter Property="CornerRadius" Value="8"/></Style>
+                        </Button.Resources>
+                    </Button>
                 </Border>
 
-                <!-- Navigation Links -->
+                <!-- Navigation Links Categorized -->
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel Margin="12,0">
-                        <RadioButton x:Name="NavDashboard" Content="📊 Dashboard" GroupName="NavGroup" IsChecked="True" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
-                        <RadioButton x:Name="NavEmployees" Content="👥 Employee 201 Files" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
-                        <RadioButton x:Name="NavPromotions" Content="📈 Salary Promotions" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
-                        <RadioButton x:Name="NavAttendance" Content="⏰ Attendance &amp; Biometrics" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
-                        <RadioButton x:Name="NavLeave" Content="🌴 Leave Management" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
-                        <RadioButton x:Name="NavHolidays" Content="🗓️ Local Holidays" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
-                        <RadioButton x:Name="NavPayroll" Content="💵 Payroll &amp; Payslips" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
-                        <RadioButton x:Name="NavGovReports" Content="🏛️ Government Reports" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
-                        <RadioButton x:Name="NavSettings" Content="⚙️ System Settings" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" Click="Nav_Click"/>
+                    <StackPanel Margin="12,0,12,8">
+                        <!-- MAIN SECTION -->
+                        <TextBlock x:Name="SecMain" Text="MAIN OVERVIEW" FontSize="10" FontWeight="Bold" Foreground="#93C5FD" Margin="12,4,12,6" Opacity="0.75"/>
+                        <RadioButton x:Name="NavDashboard" Content="📊  Dashboard" GroupName="NavGroup" IsChecked="True" Style="{DynamicResource NavRadioStyle}" ToolTip="System Overview &amp; Key Metrics" Click="Nav_Click"/>
+
+                        <!-- HR & 201 FILES -->
+                        <TextBlock x:Name="SecHr" Text="HR &amp; 201 RECORDS" FontSize="10" FontWeight="Bold" Foreground="#93C5FD" Margin="12,14,12,6" Opacity="0.75"/>
+                        <RadioButton x:Name="NavEmployees" Content="👥  Employee 201 Files" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" ToolTip="Employee HRIS, 201 Filing, and Compensation" Click="Nav_Click"/>
+                        <RadioButton x:Name="NavPromotions" Content="📈  Salary Promotions" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" ToolTip="Salary Adjustment &amp; Position Promotion History" Click="Nav_Click"/>
+
+                        <!-- TIMEKEEPING & LEAVES -->
+                        <TextBlock x:Name="SecTime" Text="TIMEKEEPING &amp; LEAVES" FontSize="10" FontWeight="Bold" Foreground="#93C5FD" Margin="12,14,12,6" Opacity="0.75"/>
+                        <RadioButton x:Name="NavAttendance" Content="⏰  Timekeeping &amp; Bio" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" ToolTip="Biometric Logs, Shift Pairing, and Overtime" Click="Nav_Click"/>
+                        <RadioButton x:Name="NavLeave" Content="🌴  Leave Management" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" ToolTip="Vacation, Sick &amp; Emergency Leave Balances" Click="Nav_Click"/>
+                        <RadioButton x:Name="NavHolidays" Content="🗓️  Local Holidays" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" ToolTip="Regular and Special Non-Working Holidays" Click="Nav_Click"/>
+
+                        <!-- PAYROLL & STATUTORY -->
+                        <TextBlock x:Name="SecPayroll" Text="PAYROLL &amp; STATUTORY" FontSize="10" FontWeight="Bold" Foreground="#93C5FD" Margin="12,14,12,6" Opacity="0.75"/>
+                        <RadioButton x:Name="NavPayroll" Content="💵  Payroll &amp; Payslips" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" ToolTip="Compute Semi-Monthly Gross-to-Net Payroll" Click="Nav_Click"/>
+                        <RadioButton x:Name="NavGovReports" Content="🏛️  Statutory Reports" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" ToolTip="SSS R-1A, PhilHealth RF-1, Pag-IBIG MCRF, BIR 1601-C" Click="Nav_Click"/>
+
+                        <!-- ADMINISTRATION -->
+                        <TextBlock x:Name="SecAdmin" Text="ADMINISTRATION" FontSize="10" FontWeight="Bold" Foreground="#93C5FD" Margin="12,14,12,6" Opacity="0.75"/>
+                        <RadioButton x:Name="NavSettings" Content="⚙️  System Settings" GroupName="NavGroup" Style="{DynamicResource NavRadioStyle}" ToolTip="User Accounts, Roles &amp; Database Configuration" Click="Nav_Click"/>
                     </StackPanel>
                 </ScrollViewer>
             </DockPanel>
@@ -66,27 +88,50 @@
         <!-- RIGHT CONTENT AREA -->
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="64"/>
+                <RowDefinition Height="68"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <!-- HEADER BAR -->
-            <Border Grid.Row="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="24,0">
+            <Border Grid.Row="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="28,0">
                 <Grid VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock x:Name="TxtHeaderTitle" Text="Management Dashboard" FontSize="18" FontWeight="Bold" Foreground="#1A202C"/>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock x:Name="TxtHeaderTitle" Text="Management Dashboard" FontSize="19" FontWeight="Bold" Foreground="#0F172A"/>
+                        <TextBlock Text="Centralized Philippine Multi-Department Overview" FontSize="12" Foreground="#64748B" Margin="0,2,0,0"/>
+                    </StackPanel>
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                        <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
-                            <TextBlock x:Name="TxtUserFullName" Text="Genetian Administrator" FontWeight="Bold" FontSize="13" HorizontalAlignment="Right"/>
-                            <TextBlock x:Name="TxtUserRole" Text="ADMINISTRATOR" FontSize="10" Foreground="#002CFA" FontWeight="Bold" HorizontalAlignment="Right"/>
-                        </StackPanel>
-                        <Border Width="36" Height="36" CornerRadius="18" Background="#EBF8FF">
-                            <TextBlock Text="👤" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <!-- Manual Refresh Button -->
+                        <Button x:Name="BtnRefreshDashboard" Content="🔄  Refresh" 
+                                Background="#F1F5F9" Foreground="#475569"
+                                BorderBrush="#E2E8F0" BorderThickness="1"
+                                Height="36" Padding="14,0" FontSize="12" FontWeight="SemiBold"
+                                Cursor="Hand" Margin="0,0,16,0"
+                                ToolTip="Refresh all live database metrics and statistics"
+                                Click="BtnRefreshDashboard_Click">
+                            <Button.Resources>
+                                <Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style>
+                            </Button.Resources>
+                        </Button>
+
+                        <!-- User Profile Pill -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="20" Padding="12,6">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <StackPanel VerticalAlignment="Center" Margin="0,0,10,0">
+                                    <TextBlock x:Name="TxtUserFullName" Text="Genetian Administrator" FontWeight="Bold" FontSize="12" Foreground="#0F172A" HorizontalAlignment="Right"/>
+                                    <Border HorizontalAlignment="Right" Background="#DCFCE7" CornerRadius="4" Padding="6,1" Margin="0,2,0,0">
+                                        <TextBlock x:Name="TxtUserRole" Text="ADMINISTRATOR" FontSize="9" Foreground="#15803D" FontWeight="Bold"/>
+                                    </Border>
+                                </StackPanel>
+                                <Border Width="32" Height="32" CornerRadius="16" Background="#DBEAFE">
+                                    <TextBlock Text="👤" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </StackPanel>
                         </Border>
                     </StackPanel>
                 </Grid>
@@ -95,42 +140,224 @@
             <!-- MAIN CONTENT AREA: Dashboard Panel (default) + Frame for module views -->
             <Grid Grid.Row="1">
                 <!-- DASHBOARD (visible by default) -->
-                <ScrollViewer x:Name="DashboardPanel" Padding="24">
+                <ScrollViewer x:Name="DashboardPanel" Padding="28" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <!-- SUMMARY CARDS -->
-                        <UniformGrid Columns="3" Margin="0,0,0,24">
-                            <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,16,0" BorderBrush="#E2E8F0" BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="TOTAL EMPLOYEES" FontSize="11" FontWeight="Bold" Foreground="#718096"/>
-                                    <TextBlock x:Name="TxtTotalEmployees" Text="Loading..." FontSize="24" FontWeight="Bold" Foreground="#1A202C" Margin="0,8,0,0"/>
-                                </StackPanel>
+                        <!-- TOP SUMMARY METRICS GRID (4 CARDS) -->
+                        <UniformGrid Columns="4" Margin="0,0,0,24">
+                            <!-- Card 1: Active Employees -->
+                            <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,16,0" BorderBrush="#E2E8F0" BorderThickness="1">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="18" Opacity="0.06" Direction="270" ShadowDepth="3" Color="#0F172A"/>
+                                </Border.Effect>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="TOTAL EMPLOYEES" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                                        <TextBlock x:Name="TxtTotalEmployees" Text="Loading..." FontSize="24" FontWeight="Bold" Foreground="#0F172A" Margin="0,8,0,2"/>
+                                        <TextBlock Text="Active 201 Records" FontSize="11" Foreground="#94A3B8"/>
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="44" Height="44" CornerRadius="10" Background="#DBEAFE" VerticalAlignment="Top">
+                                        <TextBlock Text="👥" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </Grid>
                             </Border>
-                            <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,16,0" BorderBrush="#E2E8F0" BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="CURRENT CUTOFF" FontSize="11" FontWeight="Bold" Foreground="#718096"/>
-                                    <TextBlock x:Name="TxtCurrentCutoff" Text="Loading..." FontSize="20" FontWeight="Bold" Foreground="#0A4D9C" Margin="0,8,0,0"/>
-                                </StackPanel>
+
+                            <!-- Card 2: Current Cutoff -->
+                            <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,16,0" BorderBrush="#E2E8F0" BorderThickness="1">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="18" Opacity="0.06" Direction="270" ShadowDepth="3" Color="#0F172A"/>
+                                </Border.Effect>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="CURRENT CUTOFF" FontSize="11" FontWeight="Bold" Foreground="#64748B" Margin="0,0,8,0"/>
+                                            <Border x:Name="BorderCutoffBadge" CornerRadius="4" Padding="6,1" Background="#DCFCE7" VerticalAlignment="Center">
+                                                <TextBlock x:Name="BadgeCutoffStatus" Text="OPEN" FontSize="9" FontWeight="Bold" Foreground="#15803D"/>
+                                            </Border>
+                                        </StackPanel>
+                                        <TextBlock x:Name="TxtCurrentCutoff" Text="Loading..." FontSize="18" FontWeight="Bold" Foreground="#0A4D9C" Margin="0,8,0,2" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="Semi-Monthly Period" FontSize="11" Foreground="#94A3B8"/>
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="44" Height="44" CornerRadius="10" Background="#E0E7FF" VerticalAlignment="Top">
+                                        <TextBlock Text="🗓️" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </Grid>
                             </Border>
-                            <Border Background="White" CornerRadius="8" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="ESTIMATED NET PAYROLL" FontSize="11" FontWeight="Bold" Foreground="#718096"/>
-                                    <TextBlock x:Name="TxtEstNetPayroll" Text="Loading..." FontSize="24" FontWeight="Bold" Foreground="#2F855A" Margin="0,8,0,0"/>
-                                </StackPanel>
+
+                            <!-- Card 3: Pending Leave Applications -->
+                            <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,16,0" BorderBrush="#E2E8F0" BorderThickness="1">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="18" Opacity="0.06" Direction="270" ShadowDepth="3" Color="#0F172A"/>
+                                </Border.Effect>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="PENDING LEAVE REQ." FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                                        <TextBlock x:Name="TxtPendingLeaves" Text="Loading..." FontSize="24" FontWeight="Bold" Foreground="#B45309" Margin="0,8,0,2"/>
+                                        <TextBlock Text="Awaiting HR Review" FontSize="11" Foreground="#94A3B8"/>
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="44" Height="44" CornerRadius="10" Background="#FEF3C7" VerticalAlignment="Top">
+                                        <TextBlock Text="🌴" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+
+                            <!-- Card 4: Estimated Net Payroll -->
+                            <Border Background="White" CornerRadius="12" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="18" Opacity="0.06" Direction="270" ShadowDepth="3" Color="#0F172A"/>
+                                </Border.Effect>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="ESTIMATED NET PAYROLL" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                                        <TextBlock x:Name="TxtEstNetPayroll" Text="Loading..." FontSize="22" FontWeight="Bold" Foreground="#15803D" Margin="0,8,0,2"/>
+                                        <TextBlock Text="Computed Disbursement" FontSize="11" Foreground="#94A3B8"/>
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="44" Height="44" CornerRadius="10" Background="#DCFCE7" VerticalAlignment="Top">
+                                        <TextBlock Text="💵" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </Grid>
                             </Border>
                         </UniformGrid>
 
                         <!-- QUICK ACTION BANNER -->
-                        <Border Background="White" CornerRadius="8" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1">
-                            <StackPanel>
-                                <TextBlock Text="Welcome to Genetian Payroll System" FontSize="18" FontWeight="Bold" Foreground="#1A202C"/>
-                                <TextBlock Text="Centralized Philippine Multi-Department Payroll, HR 201 Files, Employment Contracts, Biometric Timekeeping, and Statutory Deductions Engine."
-                                           FontSize="13" Foreground="#718096" Margin="0,8,0,16"/>
-                                <WrapPanel>
-                                    <Button x:Name="BtnQuickAddEmployee" Content="➕ Add New Employee" Style="{StaticResource PrimaryBtnStyle}" Width="180" Height="38" FontSize="12" Margin="0,0,16,0" Click="BtnQuickAddEmployee_Click"/>
-                                    <Button x:Name="BtnQuickProcessPayroll" Content="💵 Process Payroll Cutoff" Background="#2F855A" Foreground="White" Width="180" Height="38" FontSize="12" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="BtnQuickProcessPayroll_Click"/>
-                                </WrapPanel>
-                            </StackPanel>
+                        <Border Background="White" CornerRadius="12" Padding="24" Margin="0,0,0,24" BorderBrush="#E2E8F0" BorderThickness="1">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="18" Opacity="0.06" Direction="270" ShadowDepth="3" Color="#0F172A"/>
+                            </Border.Effect>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="Welcome to Genetian Payroll System" FontSize="18" FontWeight="Bold" Foreground="#0F172A"/>
+                                        <Border Background="#DBEAFE" CornerRadius="6" Padding="8,3" Margin="12,0,0,0">
+                                            <TextBlock Text="v2.0 Enterprise" FontSize="10" FontWeight="Bold" Foreground="#1D4ED8"/>
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock Text="Centralized Philippine Multi-Department Payroll, HR 201 Files, Employment Contracts, Biometric Timekeeping, Statutory Compliance Engine."
+                                               FontSize="13" Foreground="#64748B" Margin="0,6,0,16"/>
+                                    <WrapPanel>
+                                        <Button x:Name="BtnQuickAddEmployee" Content="➕ Add Employee" Style="{StaticResource PrimaryBtnStyle}" Width="160" Height="42" FontSize="12" Margin="0,0,12,0" ToolTip="Register a new employee into the 201 file database" Click="BtnQuickAddEmployee_Click"/>
+                                        <Button x:Name="BtnQuickAttendance" Content="⏰ Timekeeping" Background="#0A4D9C" Foreground="White" Width="150" Height="42" FontSize="12" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="0,0,12,0" ToolTip="View attendance records and import biometric punches" Click="BtnQuickAttendance_Click">
+                                            <Button.Resources>
+                                                <Style TargetType="Border"><Setter Property="CornerRadius" Value="8"/></Style>
+                                            </Button.Resources>
+                                        </Button>
+                                        <Button x:Name="BtnQuickLeave" Content="🌴 Review Leaves" Background="#002CFA" Foreground="White" Width="150" Height="42" FontSize="12" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="0,0,12,0" ToolTip="Review, approve, or reject employee leave applications" Click="BtnQuickLeave_Click">
+                                            <Button.Resources>
+                                                <Style TargetType="Border"><Setter Property="CornerRadius" Value="8"/></Style>
+                                            </Button.Resources>
+                                        </Button>
+                                        <Button x:Name="BtnQuickProcessPayroll" Content="💵 Process Payroll" Background="#15803D" Foreground="White" Width="160" Height="42" FontSize="12" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="0,0,12,0" ToolTip="Calculate gross-to-net payroll and generate payslips" Click="BtnQuickProcessPayroll_Click">
+                                            <Button.Resources>
+                                                <Style TargetType="Border"><Setter Property="CornerRadius" Value="8"/></Style>
+                                            </Button.Resources>
+                                        </Button>
+                                        <Button x:Name="BtnQuickGovReports" Content="🏛️ Statutory Reports" Background="#06254A" Foreground="White" Width="170" Height="42" FontSize="12" FontWeight="Bold" BorderThickness="0" Cursor="Hand" ToolTip="Generate SSS R-1A, PhilHealth RF-1, Pag-IBIG MCRF, and BIR returns" Click="BtnQuickGovReports_Click">
+                                            <Button.Resources>
+                                                <Style TargetType="Border"><Setter Property="CornerRadius" Value="8"/></Style>
+                                            </Button.Resources>
+                                        </Button>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Grid>
                         </Border>
+
+                        <!-- SYSTEM SUMMARY & COMPLIANCE CARDS (2 COLUMNS) -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Left Column: Philippine Statutory Compliance Engine -->
+                            <Border Grid.Column="0" Background="White" CornerRadius="12" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="18" Opacity="0.06" Direction="270" ShadowDepth="3" Color="#0F172A"/>
+                                </Border.Effect>
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                                        <TextBlock Text="🏛️" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Philippine Statutory Compliance Engine" FontSize="14" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,0,4">
+                                        <Grid Margin="0,4">
+                                            <TextBlock Text="SSS Contribution (2025/2026 Rate)" FontSize="12" Foreground="#475569"/>
+                                            <Border HorizontalAlignment="Right" Background="#DCFCE7" CornerRadius="4" Padding="6,2">
+                                                <TextBlock Text="4.5% EE / 9.5% ER" FontSize="11" FontWeight="Bold" Foreground="#15803D"/>
+                                            </Border>
+                                        </Grid>
+                                        <Grid Margin="0,6">
+                                            <TextBlock Text="PhilHealth Universal Health Care" FontSize="12" Foreground="#475569"/>
+                                            <Border HorizontalAlignment="Right" Background="#DBEAFE" CornerRadius="4" Padding="6,2">
+                                                <TextBlock Text="5.0% Premium Split" FontSize="11" FontWeight="Bold" Foreground="#1D4ED8"/>
+                                            </Border>
+                                        </Grid>
+                                        <Grid Margin="0,6">
+                                            <TextBlock Text="Pag-IBIG Fund (HDMF)" FontSize="12" Foreground="#475569"/>
+                                            <Border HorizontalAlignment="Right" Background="#FEF3C7" CornerRadius="4" Padding="6,2">
+                                                <TextBlock Text="₱200 Max Share" FontSize="11" FontWeight="Bold" Foreground="#B45309"/>
+                                            </Border>
+                                        </Grid>
+                                        <Grid Margin="0,6">
+                                            <TextBlock Text="BIR Withholding Tax (TRAIN Law)" FontSize="12" Foreground="#475569"/>
+                                            <Border HorizontalAlignment="Right" Background="#E0E7FF" CornerRadius="4" Padding="6,2">
+                                                <TextBlock Text="Semi-Monthly Brackets" FontSize="11" FontWeight="Bold" Foreground="#4338CA"/>
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Right Column: System Module Quick-Status -->
+                            <Border Grid.Column="2" Background="White" CornerRadius="12" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="18" Opacity="0.06" Direction="270" ShadowDepth="3" Color="#0F172A"/>
+                                </Border.Effect>
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                                        <TextBlock Text="⚡" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Core System Operations" FontSize="14" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,0,4">
+                                        <Grid Margin="0,4">
+                                            <TextBlock Text="HRIS &amp; 201 File Repository" FontSize="12" Foreground="#475569"/>
+                                            <TextBlock Text="RA 10173 Masked" FontSize="11" FontWeight="Bold" Foreground="#15803D" HorizontalAlignment="Right"/>
+                                        </Grid>
+                                        <Grid Margin="0,6">
+                                            <TextBlock Text="Biometric Timekeeping Engine" FontSize="12" Foreground="#475569"/>
+                                            <TextBlock Text="Shift Pairing Ready" FontSize="11" FontWeight="Bold" Foreground="#1D4ED8" HorizontalAlignment="Right"/>
+                                        </Grid>
+                                        <Grid Margin="0,6">
+                                            <TextBlock Text="Statutory Exports (SSS R-1A / RF-1 / MCRF)" FontSize="12" Foreground="#475569"/>
+                                            <TextBlock Text="Excel &amp; CSV Ready" FontSize="11" FontWeight="Bold" Foreground="#4338CA" HorizontalAlignment="Right"/>
+                                        </Grid>
+                                        <Grid Margin="0,6">
+                                            <TextBlock Text="Role-Based Security (BCrypt Hashing)" FontSize="12" Foreground="#475569"/>
+                                            <TextBlock Text="Enforced" FontSize="11" FontWeight="Bold" Foreground="#15803D" HorizontalAlignment="Right"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
                     </StackPanel>
                 </ScrollViewer>
 
@@ -145,7 +372,7 @@
             <Setter Property="Foreground" Value="#E2E8F0"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Height" Value="40"/>
+            <Setter Property="Height" Value="42"/>
             <Setter Property="Margin" Value="0,2"/>
             <Setter Property="Padding" Value="12,0"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -153,7 +380,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
-                        <Border x:Name="border" Background="Transparent" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="border" Background="Transparent" CornerRadius="8" Padding="{TemplateBinding Padding}">
                             <ContentPresenter VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>

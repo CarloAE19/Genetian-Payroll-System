@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Dapper;
 using GB_Payroll_System.Data;
 using GB_Payroll_System.Models;
@@ -13,13 +14,13 @@ namespace GB_Payroll_System
 {
     public partial class MainWindow : Window
     {
-        private EmployeeView?   _employeeView;
-        private HolidayView?    _holidayView;
-        private AttendanceView? _attendanceView;
-        private PayrollView?            _payrollView;
-        private SettingsView?           _settingsView;
-        private GovernmentReportsView?  _govReportsView;
-        private LeaveManagementView?    _leaveView;
+        private EmployeeView?          _employeeView;
+        private HolidayView?           _holidayView;
+        private AttendanceView?        _attendanceView;
+        private PayrollView?           _payrollView;
+        private SettingsView?          _settingsView;
+        private GovernmentReportsView? _govReportsView;
+        private LeaveManagementView?   _leaveView;
 
         public MainWindow()
         {
@@ -44,14 +45,26 @@ namespace GB_Payroll_System
             // Admin and HR have FULL ACCESS to all modules & data
             bool isFullAccess = (role == UserRole.Admin || role == UserRole.HR);
 
+            SecMain.Visibility       = Visibility.Visible;
             NavDashboard.Visibility  = Visibility.Visible;
-            NavEmployees.Visibility  = (isFullAccess || role == UserRole.Accounting || role == UserRole.Management) ? Visibility.Visible : Visibility.Collapsed;
+
+            bool canSeeHr = isFullAccess || role == UserRole.Accounting || role == UserRole.Management;
+            SecHr.Visibility         = canSeeHr ? Visibility.Visible : Visibility.Collapsed;
+            NavEmployees.Visibility  = canSeeHr ? Visibility.Visible : Visibility.Collapsed;
             NavPromotions.Visibility = isFullAccess ? Visibility.Visible : Visibility.Collapsed;
-            NavAttendance.Visibility = (isFullAccess || role == UserRole.Accounting || role == UserRole.Management) ? Visibility.Visible : Visibility.Collapsed;
-            NavLeave.Visibility      = (isFullAccess || role == UserRole.Accounting || role == UserRole.Management) ? Visibility.Visible : Visibility.Collapsed;
+
+            bool canSeeTime = isFullAccess || role == UserRole.Accounting || role == UserRole.Management;
+            SecTime.Visibility       = canSeeTime ? Visibility.Visible : Visibility.Collapsed;
+            NavAttendance.Visibility = canSeeTime ? Visibility.Visible : Visibility.Collapsed;
+            NavLeave.Visibility      = canSeeTime ? Visibility.Visible : Visibility.Collapsed;
             NavHolidays.Visibility   = (isFullAccess || role == UserRole.Management) ? Visibility.Visible : Visibility.Collapsed;
-            NavPayroll.Visibility    = (isFullAccess || role == UserRole.Accounting || role == UserRole.Management) ? Visibility.Visible : Visibility.Collapsed;
-            NavGovReports.Visibility = (isFullAccess || role == UserRole.Accounting || role == UserRole.Management) ? Visibility.Visible : Visibility.Collapsed;
+
+            bool canSeePayroll = isFullAccess || role == UserRole.Accounting || role == UserRole.Management;
+            SecPayroll.Visibility    = canSeePayroll ? Visibility.Visible : Visibility.Collapsed;
+            NavPayroll.Visibility    = canSeePayroll ? Visibility.Visible : Visibility.Collapsed;
+            NavGovReports.Visibility = canSeePayroll ? Visibility.Visible : Visibility.Collapsed;
+
+            SecAdmin.Visibility      = isFullAccess ? Visibility.Visible : Visibility.Collapsed;
             NavSettings.Visibility   = isFullAccess ? Visibility.Visible : Visibility.Collapsed;
         }
 
@@ -60,7 +73,7 @@ namespace GB_Payroll_System
         private async void LoadDashboardStats()
         {
             // Run DB queries off the UI thread so the window doesn't freeze
-            var (activeEmployees, cutoffLabel, estNetPayroll) = await Task.Run<(int, string, decimal)>(() =>
+            var (activeEmployees, cutoffLabel, isClosed, pendingLeaves, estNetPayroll) = await Task.Run<(int, string, bool, int, decimal)>(() =>
             {
                 try
                 {
@@ -79,23 +92,31 @@ namespace GB_Payroll_System
                         LIMIT 1;");
 
                     string label   = "No Cutoff Found";
-                    int?   pId     = null;
+                    bool closed    = false;
+                    int? pId       = null;
 
                     if (period != null)
                     {
                         DateTime start = Convert.ToDateTime(period.StartDate);
                         DateTime end   = Convert.ToDateTime(period.EndDate);
-                        bool closed    = Convert.ToBoolean(period.IsClosed);
+                        closed         = Convert.ToBoolean(period.IsClosed);
                         pId            = Convert.ToInt32(period.Id);
 
                         label = start.Month == end.Month
                             ? $"{start:MMMM} {start.Day}-{end.Day}, {end.Year}"
                             : $"{start:MMM d} – {end:MMM d, yyyy}";
-
-                        if (closed) label += " (Closed)";
                     }
 
-                    // 3. Estimated net payroll from PayrollRecords for the latest period
+                    // 3. Pending leave requests count
+                    int pendingCount = 0;
+                    try
+                    {
+                        pendingCount = conn.ExecuteScalar<int>(
+                            "SELECT COUNT(*) FROM LeaveApplications WHERE Status = 1;");
+                    }
+                    catch { /* Fallback if table is not seeded */ }
+
+                    // 4. Estimated net payroll from PayrollRecords for the latest period
                     decimal netPayroll = 0m;
                     if (pId.HasValue)
                     {
@@ -111,19 +132,32 @@ namespace GB_Payroll_System
                             new { PeriodId = pId.Value });
                     }
 
-                    return (activeEmps, label, netPayroll);
+                    return (activeEmps, label, closed, pendingCount, netPayroll);
                 }
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine($"Dashboard stats error: {ex.Message}");
-                    return (0, "DB Unavailable", 0m);
+                    return (0, "DB Unavailable", false, 0, 0m);
                 }
             });
 
             // Update UI on the dispatcher thread
             TxtTotalEmployees.Text = $"{activeEmployees} Active";
             TxtCurrentCutoff.Text  = cutoffLabel;
-            TxtEstNetPayroll.Text  = $"₱{estNetPayroll:N2}";
+
+            if (BadgeCutoffStatus != null && BorderCutoffBadge != null)
+            {
+                BadgeCutoffStatus.Text = isClosed ? "CLOSED" : "OPEN";
+                BorderCutoffBadge.Background = isClosed
+                    ? new SolidColorBrush(Color.FromRgb(254, 226, 226))
+                    : new SolidColorBrush(Color.FromRgb(220, 252, 231));
+                BadgeCutoffStatus.Foreground = isClosed
+                    ? new SolidColorBrush(Color.FromRgb(185, 28, 28))
+                    : new SolidColorBrush(Color.FromRgb(21, 128, 61));
+            }
+
+            TxtPendingLeaves.Text = $"{pendingLeaves} Pending";
+            TxtEstNetPayroll.Text = $"₱{estNetPayroll:N2}";
         }
 
         // ─── Navigation ────────────────────────────────────────────────────────────
@@ -134,10 +168,10 @@ namespace GB_Payroll_System
 
             string name = btn.Name;
             string title = btn.Content?.ToString()?
-                .Replace("📊 ", "").Replace("👥 ", "").Replace("📈 ", "")
-                .Replace("⏰ ", "").Replace("🌴 ", "")
-                .Replace("🗓️ ", "").Replace("💵 ", "").Replace("🏛️ ", "")
-                .Replace("⚙️ ", "") ?? "";
+                .Replace("📊", "").Replace("👥", "").Replace("📈", "")
+                .Replace("⏰", "").Replace("🌴", "")
+                .Replace("🗓️", "").Replace("💵", "").Replace("🏛️", "")
+                .Replace("⚙️", "").Trim() ?? "";
 
             TxtHeaderTitle.Text = title;
 
@@ -203,7 +237,16 @@ namespace GB_Payroll_System
             ContentFrame.Content = control;
         }
 
-        // ─── Quick-action Button Handlers ──────────────────────────────────────────
+        // ─── Header & Quick-action Button Handlers ─────────────────────────────────
+
+        private void BtnRefreshDashboard_Click(object sender, RoutedEventArgs e)
+        {
+            LoadDashboardStats();
+            if (ContentFrame.Content is EmployeeView empView)
+            {
+                _ = empView.LoadEmployeesAsync();
+            }
+        }
 
         private void BtnQuickAddEmployee_Click(object sender, RoutedEventArgs e)
         {
@@ -216,6 +259,22 @@ namespace GB_Payroll_System
             _employeeView.OpenAddEmployeeDialog();
         }
 
+        private void BtnQuickAttendance_Click(object sender, RoutedEventArgs e)
+        {
+            NavAttendance.IsChecked = true;
+            TxtHeaderTitle.Text = "Timekeeping & Bio";
+            _attendanceView ??= new AttendanceView();
+            SetContent(_attendanceView);
+        }
+
+        private void BtnQuickLeave_Click(object sender, RoutedEventArgs e)
+        {
+            NavLeave.IsChecked = true;
+            TxtHeaderTitle.Text = "Leave Management";
+            _leaveView ??= new LeaveManagementView();
+            SetContent(_leaveView);
+        }
+
         private void BtnQuickProcessPayroll_Click(object sender, RoutedEventArgs e)
         {
             NavPayroll.IsChecked = true;
@@ -224,12 +283,29 @@ namespace GB_Payroll_System
             SetContent(_payrollView);
         }
 
+        private void BtnQuickGovReports_Click(object sender, RoutedEventArgs e)
+        {
+            NavGovReports.IsChecked = true;
+            TxtHeaderTitle.Text = "Statutory Reports";
+            _govReportsView ??= new GovernmentReportsView();
+            SetContent(_govReportsView);
+        }
+
         private void BtnLogout_Click(object sender, RoutedEventArgs e)
         {
-            AuthService.Logout();
-            var loginWindow = new LoginWindow();
-            loginWindow.Show();
-            this.Close();
+            var result = MessageBox.Show(
+                "Are you sure you want to sign out of the Genetian Payroll System?",
+                "Confirm Sign Out",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                AuthService.Logout();
+                var loginWindow = new LoginWindow();
+                loginWindow.Show();
+                this.Close();
+            }
         }
     }
 }
