@@ -33,6 +33,23 @@ namespace GB_Payroll_System.Data
                     IsActive BOOLEAN DEFAULT TRUE
                 );
 
+                CREATE TABLE IF NOT EXISTS CompanyProfiles (
+                    Id INT PRIMARY KEY DEFAULT 1,
+                    CompanyName VARCHAR(150) NOT NULL,
+                    TradeName VARCHAR(100),
+                    CompanyAddress TEXT,
+                    ContactNumber VARCHAR(50),
+                    EmailAddress VARCHAR(100),
+                    EmployerSssNumber VARCHAR(30),
+                    EmployerPhilHealthNumber VARCHAR(30),
+                    EmployerPagIbigNumber VARCHAR(30),
+                    EmployerTin VARCHAR(30),
+                    AuthorizedSignatoryName VARCHAR(100),
+                    AuthorizedSignatoryTitle VARCHAR(100),
+                    UpdatedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                    UpdatedByUsername VARCHAR(50) DEFAULT 'system'
+                );
+
                 CREATE TABLE IF NOT EXISTS Employees (
                     Id SERIAL PRIMARY KEY,
                     EmployeeCode VARCHAR(50) UNIQUE NOT NULL,
@@ -281,6 +298,31 @@ namespace GB_Payroll_System.Data
                 END $$;
                 ";
                 conn.Execute(migrationSql);
+
+                // Seed Default Company Profile
+                int compCount = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM CompanyProfiles;");
+                if (compCount == 0)
+                {
+                    conn.Execute(@"
+                    INSERT INTO CompanyProfiles (Id, CompanyName, TradeName, CompanyAddress, ContactNumber, EmailAddress,
+                                               EmployerSssNumber, EmployerPhilHealthNumber, EmployerPagIbigNumber, EmployerTin,
+                                               AuthorizedSignatoryName, AuthorizedSignatoryTitle, UpdatedByUsername)
+                    VALUES (1, 'Genetian Enterprise Solutions', 'Genetian GB', 'General Santos City, South Cotabato, Philippines',
+                            '+63 (083) 552-0000', 'info@genetian.ph', '09-1234567-8', '12-345678901-2', '1234-5678-9012',
+                            '000-123-456-000', 'Maria Santos', 'HR & Administrative Director', 'system');");
+                }
+
+                // Seed Default Branches if empty
+                int branchCount = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM Branches;");
+                if (branchCount == 0)
+                {
+                    conn.Execute(@"
+                    INSERT INTO Branches (Code, Name, Location, IsActive)
+                    VALUES 
+                        ('MAIN', 'Main Office - Headquarter', 'General Santos City', TRUE),
+                        ('DVO', 'Davao City Branch', 'Davao City', TRUE),
+                        ('CEB', 'Cebu Operations Hub', 'Cebu City', TRUE);");
+                }
 
                 // Seed Default Statutory Settings if not present
                 int statCount = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM StatutorySettings;");
