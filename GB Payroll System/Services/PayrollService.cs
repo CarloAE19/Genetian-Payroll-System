@@ -27,6 +27,7 @@ namespace GB_Payroll_System.Services
             double totalOtHrs = 0;
             double totalNightDiffHrs = 0;
             int presentDaysCount = 0;
+            double absentDaysCount = 0;
 
             foreach (var att in attendances)
             {
@@ -37,6 +38,14 @@ namespace GB_Payroll_System.Services
                     totalUndertimeMins += att.UndertimeMinutes;
                     totalOtHrs += att.OvertimeHours;
                     totalNightDiffHrs += att.NightDiffHours;
+                }
+                else if (att.Status == AttendanceStatus.Absent || att.Status == AttendanceStatus.AWOL)
+                {
+                    absentDaysCount += 1.0;
+                }
+                else if (att.Status == AttendanceStatus.HalfDay)
+                {
+                    absentDaysCount += 0.5;
                 }
             }
 
@@ -60,6 +69,12 @@ namespace GB_Payroll_System.Services
             // Tardiness & Undertime Deductions
             record.TardinessDeduction = Math.Round((decimal)totalLateMins * minuteRate, 2);
             record.UndertimeDeduction = Math.Round((decimal)totalUndertimeMins * minuteRate, 2);
+
+            // Absence Deduction
+            if (employee.PayType == PayType.Monthly)
+            {
+                record.AbsenceDeduction = Math.Round((decimal)absentDaysCount * dailyRate, 2);
+            }
 
             // Estimated Monthly Equivalent Compensation for Statutory Base
             decimal monthlyCompensation = employee.PayType == PayType.Monthly 
@@ -131,8 +146,14 @@ namespace GB_Payroll_System.Services
             }
             else
             {
-                // Taxable income = Gross - SSS - PhilHealth - PagIBIG
-                decimal taxableIncome = record.GrossPay - record.SssEmployee - record.PhilHealthEmployee - record.PagIbigEmployee;
+                // Taxable income = Gross - Deductions (Absence, Tardiness, Undertime, SSS, PhilHealth, PagIBIG)
+                decimal taxableIncome = record.GrossPay 
+                                      - record.AbsenceDeduction 
+                                      - record.TardinessDeduction 
+                                      - record.UndertimeDeduction 
+                                      - record.SssEmployee 
+                                      - record.PhilHealthEmployee 
+                                      - record.PagIbigEmployee;
                 if (taxableIncome < 0) taxableIncome = 0;
 
                 record.WithholdingTax = PhilippineDeductionService.CalculateSemiMonthlyWithholdingTax(taxableIncome);
