@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -9,8 +10,21 @@ using GB_Payroll_System.Models;
 
 namespace GB_Payroll_System.Views
 {
-    // Simple label+amount pair for the earnings / deductions lists
-    public record PayslipLineItem(string Label, decimal Amount);
+    // Label + amount + detail line for earnings / deductions lists
+    public class PayslipLineItem
+    {
+        public string Label { get; set; } = string.Empty;
+        public decimal Amount { get; set; }
+        public string Detail { get; set; } = string.Empty;
+        public bool HasDetail => !string.IsNullOrWhiteSpace(Detail);
+
+        public PayslipLineItem(string label, decimal amount, string detail = "")
+        {
+            Label = label;
+            Amount = amount;
+            Detail = detail;
+        }
+    }
 
     public partial class PayslipWindow : Window
     {
@@ -48,14 +62,56 @@ namespace GB_Payroll_System.Views
 
             // Deductions lines
             var deductions = new List<PayslipLineItem>();
-            if (_row.TardinessDeduction > 0) deductions.Add(new("Tardiness / Late Deduction",   _row.TardinessDeduction));
-            if (_row.UndertimeDeduction > 0) deductions.Add(new("Undertime Deduction",          _row.UndertimeDeduction));
-            if (_row.AbsenceDeduction   > 0) deductions.Add(new("Absence Deduction",            _row.AbsenceDeduction));
-            deductions.Add(new("SSS Contribution (Employee)",                                     _row.SssEmployee));
-            deductions.Add(new("PhilHealth Premium (Employee)",                                   _row.PhilHealthEmployee));
-            deductions.Add(new("Pag-IBIG / HDMF (Employee)",                                     _row.PagIbigEmployee));
-            if (_row.WithholdingTax > 0) deductions.Add(new("BIR Withholding Tax (TRAIN Law)",  _row.WithholdingTax));
-            if (_row.OtherDeductions > 0) deductions.Add(new("Other Deductions",                 _row.OtherDeductions));
+            if (_row.TardinessDeduction > 0) deductions.Add(new("Tardiness / Late Deduction", _row.TardinessDeduction));
+            if (_row.UndertimeDeduction > 0) deductions.Add(new("Undertime Deduction", _row.UndertimeDeduction));
+
+            // Retrieve absent dates for this employee during this cutoff period
+            var absentDates = new List<DateTime>();
+            try
+            {
+                var attRepo = new AttendanceRepository();
+                var attList = attRepo.GetByDateRange(_period.StartDate, _period.EndDate, _row.EmployeeId);
+                absentDates = attList
+                    .Where(a => a.Status == AttendanceStatus.Absent || a.Status == AttendanceStatus.AWOL)
+                    .OrderBy(a => a.Date)
+                    .Select(a => a.Date)
+                    .Distinct()
+                    .ToList();
+            }
+            catch
+            {
+                // Graceful fallback for offline mode or database unavailability
+            }
+
+            string absentLabel = "Absent Deduction";
+            string absentDetail = "";
+
+            if (absentDates.Count > 0)
+            {
+                if (absentDates.Count == 1)
+                {
+                    absentLabel = $"Absent Deduction ({absentDates[0]:MMM dd, yyyy})";
+                    absentDetail = $"Date absent: {absentDates[0]:MMMM dd, yyyy}";
+                }
+                else if (absentDates.Count <= 3)
+                {
+                    string datesBrief = string.Join(", ", absentDates.Select(d => d.ToString("MMM dd")));
+                    absentLabel = $"Absent Deduction ({datesBrief})";
+                    absentDetail = $"Dates absent: {string.Join(", ", absentDates.Select(d => d.ToString("MMMM dd, yyyy")))}";
+                }
+                else
+                {
+                    absentLabel = $"Absent Deduction ({absentDates.Count} days)";
+                    absentDetail = $"Dates absent: {string.Join(", ", absentDates.Select(d => d.ToString("MMM dd, yyyy")))}";
+                }
+            }
+
+            deductions.Add(new(absentLabel, _row.AbsenceDeduction, absentDetail));
+            deductions.Add(new("SSS Contribution (Employee)", _row.SssEmployee));
+            deductions.Add(new("PhilHealth Premium (Employee)", _row.PhilHealthEmployee));
+            deductions.Add(new("Pag-IBIG / HDMF (Employee)", _row.PagIbigEmployee));
+            if (_row.WithholdingTax > 0) deductions.Add(new("BIR Withholding Tax (TRAIN Law)", _row.WithholdingTax));
+            deductions.Add(new("Others", _row.OtherDeductions));
             DeductionItems.ItemsSource = deductions;
             TxtTotalDed.Text = $"₱{_row.TotalDeductions:N2}";
 
